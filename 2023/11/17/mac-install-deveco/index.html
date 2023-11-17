@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.2.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.png">
+  <link rel="mask-icon" href="/images/favicon.png" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" integrity="sha256-Z1K5uhUaJXA7Ll0XrZ/0JhX4lAtZFpT6jkKrEDT0drU=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"it-liupp.gitee.io","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.14.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":true,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta property="og:type" content="article">
+<meta property="og:title" content="MacOS Sonoma安装Huawei DevEco Studio 3.1.1">
+<meta property="og:url" content="https://it-liupp.gitee.io/2023/11/17/mac-install-deveco/index.html">
+<meta property="og:site_name" content="Hello Mr Liu">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://it-liupp.gitee.io/images/mac-install-deveco/image-20231117111436846.png">
+<meta property="og:image" content="https://it-liupp.gitee.io/images/mac-install-deveco/image-20231117113108599.png">
+<meta property="og:image" content="https://it-liupp.gitee.io/images/mac-install-deveco/7ce2062edd4f10601925108a7e0cb215.png">
+<meta property="og:image" content="https://it-liupp.gitee.io/images/mac-install-deveco/image-20231117113603547.png">
+<meta property="og:image" content="https://it-liupp.gitee.io/images/mac-install-deveco/image-20231117113724203.png">
+<meta property="og:image" content="https://it-liupp.gitee.io/images/mac-install-deveco/image-20231117114007417.png">
+<meta property="og:image" content="https://it-liupp.gitee.io/images/mac-install-deveco/image-20231117114158137.png">
+<meta property="og:image" content="https://it-liupp.gitee.io/images/mac-install-deveco/image-20231117114315372.png">
+<meta property="og:image" content="https://it-liupp.gitee.io/images/mac-install-deveco/image-20231117114340090.png">
+<meta property="og:image" content="https://it-liupp.gitee.io/images/mac-install-deveco/image-20231117114522288.png">
+<meta property="article:published_time" content="2023-11-17T03:08:18.000Z">
+<meta property="article:modified_time" content="2023-11-17T04:32:24.346Z">
+<meta property="article:author" content="Mr Liu">
+<meta property="article:tag" content="IDE">
+<meta property="article:tag" content="MacOS14">
+<meta property="article:tag" content="HarmonyOS">
+<meta property="article:tag" content="OpenHarmony">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://it-liupp.gitee.io/images/mac-install-deveco/image-20231117111436846.png">
+
+
+<link rel="canonical" href="https://it-liupp.gitee.io/2023/11/17/mac-install-deveco/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://it-liupp.gitee.io/2023/11/17/mac-install-deveco/","path":"2023/11/17/mac-install-deveco/","title":"MacOS Sonoma安装Huawei DevEco Studio 3.1.1"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>MacOS Sonoma安装Huawei DevEco Studio 3.1.1 | Hello Mr Liu</title>
+  
+
+
+
+
+
+
+  <script async defer data-website-id="" src=""></script>
+
+  <script defer data-domain="" src=""></script>
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Hello Mr Liu</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">临江对月</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E7%B3%BB%E7%BB%9F%E7%8E%AF%E5%A2%83"><span class="nav-number">1.</span> <span class="nav-text">一、系统环境</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81IDE%E7%AE%80%E4%BB%8B"><span class="nav-number">2.</span> <span class="nav-text">二、IDE简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E5%89%8D%E7%BD%AE%E8%AF%B4%E6%98%8E"><span class="nav-number">3.</span> <span class="nav-text">三、前置说明</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E3%80%81%E5%AE%89%E8%A3%85"><span class="nav-number">4.</span> <span class="nav-text">四、安装</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1%E4%B8%8B%E8%BD%BD"><span class="nav-number">4.1.</span> <span class="nav-text">4.1下载</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-2%E5%AE%89%E8%A3%85"><span class="nav-number">4.2.</span> <span class="nav-text">4.2安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-3%E9%85%8D%E7%BD%AE"><span class="nav-number">4.3.</span> <span class="nav-text">4.3配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%94%E3%80%81%E5%AD%A6%E4%B9%A0%E5%8F%8A%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99%E6%B8%85%E5%8D%95"><span class="nav-number">4.4.</span> <span class="nav-text">五、学习及参考资料清单</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Mr Liu"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Mr Liu</p>
+  <div class="site-description" itemprop="description">和意识先进的人在一起你才能转变意识，和心态积极的人在一起，你才能够积极，靠自己改变很难，一个人拽着自己的头发是很难把自己拎起来的。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">17</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">22</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/big/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://it-liupp.gitee.io/2023/11/17/mac-install-deveco/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Mr Liu">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hello Mr Liu">
+      <meta itemprop="description" content="和意识先进的人在一起你才能转变意识，和心态积极的人在一起，你才能够积极，靠自己改变很难，一个人拽着自己的头发是很难把自己拎起来的。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="MacOS Sonoma安装Huawei DevEco Studio 3.1.1 | Hello Mr Liu">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          MacOS Sonoma安装Huawei DevEco Studio 3.1.1
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2023-11-17 11:08:18 / 修改时间：12:32:24" itemprop="dateCreated datePublished" datetime="2023-11-17T11:08:18+08:00">2023-11-17</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E8%BD%AF%E4%BB%B6%E5%AE%89%E8%A3%85/" itemprop="url" rel="index"><span itemprop="name">软件安装</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E8%BD%AF%E4%BB%B6%E5%AE%89%E8%A3%85/%E9%B8%BF%E8%92%99%E7%B3%BB%E7%BB%9F/" itemprop="url" rel="index"><span itemprop="name">鸿蒙系统</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>1.2k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>4 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p><img src="/../images/mac-install-deveco/image-20231117111436846.png" alt="image-20231117111436846"></p>
+<span id="more"></span>
+
+<h2 id="一、系统环境"><a href="#一、系统环境" class="headerlink" title="一、系统环境"></a>一、系统环境</h2><blockquote>
+<p>操作系统：macOS Sonoma 14.1.1 (23B81)</p>
+<p>IDE版本：DevEco Studio 3.1.1</p>
+<p>NodeJs版本：v14.21.3</p>
+</blockquote>
+<h2 id="二、IDE简介"><a href="#二、IDE简介" class="headerlink" title="二、IDE简介"></a>二、IDE简介</h2><p>HUAWEI DevEco Studio（获取工具请单击<a target="_blank" rel="noopener" href="https://developer.harmonyos.com/cn/develop/deveco-studio#download">链接下载</a>，以下简称DevEco Studio）是基于IntelliJ IDEA Community开源版本打造，为运行在HarmonyOS和OpenHarmony系统上的应用和服务（以下简称应用&#x2F;服务）提供一站式的开发平台。</p>
+<p>作为一款开发工具，除了具有基本的代码开发、编译构建及调测等功能外，DevEco Studio还具有如下特点：</p>
+<ul>
+<li>高效智能代码编辑：支持ArkTS、JS、C&#x2F;C++等语言的代码高亮、代码智能补齐、代码错误检查、代码自动跳转、代码格式化、代码查找等功能，提升代码编写效率。更多详细信息，请参考<a target="_blank" rel="noopener" href="https://developer.harmonyos.com/cn/docs/documentation/doc-guides-V3/editer_overview-0000001053502418-V3">编辑器使用技巧</a>。</li>
+<li>低代码可视化开发：丰富的UI界面编辑能力，支持自由拖拽组件和可视化数据绑定，可快速预览效果，所见即所得；同时支持卡片的零代码开发，降低开发门槛和提升界面开发效率。更多详细信息，请参考<a target="_blank" rel="noopener" href="https://developer.harmonyos.com/cn/docs/documentation/doc-guides-V3/ide-low-code-overview-0000001480179573-V3">使用低代码开发应用&#x2F;服务</a>。</li>
+<li>多端双向实时预览：支持UI界面代码的双向预览、实时预览、动态预览、组件预览以及多端设备预览，便于快速查看代码运行效果。更多详细信息，请参考<a target="_blank" rel="noopener" href="https://developer.harmonyos.com/cn/docs/documentation/doc-guides-V3/previewer-0000001054328973-V3">使用预览器预览应用&#x2F;服务界面效果</a>。</li>
+<li>多端设备模拟仿真：提供HarmonyOS本地模拟器，支持手机等设备的模拟仿真，便捷获取调试环境。更多详细信息，请参考<a target="_blank" rel="noopener" href="https://developer.harmonyos.com/cn/docs/documentation/doc-guides-V3/run_simulator-0000001053303709-V3">使用模拟器运行应用&#x2F;服务</a>。</li>
+</ul>
+<h2 id="三、前置说明"><a href="#三、前置说明" class="headerlink" title="三、前置说明"></a>三、前置说明</h2><p>​	对于这个IDE，笔者安装过几次，过程一言难尽，有成功有失败，失败的原因也是各种情况。这次安装是在重装完系统后重新安装该IDE，笔记用于记录安装过程。</p>
+<p>​	HUAWEI DevEco Studio截止到当前日期，最新release版本是DevEco Studio 3.1.1版本，4.0是beta版，因为可能存在未知bug，保险期间，建议安装3.1.1版本，本文介绍的也是安装3.1.1版本。</p>
+<p>​	IDE的下载到官网进行下载即可：<a target="_blank" rel="noopener" href="https://developer.harmonyos.com/cn/develop/deveco-studio/#download">HUAWEI DevEco Studio和SDK下载和升级 | HarmonyOS开发者</a> </p>
+<p>​	需要注意的是，DevEco Studio每个版本对NodeJS的版本是有要求的，这个之前我也没有注意到，在执行过程中总是会碰到nodejs问题。一次偶然的机会在华为开发者论坛找到DevEco Studio SDK与NodeJS版本配套关系：<a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/forum/topic/0203876484517800640?fid=26">SDK配套关系&amp;适配历史工程-华为开发者论坛 | 华为开发者联盟 (huawei.com)</a>，由于DevEco Studio版本在持续更新，SDK版本也在更新，构建插件版本也在更新，他们必须匹配，才能正常使用。</p>
+<p><img src="/../images/mac-install-deveco/image-20231117113108599.png" alt="image-20231117113108599"></p>
+<p>​	说明中，最新的IDE版本只列至3.1.0.501，对于3.1.1版本并没有说明，我们也参照这个版本安装nodejs，本文采用的是NodeJs v14.21.3版本。</p>
+<p>​	<strong>为保证安装顺利，强力建议安装与之匹配的NodeJs版本，不然出的问题足以让你崩溃。</strong></p>
+<p>​	推荐一个NodeJs多版本可视化管理工具，跨平台使用，可以灵活切换NodeJs版本，点击 <a target="_blank" rel="noopener" href="https://github.com/1111mp/nvm-desktop/releases">跳转下载</a>  可下载最新版本：</p>
+<p><img src="/../images/mac-install-deveco/7ce2062edd4f10601925108a7e0cb215.png" alt="7ce2062edd4f10601925108a7e0cb215"></p>
+<h2 id="四、安装"><a href="#四、安装" class="headerlink" title="四、安装"></a>四、安装</h2><h3 id="4-1下载"><a href="#4-1下载" class="headerlink" title="4.1下载"></a>4.1下载</h3><p>​	根据系统环境下载对应版本，本系统是Intel的Mac系统，需要下载Mac(X86)版本，如果是M1&#x2F;2&#x2F;3的CPU，需要下载ARM版本。</p>
+<p><img src="/../images/mac-install-deveco/image-20231117113603547.png" alt="image-20231117113603547"></p>
+<h3 id="4-2安装"><a href="#4-2安装" class="headerlink" title="4.2安装"></a>4.2安装</h3><p>​	下载完成后解压，双击打开.dmg文件文件，按要求拖动APP至Applications文件夹。</p>
+<p><img src="/../images/mac-install-deveco/image-20231117113724203.png" alt="image-20231117113724203"></p>
+<h3 id="4-3配置"><a href="#4-3配置" class="headerlink" title="4.3配置"></a>4.3配置</h3><p><img src="/../images/mac-install-deveco/image-20231117114007417.png" alt="image-20231117114007417"></p>
+<p>​	在启动台点击DevEco-Studio图标打开IDE，启动后，弹出配置对话框。图中①所示是指安装Ohpm的位置，一般情况都是未先行安装的，勾选Install选项，安装位置无需特意改变（如果本地已经安装配置的话，系统会自动检测本地路径，则无需选择Install），确认无误，点击“Next”进入下一步。</p>
+<p><img src="/../images/mac-install-deveco/image-20231117114158137.png" alt="image-20231117114158137"></p>
+<p>​	该环节用于配置HarmonyOS SDK,建议保持不变，直接下一步“Next”:</p>
+<p><img src="/../images/mac-install-deveco/image-20231117114315372.png" alt="image-20231117114315372"></p>
+<p>​	确认无误后，进入下一步”Next”：</p>
+<p><img src="/../images/mac-install-deveco/image-20231117114340090.png" alt="image-20231117114340090"></p>
+<p>​	此时安装向导会安装所需SDK和组件，安装成功会显示：</p>
+<p><img src="/../images/mac-install-deveco/image-20231117114522288.png" alt="image-20231117114522288"></p>
+<p>​	至此，DevEco Studio 3.1.1安装结束。</p>
+<h3 id="五、学习及参考资料清单"><a href="#五、学习及参考资料清单" class="headerlink" title="五、学习及参考资料清单"></a>五、学习及参考资料清单</h3><ol>
+<li>鸿蒙应用开发官网：<a target="_blank" rel="noopener" href="https://developer.harmonyos.com/">HarmonyOS应用开发官网 - 华为HarmonyOS打造全场景新服务</a></li>
+<li>鸿蒙OS学堂：<a target="_blank" rel="noopener" href="https://developer.harmonyos.com/cn/documentation/teaching-video/">HarmonyOS学堂</a></li>
+<li>鸿蒙OS开发示例：<a target="_blank" rel="noopener" href="https://developer.harmonyos.com/cn/documentation/codelabs/?catalogVersion=V3">HarmonyOS开发示例源代码</a></li>
+<li>ArkUI实战：<a target="_blank" rel="noopener" href="https://www.arkui.club/">《ArkUI实战》</a></li>
+<li>鸿蒙HarmonyOS4.0应用开发教程：<a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1pb4y1g75m">跳转观看</a></li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>☕请作者喝杯咖啡☕</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.jpg" alt="Mr Liu 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/images/alipay.jpg" alt="Mr Liu 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>Mr Liu
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://it-liupp.gitee.io/2023/11/17/mac-install-deveco/" title="MacOS Sonoma安装Huawei DevEco Studio 3.1.1">https://it-liupp.gitee.io/2023/11/17/mac-install-deveco/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/IDE/" rel="tag"># IDE</a>
+              <a href="/tags/MacOS14/" rel="tag"># MacOS14</a>
+              <a href="/tags/HarmonyOS/" rel="tag"># HarmonyOS</a>
+              <a href="/tags/OpenHarmony/" rel="tag"># OpenHarmony</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2023/01/13/selinux/" rel="prev" title="SELinux（安全增强型Linux）">
+                  <i class="fa fa-chevron-left"></i> SELinux（安全增强型Linux）
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mr Liu</span>
+</div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+      <span>站点总字数：</span>
+    <span title="站点总字数">34k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span>站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">2:04</span>
+  </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script><script src="/js/bookmark.js"></script>
+
+  
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>

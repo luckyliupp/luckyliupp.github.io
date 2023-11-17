@@ -1,0 +1,899 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.2.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.png">
+  <link rel="mask-icon" href="/images/favicon.png" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" integrity="sha256-Z1K5uhUaJXA7Ll0XrZ/0JhX4lAtZFpT6jkKrEDT0drU=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"it-liupp.gitee.io","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.14.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":true,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta property="og:type" content="article">
+<meta property="og:title" content="SELinux（安全增强型Linux）">
+<meta property="og:url" content="https://it-liupp.gitee.io/2023/01/13/selinux/index.html">
+<meta property="og:site_name" content="Hello Mr Liu">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://img0.baidu.com/it/u=22201649,3297937149&fm=253&fmt=auto&app=138&f=PNG?w=567&h=199">
+<meta property="article:published_time" content="2023-01-13T08:03:00.000Z">
+<meta property="article:modified_time" content="2023-11-17T02:59:18.562Z">
+<meta property="article:author" content="Mr Liu">
+<meta property="article:tag" content="Linux">
+<meta property="article:tag" content="Selinux">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://img0.baidu.com/it/u=22201649,3297937149&fm=253&fmt=auto&app=138&f=PNG?w=567&h=199">
+
+
+<link rel="canonical" href="https://it-liupp.gitee.io/2023/01/13/selinux/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://it-liupp.gitee.io/2023/01/13/selinux/","path":"2023/01/13/selinux/","title":"SELinux（安全增强型Linux）"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>SELinux（安全增强型Linux） | Hello Mr Liu</title>
+  
+
+
+
+
+
+
+  <script async defer data-website-id="" src=""></script>
+
+  <script defer data-domain="" src=""></script>
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Hello Mr Liu</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">临江对月</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E4%BB%8B%E7%BB%8D"><span class="nav-number">1.</span> <span class="nav-text">1.介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1%E4%B8%80%E4%BA%9B%E9%97%AE%E9%A2%98"><span class="nav-number">1.1.</span> <span class="nav-text">1.1一些问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88"><span class="nav-number">1.2.</span> <span class="nav-text">1.2解决方案</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-SELinux%E6%A8%A1%E5%BC%8F"><span class="nav-number">2.</span> <span class="nav-text">2.SELinux模式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-SELinux%E7%AD%96%E7%95%A5"><span class="nav-number">3.</span> <span class="nav-text">3.SELinux策略</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-SELinux%E8%AE%BF%E9%97%AE%E6%8E%A7%E5%88%B6"><span class="nav-number">4.</span> <span class="nav-text">4.SELinux访问控制</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1%E5%9F%BA%E4%BA%8E%E8%A7%92%E8%89%B2%E7%9A%84%E8%AE%BF%E9%97%AE%E6%8E%A7%E5%88%B6%EF%BC%88RBAC%EF%BC%89"><span class="nav-number">4.1.</span> <span class="nav-text">4.1基于角色的访问控制（RBAC）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-2%E5%A4%9A%E7%B1%BB%E5%88%AB%E5%AE%89%E5%85%A8%EF%BC%88MCS%EF%BC%89"><span class="nav-number">4.2.</span> <span class="nav-text">4.2多类别安全（MCS）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-SELinux%E6%95%85%E9%9A%9C%E6%8E%92%E9%99%A4"><span class="nav-number">5.</span> <span class="nav-text">5.SELinux故障排除</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#5-1SELinux%E5%92%8C%E5%AE%A1%E8%AE%A1"><span class="nav-number">5.1.</span> <span class="nav-text">5.1SELinux和审计</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-2%E9%87%8D%E6%96%B0%E6%A0%87%E8%AE%B0%E6%96%87%E4%BB%B6"><span class="nav-number">5.2.</span> <span class="nav-text">5.2重新标记文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-3%E6%81%A2%E5%A4%8D%E9%BB%98%E8%AE%A4%E5%AE%89%E5%85%A8%E4%B8%8A%E4%B8%8B%E6%96%87"><span class="nav-number">5.3.</span> <span class="nav-text">5.3恢复默认安全上下文</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-4%E9%87%8D%E6%96%B0%E6%A0%87%E8%AE%B0%E5%AE%8C%E6%95%B4%E7%9A%84%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F"><span class="nav-number">5.4.</span> <span class="nav-text">5.4重新标记完整的文件系统</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-5%E5%85%81%E8%AE%B8%E8%AE%BF%E9%97%AE%E7%AB%AF%E5%8F%A3"><span class="nav-number">5.5.</span> <span class="nav-text">5.5允许访问端口</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-6%E5%9C%A8%E5%AE%BD%E5%AE%B9%E6%A8%A1%E5%BC%8F%E4%B8%8B%E6%94%B6%E9%9B%86%E5%AE%A1%E8%AE%A1%E6%97%A5%E5%BF%97"><span class="nav-number">5.6.</span> <span class="nav-text">5.6在宽容模式下收集审计日志</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-7%E8%BF%90%E7%94%A8%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7"><span class="nav-number">5.7.</span> <span class="nav-text">5.7运用分析工具</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-%E8%87%AA%E5%AE%9A%E4%B9%89SELinux%E7%AD%96%E7%95%A5"><span class="nav-number">6.</span> <span class="nav-text">6.自定义SELinux策略</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-%E9%80%82%E7%94%A8Audit2allow%E5%88%9B%E5%BB%BA%E8%87%AA%E5%AE%9A%E4%B9%89SELinux%E7%AD%96%E7%95%A5%E6%A8%A1%E5%9D%97"><span class="nav-number">7.</span> <span class="nav-text">7.适用Audit2allow创建自定义SELinux策略模块</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#7-1%E6%89%8B%E5%8A%A8%E8%87%AA%E5%AE%9A%E4%B9%89%E7%AD%96%E7%95%A5%E6%A8%A1%E5%9D%97"><span class="nav-number">7.1.</span> <span class="nav-text">7.1手动自定义策略模块</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#8-%E7%AD%96%E7%95%A5%E6%96%87%E4%BB%B6"><span class="nav-number">8.</span> <span class="nav-text">8.策略文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#9-%E6%80%BB%E7%BB%93"><span class="nav-number">9.</span> <span class="nav-text">9.总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#10-%E5%85%B6%E4%BB%96%E8%B5%84%E6%BA%90"><span class="nav-number">10.</span> <span class="nav-text">10.其他资源</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#11-%E7%94%A8%E6%88%B7%E8%AF%B4%E6%98%8E%E5%92%8C%E9%99%B7%E9%98%B1"><span class="nav-number">11.</span> <span class="nav-text">11.用户说明和陷阱</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Mr Liu"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Mr Liu</p>
+  <div class="site-description" itemprop="description">和意识先进的人在一起你才能转变意识，和心态积极的人在一起，你才能够积极，靠自己改变很难，一个人拽着自己的头发是很难把自己拎起来的。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">17</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">22</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/big/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://it-liupp.gitee.io/2023/01/13/selinux/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Mr Liu">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hello Mr Liu">
+      <meta itemprop="description" content="和意识先进的人在一起你才能转变意识，和心态积极的人在一起，你才能够积极，靠自己改变很难，一个人拽着自己的头发是很难把自己拎起来的。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="SELinux（安全增强型Linux） | Hello Mr Liu">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          SELinux（安全增强型Linux）
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2023-01-13 16:03:00" itemprop="dateCreated datePublished" datetime="2023-01-13T16:03:00+08:00">2023-01-13</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2023-11-17 10:59:18" itemprop="dateModified" datetime="2023-11-17T10:59:18+08:00">2023-11-17</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" itemprop="url" rel="index"><span itemprop="name">操作系统</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E5%AE%89%E5%85%A8%E5%8A%A0%E5%9B%BA/" itemprop="url" rel="index"><span itemprop="name">安全加固</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E5%AE%89%E5%85%A8%E5%8A%A0%E5%9B%BA/%E7%BF%BB%E8%AF%91/" itemprop="url" rel="index"><span itemprop="name">翻译</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>12k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>42 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p><img src="https://img0.baidu.com/it/u=22201649,3297937149&fm=253&fmt=auto&app=138&f=PNG?w=567&h=199" alt="selinux"></p>
+<span id="more"></span>
+
+<blockquote>
+<p><strong>原文链接：<a target="_blank" rel="noopener" href="https://wiki.centos.org/HowTos/SELinux#head-02c04b0b030dd3c3d58bb7acbbcff033505dd3af">HowTos&#x2F;SELinux - CentOS Wiki</a></strong></p>
+</blockquote>
+<h2 id="1-介绍"><a href="#1-介绍" class="headerlink" title="1.介绍"></a>1.介绍</h2><p>SELinux全称是Security-Enhanced Linux，安全性增强型 Linux，是在内核中实现的强制访问控制 （MAC） 安全机制。SELinux 最早是在 CentOS 4 中引入的，并在后来的 CentOS 版本中得到了显著的增强。这些增强功能意味着随着时间的推移，如何处理 SELinux 以解决问题的方式会有所不同。</p>
+<h3 id="1-1一些问题"><a href="#1-1一些问题" class="headerlink" title="1.1一些问题"></a>1.1一些问题</h3><p>为了更好的理解为什么 SELinux 很重要以及它可以为您做什么，最简单的方法是查看一些示例。如果未启用 SELinux，则仅需要使用传统的自由访问控制 （DAC） 方法（如文件权限或访问控制列表 （ACL））来控制用户的文件访问。允许用户和程序都可以向其他人授予不安全的文件权限，或者相反，访问正常操作不需要授权的系统部分。例如：</p>
+<blockquote>
+<ul>
+<li>管理员无法控制用户：用户可以对敏感文件（如 ssh 密钥）和包含此类密钥的目录设置全局可读权限，通常为：~&#x2F;<code>.ssh/;</code></li>
+<li>进程可以更改安全属性：用户的邮件文件应仅由该用户读取，但邮件客户端软件能够将其更改为全局可读;</li>
+<li>进程继承用户的权利：如果受到<strong>木马</strong>版本的影响，Firefox 可以读取用户的私钥，即使它没有理由这样做。</li>
+</ul>
+</blockquote>
+<p>本质上，在传统的DAC模型下，有两个权限级别，root和user，并且没有简单的方法来强制执行最小权限模型。许多由 root 启动的进程后来会放弃其作为受限用户运行的权限，并且某些进程可能在监牢（chroot jail）中运行，但所有这些安全方法都是可自由定制的。</p>
+<h3 id="1-2解决方案"><a href="#1-2解决方案" class="headerlink" title="1.2解决方案"></a>1.2解决方案</h3><p>SELinux 更接近于遵循最小权限模型。默认情况下，在严格的“强制”模式设置下，所有操作都会被拒绝，然后编写一系列例外策略，仅向系统的每个元素（服务、程序或用户）提供运行所需的访问权限。如果服务、程序或用户随后尝试访问或修改其运行不需要的文件或资源，则会拒绝访问并记录操作。</p>
+<p>因为 SELinux 是在内核中实现的，所以不需要特别编写或修改单个应用程序以在 SELinux 下工作，当然，如果编写这些应用程序是为了监控 SELinux 返回的错误代码以达到之后可以正常的运行的目的，可参见下面。如果 SELinux 阻止了某个操作，则会将此作为应用程序的正常（或至少是常规）“拒绝访问”类型错误报告给底层应用程序。但是，许多应用程序不会测试系统调用的所有返回代码，并且可能不返回任何解释问题的消息，或者可能以误导性方式返回。</p>
+<p>但是请注意，假设的例子是为了提供可能更高的安全性，例如，将授权程序限制为允许读取用户的“~&#x2F;.ssh&#x2F;”目录的有限程序集，防止邮件传递代理篡改用户组权限或其他文件读取权限，或者被限制读取用户的主目录的web浏览器尚未在CentOS版本6之前的任何版本的SELinux策略中实现。CentOS6和7对如上所述限制用户程序的支持有限，但对用户程序的覆盖范围不及目标系统守护程序。如果管理员希望更改默认的无限制登录配置，他们可以查看以下有关<strong>基于角色的访问控制</strong>的部分。</p>
+<h2 id="2-SELinux模式"><a href="#2-SELinux模式" class="headerlink" title="2.SELinux模式"></a>2.SELinux模式</h2><p>SELinux有三种基本操作模式，其中“Enforing”(强制)模式被设置为默认项。但是，还有一个额外的限定符 <strong>targeted或</strong> 或mls** ，用于控制如何应用被许可的SELinux规则，<strong>targeted</strong>是较不严格的级别。</p>
+<ul>
+<li><strong>强制(enforcing)：</strong>默认模式，它将在系统上启用和实施 SELinux 安全策略，拒绝访问和日志记录操作；</li>
+<li><strong>宽容(permissive)：</strong>在宽容模式下，SELinux 已启用，但不强制执行安全策略，仅警告和记录操作。宽容模式对于解决 SELinux 问题很有用；</li>
+<li><strong>禁用(disabled)：</strong>SELinux 已关闭</li>
+</ul>
+<p>可以通过“管理”菜单上提供的 SELinux 管理 GUI 工具或从命令行运行“system-config-selinux”命令来查看和更改SELinux（SELinux Management GUI 工具是 <strong>policycoreutils-gui</strong> 软件包的一部分，默认情况下未安装）。</p>
+<p>喜欢命令行的用户可以使用“sestatus”命令来查看当前的 SELinux 状态：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># sestatus</span>
+SELinux status:                 enabled
+SELinuxfs mount:                /selinux
+Current mode:                   enforcing
+Mode from config file:          enforcing
+Policy version:                 <span class="token number">21</span>
+Policy from config file:        targeted<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>“setenforce”命令可用于动态切换强制（enforcing）模式和宽容(permissive)模式，但请注意，这些更改将会在重启后失效。</p>
+<p>如果需要永久生效，需要编辑&#x2F;etc&#x2F;SELINUX&#x2F;config中的“SELINUX&#x3D;”行，以选择“enforcing”、”permissive”或“disabled”。例如：’SELINUX&#x3D;permissive’.</p>
+<blockquote>
+<p> <strong>⚠  注意：</strong>当从<strong>disabled</strong>切换到<strong>permissive</strong>或<strong>enforcing</strong>模式时，强烈建议重新启动操作系统以重新标记文件系统。</p>
+</blockquote>
+<h2 id="3-SELinux策略"><a href="#3-SELinux策略" class="headerlink" title="3.SELinux策略"></a>3.SELinux策略</h2><p>如上所述，SELinux 遵循最小权限模型;默认情况下，所有操作都将被拒绝，然后编写一个策略，该策略仅为系统的每个元素提供运行所需的访问权限。这一描述最好地描述了<strong>严格的</strong>策略。但是，这样的策略很难编写，因为它适用于可能使用诸如Enterprise Linux等产品的广泛环境。最终结果是 SELinux可能会给系统管理员和最终用户带来难题，系统管理员可能只是禁用 SELinux，从而破坏内置保护，而不是解决这些问题。</p>
+<p>根据设计，SELinux 允许编写可互换的不同策略。CentOS 中的默认策略是<strong>目标（targeted）</strong>策略，它“针对”并限制选定的系统进程。在 CentOS 4 中，只有 15 个定义的目标存在（包括 httpd、named、dhcpd、mysqld）。后来，在CentOS 5 中，这个数字上升到 200 多个目标。</p>
+<p>所有其他系统进程和所有剩余的用户空间程序，以及任何内部应用程序，即系统上的其他应用程序，都在<strong>未受限制</strong>的域中运行，不受 SELinux 保护模型的保护。</p>
+<p>一个目标可能是针对安装的每个进程，默认情况下，启动时运行的进程应该在受限域中运行。<strong>目标</strong>策略旨在保护尽可能多的关键进程，而不会对最终用户体验产生负面影响，大多数用户应该完全不知道 SELinux 正在运行。</p>
+<h2 id="4-SELinux访问控制"><a href="#4-SELinux访问控制" class="headerlink" title="4.SELinux访问控制"></a>4.SELinux访问控制</h2><p>CentOS 上的SELinux<strong>目标（targeted）</strong> 策略提供了 4 种形式的访问控制：</p>
+<ul>
+<li><strong>类型强制 （TE）：</strong>类型强制是<strong>目标</strong>策略中最常使用的访问控制机制；</li>
+<li><strong>基于角色的访问控制 （RBAC）：</strong>基于 SELinux 用户（不一定与 Linux 用户相同），但不用于<strong>目标</strong>策略的默认配置；</li>
+<li><strong>多级安全性：</strong>不常用，通常隐藏在默认<strong>的目标</strong>策略中；</li>
+<li><strong>多类别安全性：</strong>多级安全性的扩展，在<strong>目标</strong>策略中用于通过 <strong>sVirt</strong> 实现虚拟机和容器的划分。</li>
+</ul>
+<p>所有进程和文件都有一个 SELinux 安全上下文。让我们看看 Apache 主页的 SELinux 安全上下文来了解这些操作：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token string">'/var/www/html/index.html'</span> <span class="token punctuation">&#123;</span><span class="token punctuation">&#123;</span><span class="token punctuation">&#123;</span>$ <span class="token function">ls</span> -Z /var/www/html/index.html -rw-r--r-- username username system_u:object_r:httpd_sys_content_t /var/www/html/index.html <span class="token punctuation">&#125;</span><span class="token punctuation">&#125;</span><span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<blockquote>
+<p> <strong>⚠  注意：</strong>-Z 开关将与大多数实用程序配合使用，以显示 SELinux 安全上下文（例如，“ls -Z”、“ps axZ” 等）</p>
+</blockquote>
+<p>除了标准文件权限和所有权，我们还可以看到 SELinux 安全上下文字段：system_u：object_r：httpd_sys_content_t。</p>
+<p>这是基于用户：角色：类型：mls。在上面的示例中，显示了 user：role：type 字段，并且隐藏了 mls。在默认<strong>的目标</strong>策略中，<strong>type</strong> 是用于实现类型强制（在本例中为 httpd_sys_content_t）的重要字段。</p>
+<p>现在来看一下 Apache Web 服务器进程“httpd”的 SELinux 安全上下文：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ <span class="token function">ps</span> axZ <span class="token operator">|</span> <span class="token function">grep</span> httpd
+system_u:system_r:httpd_t        <span class="token number">3234</span> ?        Ss     <span class="token number">0</span>:00 /usr/sbin/httpd<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+
+<p>这里，我们从类型字段看出Apache运行在htttpd_t类型域下。</p>
+<p>最后，让我们看看主目录中文件的SELinux安全上下文：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ <span class="token function">ls</span> -Z /home/username/myfile.txt
+-rw-r--r--  username username user_u:object_r:user_home_t      /home/username/myfile.txt<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+
+<p>我们看到的类型是user_home_t，这是用户主目录中文件的默认类型。</p>
+<p>只允许在类似类型之间进行访问，因此以httpd_t身份运行的 Apache 可以读取 httpd_sys_content_t 类型的”&#x2F;var&#x2F;www&#x2F;html&#x2F;index.html”。因为 Apache 在httpd_t 域中运行,并且没有 userid：username，所以它无法访问 “&#x2F;home&#x2F;username&#x2F;myfile.txt”即使这个文件是全局可读的，因为”&#x2F;<strong>home&#x2F;username&#x2F;myfile.txt</strong>“的SELinux 安全上下文不是httpd_t类型。如果 Apache 被利用，假设在本例中没有获得将 SELinux 重新标记到另一个上下文所需的<strong>根（root）</strong>帐户权限，它将无法启动任何不在httpd_t域中的进程（这可以防止权限升级）也无法访问不在httpd_t相关域中的任何文件。</p>
+<h3 id="4-1基于角色的访问控制（RBAC）"><a href="#4-1基于角色的访问控制（RBAC）" class="headerlink" title="4.1基于角色的访问控制（RBAC）"></a>4.1基于角色的访问控制（RBAC）</h3><p>尽管<strong>目标</strong>策略的默认配置是使用不受限制的登录，但管理员可以轻松地切换到<strong>基于角色的访问控制</strong>模型。此模型还切换到用户域的“严格”模式，以允许单独针对每个程序。要启用此功能，请使用 <strong>semanage-login</strong> 为您的用户添加登录映射。</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">semanage login -a -s <span class="token string">"staff_u"</span> -r <span class="token string">"s0-s0:c0.c1023"</span> <span class="token operator">&lt;</span>username<span class="token operator">></span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+
+
+<p><strong>semanage-login</strong> 命令将 Linux 用户名映射到名为 “staff_u” 的 SELinux 用户，MLS&#x2F;MCS 范围为 “s0-s0：c0.c1023”。在此之后，登录将导致 id -Z 返回 staff_u：staff_r：staff_t：<strong>s0-s0</strong>：<code>c0.c1023</code>，而不是 unconfined_u：unconfined_r：<code>unconfined_t：s0</code>。虽然<code>staff_r</code>不是用于管理的角色，但它是允许用户更改为其他角色的角色。当管理员想要执行系统管理任务时，他们应该使用 <strong>sudo</strong> 中的 -r 标志切换到 <code>sysadm_r</code> 角色，</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">sudo</span> -r sysadm_r -i<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>这可以通过在 &#x2F;etc&#x2F;sudoers.d&#x2F; 下添加一项配置来实现，以将用户映射到默认的管理员角色。</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">%wheel  <span class="token assign-left variable">ALL</span><span class="token operator">=</span><span class="token punctuation">(</span>ALL<span class="token punctuation">)</span>       <span class="token assign-left variable">TYPE</span><span class="token operator">=</span>sysadm_t   <span class="token assign-left variable">ROLE</span><span class="token operator">=</span>sysadm_r   ALL<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>尽管受限用户域的优势会随之丧失，但仍然可以以非受限用户身份登录或通过<strong>newrole</strong>切换到非受限角色。还可以通过创建一个仅与一组选定的角色关联的新 SELinux 用户来移除这样做的能力，</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">semanage user -a -R <span class="token string">"staff_r sysadm_r system_r -r "</span>s0-s0:c0.c1023" my_staff_u<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>然后在 semanage-login 命令中用 <code>staff_u</code> 替换 <code>my_staff_u</code>。现在尝试切换到<code>unconfined_r</code>角色将出现 <strong>AVC</strong> 和<strong>SELINUX_ERR</strong>消息。如果管理员希望完全移除以不受限制的用户身份登录的功能，则应再次使用semanage-login 命令，将<code>__default__</code>登录重新映射到更合适的 SELinux 用户。</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">semanage login -m -s <span class="token string">"user_u"</span> -r <span class="token string">"s0"</span> __default__<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>如果用户希望以非默认角色登录，则由登录程序提供此功能。SSH 允许使用替代 SELinux 角色登录，方法是将其指定为登录标识符的一部分（例如，作为unconfined_r登录的员工用户）。</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">ssh</span> <span class="token operator">&lt;</span>username<span class="token operator">></span>/unconfined_r@hostname.net<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>从最小权限的角度来看，基于角色的访问控制附带的严格模型并不完美;使用策略分析工具进行快速搜索，我们可以看到几个受限程序仍然可以读取用户的私有SSH密钥。</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">sesearch -ACS -t ssh_home_t -c <span class="token function">file</span> -p <span class="token builtin class-name">read</span>
+Found <span class="token number">132</span> semantic av rules:
+   allow snapperd_t file_type <span class="token builtin class-name">:</span> <span class="token function">file</span> <span class="token punctuation">&#123;</span> ioctl <span class="token builtin class-name">read</span> getattr lock <span class="token function">open</span> <span class="token punctuation">&#125;</span> <span class="token punctuation">;</span> 
+   allow oddjob_mkhomedir_t user_home_type <span class="token builtin class-name">:</span> <span class="token function">file</span> <span class="token punctuation">&#123;</span> ioctl <span class="token builtin class-name">read</span> <span class="token function">write</span> create getattr setattr lock append unlink <span class="token function">link</span> <span class="token function">rename</span> <span class="token function">open</span> <span class="token punctuation">&#125;</span> <span class="token punctuation">;</span> 
+   allow mplayer_t non_security_file_type <span class="token builtin class-name">:</span> <span class="token function">file</span> <span class="token punctuation">&#123;</span> ioctl <span class="token builtin class-name">read</span> getattr lock <span class="token function">open</span> <span class="token punctuation">&#125;</span> <span class="token punctuation">;</span> 
+   allow sendmail_t user_home_type <span class="token builtin class-name">:</span> <span class="token function">file</span> <span class="token punctuation">&#123;</span> ioctl <span class="token builtin class-name">read</span> getattr lock <span class="token function">open</span> <span class="token punctuation">&#125;</span> <span class="token punctuation">;</span> 
+   allow systemd_tmpfiles_t non_auth_file_type <span class="token builtin class-name">:</span> <span class="token function">file</span> <span class="token punctuation">&#123;</span> ioctl <span class="token builtin class-name">read</span> <span class="token function">write</span> create getattr setattr lock relabelfrom relabelto append unlink <span class="token function">link</span> <span class="token function">rename</span> <span class="token function">open</span> <span class="token punctuation">&#125;</span> <span class="token punctuation">;</span> 
+   allow login_pgm ssh_home_t <span class="token builtin class-name">:</span> <span class="token function">file</span> <span class="token punctuation">&#123;</span> ioctl <span class="token builtin class-name">read</span> getattr lock <span class="token function">open</span> <span class="token punctuation">&#125;</span> <span class="token punctuation">;</span> 
+   allow ssh_keygen_t ssh_home_t <span class="token builtin class-name">:</span> <span class="token function">file</span> <span class="token punctuation">&#123;</span> ioctl <span class="token builtin class-name">read</span> <span class="token function">write</span> create getattr setattr lock append unlink <span class="token function">link</span> <span class="token function">rename</span> <span class="token function">open</span> <span class="token punctuation">&#125;</span> <span class="token punctuation">;</span> 
+   allow colord_t user_home_type <span class="token builtin class-name">:</span> <span class="token function">file</span> <span class="token punctuation">&#123;</span> <span class="token builtin class-name">read</span> getattr <span class="token punctuation">&#125;</span> <span class="token punctuation">;</span> 
+   <span class="token punctuation">..</span>. snip <span class="token punctuation">..</span>.<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p><code>mplayer_t</code>可能不需要读取SSH私钥，但通过允许读取与<code>non_security_file_type</code>相关的内容类型，它可以暂时访问SSH私钥从而允许mplayer读取任何与安全无关的内容，以便用户可以从文件系统上的任何地方播放多媒体。这可能会在基本 SELinux 策略中进一步受到限制，但如前所述，这不是上游的主要关注点。</p>
+<p>除了严格的模型之外，基于角色的访问控制还提供了一种机制，用于限制用户在使用 <strong>sudo</strong> 切换到 root 时可以执行的操作范围。通常需要对具有特定角色（如 DBA 或审计员）的用户强制实施最小权限，目标策略包括多个用于此类目的的用户角色，并在其各自的章节中都有说明，如<strong>策略</strong>章节中所述。</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">seinfo -r
+
+Roles: <span class="token number">14</span>
+   auditadm_r
+   dbadm_r
+   guest_r
+   staff_r
+   user_r
+   logadm_r
+   object_r
+   secadm_r
+   sysadm_r
+   system_r
+   webadm_r
+   xguest_r
+   nx_server_r
+   unconfined_r<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>要将用户映射到其中的一个管理员角色，使用与以前相同的 semanage-user命令来创建与所需角色关联的新 SELinux 用户，然后 semanage-login将 Linux 登录名与 SELinux 用户名相关联。如果用户还应该能够从其用户域启动他们管理的系统守护程序（即，以dbadm_r身份启动mysql，以便通过shell进行调试），则<code>system_r</code>角色应包含在他们的关联角色列表中。</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">semanage user -a -R <span class="token string">"staff_r system_r auditadm_r"</span> -r <span class="token string">"s0-s0:c0.c1023"</span> auditor_u
+semanage login -a -s <span class="token string">"auditor_u"</span> -r <span class="token string">"s0-s0:c0.c1023"</span> <span class="token operator">&lt;</span>username<span class="token operator">></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+
+<h3 id="4-2多类别安全（MCS）"><a href="#4-2多类别安全（MCS）" class="headerlink" title="4.2多类别安全（MCS）"></a>4.2多类别安全（MCS）</h3><p>多类别安全性提供了一种将一组或一系列<strong>隔离区间</strong>与 SELinux 上下文相关联的方法。目标策略模型实现了与<code>mcs_constrained_type</code>关联的类型的划分。要了解其工作原理，需要知道如何检查安全上下文的 MLS 部分。这是 <code>user：role：type</code> 部分之后的部分，包括一个范围，该范围表示低安全级别和高安全级别。</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">system_u:system_r:httpd_t:s0           -        s0:c0.c5
+                          ▼                     ▼
+                  Low security level,    High security level, also
+                  associated with no     associated with compartments
+                  compartments.          c0, c1, c2, c3, c4 and c5.<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>上面值得注意的一点是，在“低“安全级别上缺少隔离区间，并且<code>两个安全级别</code>相同。第一点是目标策略中 MCS 模型的实现细节。当与<code>mcs_constrained_type</code>关联的进程计算访问向量时，仅比较高级别的 MCS 隔离区间。第二点是由于MLS没有被使用。</p>
+<p>上述安全上下文的隔离区间是一个类别范围，但也可以是一组用逗号分隔的<strong>类别</strong>。类别范围会导致上下文与该范围内的一组包含的类别相关联。要了解如何为具有一组类别的两个进程计算访问权限，需要查看 SELinux 安全级别的<strong>控制</strong>规则（仅当源类型的高安全级别<strong>主导</strong>目标类型的高安全级别时，才允许访问）。这些规则如下（仅说明虑类别，而非MLS安全级别）</p>
+<ul>
+<li>如果源上下文中的类别与目标上下文中的类别相同或其超集，则源将控制导目标。</li>
+<li>如果源上下文中的类别是目标上下文类别的子集，则源由目标控制。</li>
+<li>如果源和目标的上下文中的类别集相同，则相互支配。</li>
+</ul>
+<p>考虑到这一点，我们知道类别集为 c0.c5 的上下文将被授予对类别集为 c0，c3 的上下文的范文权限，但不能访问类别集为 <code>c0，c6 或</code> <code>c0.c1023</code> 的上下文。这一规则是 sVirt 生成一组随机类别的原因，因此在一个 virt 域将支配另一个域时不会出现重叠。Android项目也做了同样的事情，将应用程序放在隔离的域中。</p>
+<p>多类别安全性的一个示例是使用NGINX多个vhosts，这些vhost连接到同样作为httpd域运行的后端服务器（例如，PHP-FPM）。通常，由于类型强制规则，后端服务器的这些实例能够修改和管理彼此的域。如果它们与类别相关联，那么它们只能在一个后端服务器支配另一个时才能这样做。由于NGINX本身是一个HTTPD域，它应该主导所有后端服务器，所以如果我们有类别c0到c5可用于HTTPD域，我们希望将NGINX运行为system_u：system_r：httpd_t：s0-s0：c0.c5，以便它可以连接到上游服务器。每个后端服务器都将使用 c0-c5 中的单个类型和诸如 <code>system_u：system_r：httpd_t：s0-s0：c1</code>之类的上下文运行。</p>
+<p>要做到这一点，有几个先决条件。首先，httpd_t必须与“mcs_constrated_type”属性相关联，该属性当前仅与CentOS 7上的以下类型相关联：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">seinfo -xamcs_constrained_type
+   mcs_constrained_type
+      netlabel_peer_t
+      openshift_t
+      openshift_app_t
+      sandbox_min_t
+      sandbox_x_t
+      sandbox_web_t
+      sandbox_net_t
+      svirt_t
+      svirt_tcg_t
+      svirt_lxc_net_t
+      svirt_qemu_net_t
+      svirt_kvm_net_t<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>To add to this list of types it is necessary to create a local policy module that associates the desired type with the attribute. This is done using the <code>typeattribute</code> statement, and can be done like so:</p>
+<p>要添加到此类型列表，需要创建一个本地策略模块，将所需类型与属性相关联。这是使用“typeattribute”语句完成的，可以这样做：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">policy_module<span class="token punctuation">(</span>httpd_mcs, <span class="token number">1.0</span><span class="token punctuation">)</span>
+gen_require<span class="token punctuation">(</span>`
+    <span class="token builtin class-name">type</span> httpd_t<span class="token punctuation">;</span>
+    attribute mcs_constrained_type<span class="token punctuation">;</span>
+'<span class="token punctuation">)</span>
+
+typeattribute httpd_t mcs_constrained_type<span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>请参阅<strong>自定义本地策略</strong>章节以获取有关构建策略模块的说明。</p>
+<p>一旦类型与“mcs_constrated_type”关联，每个后端服务器都必须重新标记其内容，以便在其文件上下文规范中包含相应的类别。这可以通过将文件类型添加到“&#x2F;etc&#x2F;selinux&#x2F;targeted&#x2F;contexts&#x2F;customizable_types”来实现，但这可能会在策略升级时中断。另一种方法是使用<strong>semanage fcontext</strong>添加包含类别的新文件上下文规范：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">semanage fcontext -a -t httpd_sys_content_t -r <span class="token string">"s0-s0:c1"</span> <span class="token string">"/srv/backend1(/.*)?"</span>
+semanage fcontext -a -t httpd_sys_content_t -r <span class="token string">"s0-s0:c2"</span> <span class="token string">"/srv/backend2(/.*)?"</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+
+<p>下一步是确保使用正确的安全上下文启动后端服务器。在CentOS 7的systemd上，这可以通过单元文件中的<strong>SELinuxContext&#x3D;<strong>指令实现，在之前的版本中，可以使用</strong>runcon</strong>命令实现。</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">runcon <span class="token string">"system_u:system_r:httpd_t:s0-s0:c1"</span> <span class="token string">"/usr/local/bin/backend-server"</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>或在systemd单元中：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token assign-left variable">SELinuxContext</span><span class="token operator">=</span>system_u:system_r:httpd_t:s0-s0:c1<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>现在，每个后端服务器都应该彼此隔离，同时允许NGINX访问来管理和向它们发送消息。</p>
+<h2 id="5-SELinux故障排除"><a href="#5-SELinux故障排除" class="headerlink" title="5.SELinux故障排除"></a>5.SELinux故障排除</h2><p>迟早，您可能会遇到 SELinux 拒绝访问某些内容的情况，您需要对问题进行故障排除。SELinux 可能拒绝访问文件、进程或资源的原因有很多：</p>
+<ul>
+<li>标记错误的文件。</li>
+<li>在错误的 SELinux 安全上下文下运行的进程。</li>
+<li>策略中的错误。应用程序需要访问一个未在策略中的文件时，会生成错误。</li>
+<li>入侵尝试。</li>
+</ul>
+<p>我们可以处理前三种情况，而在第四种情况下发出警告和通知。</p>
+<p>要解决任何问题，日志文件是关键，SELinux 也不例外。默认情况下，SELinux 日志消息通过 Linux 审计系统的 ‘auditd’ 写入 <strong>&#x2F;var&#x2F;log&#x2F;audit&#x2F;audit.log</strong>。如果“auditd”守护程序未运行，则消息将写入“&#x2F;var&#x2F;log&#x2F;messages”。SELinux 日志消息中用“AVC”关键字标记，这样就可以使用类似<strong>grep</strong>的命令从其他消息中过滤出来。</p>
+<p>从CentOS 5开始，SELinux故障排除工具可用于帮助分析日志文件，将其转换为更易于阅读的格式。该工具包括一个GUI工具，用于以人类可读的格式显示消息和可能的解决方案，一个提醒新问题的桌面通知图标，以及一个守护进程“setroubleshoot”，用于检查新的SELinux AVC警报并提供通知图标。也可以配置电子邮件通知，例如那些不运行X Server的电子邮件通知。SELinux故障排除工具由<strong>settroubleshoot</strong>包提供。该工具可以从X Window GUI管理器系统菜单或从命令行启动：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">sealert -b <span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>不运行X服务器（即没有图形界面）的用户可以从命令行生成可读报告：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">sealert -a /var/log/audit/audit.log <span class="token operator">></span> /path/to/mylogfile.txt <span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<h3 id="5-1SELinux和审计"><a href="#5-1SELinux和审计" class="headerlink" title="5.1SELinux和审计"></a>5.1SELinux和审计</h3><p>如上所述，SELinux与audited交互以生成有助于系统审计和故障排除的消息。SELinux审计日志中最常见的消息类型是AVC。它们描述了SELinux安全服务拒绝（或允许）的操作。尽管AVC消息是最常见的，但它们并不是SELinux生成并发送到审计子系统的唯一类型的消息。</p>
+<table>
+<thead>
+<tr>
+<th><strong>审计记录类型</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>AVC</strong></td>
+<td>每当授予或拒绝对操作的访问权限时，内核生成的消息。使用<strong>auditlallow</strong>策略规则授予访问权限时，可以生成审核消息，当使用<strong>dontaudit</strong>规则拒绝访问时，也可以记录拒绝访问消息。</td>
+</tr>
+<tr>
+<td><strong>USER_AVC</strong></td>
+<td>与 <strong>AVC</strong> 消息类似，但由使用 SELinux 安全服务的用户空间程序生成。这些程序被称为用户空间对象管理器，包括D-Bus和systemd。</td>
+</tr>
+<tr>
+<td><strong>SELINUX_ERR</strong></td>
+<td>SELinux 安全服务器在操作失败且 AVC 未充分描述问题的情况下发出的错误。这通常发生在 systemd 尝试转换到单元文件中具有 <strong>[NoNewPrivileges]&#x3D;True</strong> 的服务，但在 systemd 与其自己的类型之间没有类型边界时。如果进程希望 <strong>setcon（3）</strong> 来改变其某个线程的上下文，也会出现此特定问题。当程序尝试设置无效的上下文时，也会发生这种情况，例如，PAM尝试使用 <strong>setcon（3）</strong> 来更改登录用户域，而错误配置的 SELinux 登录可能会导致从 SELinux 用户空间返回错误的上下文。</td>
+</tr>
+<tr>
+<td><strong>USER_SELINUX_ERR</strong></td>
+<td>与<strong>SELINUX_ERR</strong>类似，当用户空间对象管理器遇到与 SELinux 相关的错误时，会记录此类型的消息。</td>
+</tr>
+<tr>
+<td><strong>MAC_POLICY_LOAD</strong>, <strong>USER_MAC_POLICY_LOAD</strong></td>
+<td>加载 SELinux 策略时记录的消息。USER变量也由用户空间对象管理器发出，以通知它们加载策略。</td>
+</tr>
+<tr>
+<td><strong>MAC_CONFIG_CHANGE</strong></td>
+<td>当管理员使用 <strong>setebol</strong> 更改 SELinux 布尔值时记录的消息。</td>
+</tr>
+<tr>
+<td><strong>MAC_STATUS</strong></td>
+<td>当 SELinux 的状态从强制更改为宽容时，反之亦然。</td>
+</tr>
+<tr>
+<td><strong>USER_ROLE_CHANGE</strong></td>
+<td>当用户通过 <strong>newrole（1）</strong> 命令、登录时或使用 <strong>sudo</strong> 更改角色时记录的消息。仅适用于基于角色的访问控制。</td>
+</tr>
+<tr>
+<td><strong>USER_LABEL_EXPORT</strong></td>
+<td>当用户使用 CUPS 导出标记的对象时都会记录。</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>⚠  注意：IPSec&#x2F;NetLabel 中使用的其他几个与 SELinux 相关的审计事件目前未在此处介绍。这些事件是<strong>MAC_UNLBL_ALLOW</strong>、<strong>MAC_UNLBL_STCADD</strong>、<strong>MAC_UNLBL_STCDEL</strong>、<strong>MAC_MAP_ADD</strong>、<strong>MAC_MAP_DEL</strong>、<strong>MAC_IPSEC_EVENT</strong>、<strong>MAC_CIPSOV4_ADD</strong> <strong>MAC_CIPSOV4_DEL</strong>。</p>
+</blockquote>
+<p>虽然 <code>sealert</code> 在解释 AVC 记录时略有帮助，但审计工具可以为管理员提供更强大的审计日志视图。<code>Ausearch</code> 可用于搜索审计日志中的特定事件，并有多种可用于处理审计记录的选项。因此，可以使用 <code>ausearch</code> 检查 SELinux 问题的任何潜在原因，而不是使用 <code>sealert</code> 解释消息。在解决问题时，我们通常要查看的类型是 <strong>AVC</strong>、<strong>USER_AVC</strong>、<strong>SELINUX_ERR</strong> 和 <strong>USER_SELINUX_ERR</strong>。<code>Ausearch</code> 提供了一个 -<strong>M</strong> 选项，该选项采用以逗号分隔的审计记录类型列表进行筛选，以及一个 <strong>-i</strong> 标志，该标志根据系统将数值解释为字符串。这包括将 UID&#x2F;GID 转换为用户名和组名，以及将系统调用和体系结构对映射到系统调用名称：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">ausearch -m AVC,USER_AVC,SELINUX_ERR,USER_SELINUX_ERR -i<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>搜索记录并创建检查点，以确保已查看的审计记录不会在下次搜索时再次显示：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">ausearch --checkpoint<span class="token operator">=</span><span class="token string">"./audit-checkpoint"</span> -m AVC,USER_AVC,SELINUX_ERR,USER_SELINUX_ERR -i<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>根据进程<strong>comm名称</strong>搜索记录，这是内核中任务的可执行文件名称：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">ausearch -c <span class="token string">"httpd"</span> -m AVC,USER_AVC,SELINUX_ERR,USER_SELINUX_ERR -i<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>查找管理员（或程序）变更 SELinux 执行状态的事件：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">ausearch -m MAC_STATUS -i<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>由于可以防止使用 <strong>dontaudit</strong> 记录审计记录，因此可能看不到所有 <strong>AVC</strong> 或 <strong>USER_AVC</strong> 消息。为了防止 dontaudit 规则隐藏这些消息，管理员可以运行 <code>semodule -DB</code> 来重建其 SELinux 策略，而不需要 dontaudit 规则。重现问题后，应该有更多的消息可用，以及一些与问题无关的记录（<strong>noatsecure</strong>、<strong>rlimitinh</strong> 和 <strong>siginh</strong> 是执行程序时始终检查的权限，通常可以忽略）。检查完不受 dontaudit 规则约束的记录后，运行 <code>semodule -B</code> 重新构建策略，再次包含 dontaudit 角色。</p>
+<p>与此相反的是使用 <strong>auditallow</strong> 记录成功操作的能力。可以通过按成功操作筛选来搜索这些日志（尽管这也会在宽容模式下返回成功事件）：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">ausearch -m AVC,USER_AVC -i --success <span class="token function">yes</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<h3 id="5-2重新标记文件"><a href="#5-2重新标记文件" class="headerlink" title="5.2重新标记文件"></a>5.2重新标记文件</h3><p>“chcon”命令可用于更改文件或文件&#x2F;目录的SELinux安全上下文，其方式与“chown”或“chmod”用于更改文件的所有权或标准文件权限的方式类似。</p>
+<p>让我们看一些例子。</p>
+<p>以 Apache 为例，假设您要更改 DocumentRoot从默认 &#x2F;<strong>var&#x2F;www&#x2F;html&#x2F;</strong> 目录以外的位置提供网页。假设我们在 <strong>&#x2F;html&#x2F;</strong> 处创建一个目录（或者可能是一个挂载点），并在那里创建一个 <strong>index.html</strong> 文件：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># mkdir /html</span>
+<span class="token comment"># touch /html/index.html</span>
+<span class="token comment"># ls -Z /html/index.html</span>
+-rw-r--r--  root root user_u:object_r:default_t        /html/index.html
+<span class="token comment"># ls -Z | grep html</span>
+drwxr-xr-x  root root user_u:object_r:default_t        html <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>我们看到目录 <strong>&#x2F;html</strong>&#x2F; 和文件 <strong>&#x2F;html&#x2F;index.html</strong> 都具有安全上下文类型：default_t。如果我们启动 Web 浏览器并尝试查看页面，SELinux 将拒绝访问并记录错误，因为目录和文件具有错误的安全上下文。我们需要为 Apache 设置正确的安全上下文类型：httpd_sys_content_t。</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># chcon -v --type=httpd_sys_content_t /html</span>
+context of /html changed to user_u:object_r:httpd_sys_content_t
+<span class="token comment"># chcon -v --type=httpd_sys_content_t /html/index.html</span>
+context of /html/index.html changed to user_u:object_r:httpd_sys_content_t
+<span class="token comment"># ls -Z /html/index.html</span>
+-rw-r--r--  root root user_u:object_r:httpd_sys_content_t    /html/index.html
+<span class="token comment"># ls -Z | grep html</span>
+drwxr-xr-x  root root user_u:object_r:httpd_sys_content_t    html <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>同样，我们可以使用 -R 递归开关一次性设置两者：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># chcon -Rv --type=httpd_sys_content_t /html </span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>以这种方式修改安全上下文将在系统重新启动之间持续存在，但仅在重新标记文件系统的修改部分之前。这是一个并不少见的操作，测试后的正确解决方案是编写本地自定义规则（所谓的策略模块）并将其合并到基本的本地规则中。这将是上述 200+ 规则之上的附加规则。为了使安全上下文更改永久化，即使通过完整的文件系统重新标记，我们也可以使用 SELinux 管理工具或命令行中的“semanage”命令：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">semanage fcontext -a -t httpd_sys_content_t <span class="token string">"/html(/.*)?"</span> <span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>为 &#x2F;html 下的所有内容添加 httpd_sys_content_t 类型的文件上下文。</p>
+<h3 id="5-3恢复默认安全上下文"><a href="#5-3恢复默认安全上下文" class="headerlink" title="5.3恢复默认安全上下文"></a>5.3恢复默认安全上下文</h3><p>“restorecon”命令可用于恢复文件默认的 SELinux 安全上下文。</p>
+<p>同样，让我们以 Apache 为例。假设用户在其主目录中编辑 index.html 的副本，并将该文件移动到 DocumentRoot &#x2F;var&#x2F;www&#x2F;html。虽然复制 （cp） 命令通常会适用目标目录或文件的安全上下文，但移动 （mv） 将维持源的安全上下文。我们可以使用“chcon”命令来更改相关文件的安全上下文，但由于文件现在位于默认的Apache DocumentRoot（&#x2F;var&#x2F;www&#x2F;html）中，我们可以恢复该目录或文件的默认安全上下文。要仅恢复 index.html 文件，我们将使用：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># restorecon -v /var/www/html/index.html </span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>或者递归地恢复整个目录的默认安全上下文：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># restorecon -Rv /var/www/html </span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>此外，如果我们只是想检查 &#x2F;var&#x2F;www&#x2F;html 目录的安全上下文，以查看是否有需要恢复其安全上下文的任何文件，我们可以将 restorecon 与 -n 开关一起使用，以防止任何重新标记发生：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># restorecon -Rv -n /var/www/html </span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>在某些情况下，也可能是用户移动了 &#x2F;<code>etc/selinux/targeted/contexts/customizable_types</code> 中列出的类型的文件。这些类型被 <code>restorecon</code> 视为特殊类型，因为除非传递额外的 <code>-F</code> 标志，否则 <code>restorecon</code> 通常不会重新标记它们。这是因为这些类型要么与类别相关联（如多<strong>类别</strong>安全性中所述），要么是允许用户自定义的用户内容类型。若要重新标记与之关联的可自定义类型的内容，请如上所述运行 <code>restorecon</code>，并使用特定的标志：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># restorecon -RvF /var/www/html </span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<h3 id="5-4重新标记完整的文件系统"><a href="#5-4重新标记完整的文件系统" class="headerlink" title="5.4重新标记完整的文件系统"></a>5.4重新标记完整的文件系统</h3><p>有时需要重新标记整个文件系统，尽管只有在禁用 SELinux 后再启用 SELinux 或将 SELinux 策略从默认<strong>目标</strong>策略更改为<strong>严格</strong>时，才需要这样做。要在重新启动时自动重新标记整个文件系统，请执行以下操作：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># touch /.autorelabel</span>
+<span class="token comment"># reboot </span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+
+<p>有时，如果系统已升级到 CentOS-5.2 并禁用 SELinux，然后启用 SELinux时，完整的文件系统重新标记将失败。如果上述过程没有正确执行完整的文件系统重新标记，请尝试先执行“genhomedircon”命令：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># genhomedircon</span>
+<span class="token comment"># touch /.autorelabel</span>
+<span class="token comment"># reboot </span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="5-5允许访问端口"><a href="#5-5允许访问端口" class="headerlink" title="5.5允许访问端口"></a>5.5允许访问端口</h3><p>我们可能希望允许像 Apache 这样的服务能够绑定和侦听非标准端口上的传入连接。默认情况下，SELinux 策略只允许服务访问与这些服务关联的已识别端口。如果我们想允许 Apache 侦听 tcp 端口 81，我们可以使用 ‘semanage’ 命令来添加一个规则：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># semanage port -a -t http_port_t -p tcp 81 </span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>SELinux 允许服务访问的端口完整列表可以通过以下方式获得：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># semanage port -l </span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<h3 id="5-6在宽容模式下收集审计日志"><a href="#5-6在宽容模式下收集审计日志" class="headerlink" title="5.6在宽容模式下收集审计日志"></a>5.6在宽容模式下收集审计日志</h3><p>当程序被 SELinux 反复拒绝操作时，有时在宽容模式下继续调试会更容易。通常的操作是 <code>setforce0</code>，但是这会将系统上的所有域置于宽容模式，而不仅仅是遇到问题的进程的域。为了避免这种情况，SELinux 支持宽容类型的概念，允许管理员仅将单个域置于宽容模式，而不是整个系统。</p>
+<p>若要基于审计日志条目执行此操作，请查看 <strong>scontext</strong> 字段上下文中的类型：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token assign-left variable">type</span><span class="token operator">=</span>AVC <span class="token assign-left variable">msg</span><span class="token operator">=</span>audit<span class="token punctuation">(</span><span class="token number">1218128130.653</span>:334<span class="token punctuation">)</span>: avc:  denied  <span class="token punctuation">&#123;</span> connectto <span class="token punctuation">&#125;</span> <span class="token keyword">for</span>  <span class="token assign-left variable">pid</span><span class="token operator">=</span><span class="token number">9111</span> <span class="token assign-left variable">comm</span><span class="token operator">=</span><span class="token string">"smtpd"</span> <span class="token assign-left variable">path</span><span class="token operator">=</span><span class="token string">"/var/spool/postfix/postgrey/socket"</span>
+<span class="token assign-left variable">scontext</span><span class="token operator">=</span>system_u:system_r:postfix_smtpd_t:s0 <span class="token assign-left variable">tcontext</span><span class="token operator">=</span>system_u:system_r:initrc_t:s0 <span class="token assign-left variable">tclass</span><span class="token operator">=</span>unix_stream_socket<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+
+<p>这是：<code>postfix_smtpd_t</code>。要临时授予对此域所需的任何操作的访问权限，我们可以使用 semanage 添加新的宽容类型：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">semanage permissive -a postfix_smtpd_t<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>现在，我们可以查看审计日志，以了解需要允许<code>postfix_smtpd_t</code>执行哪些操作才能成功运行。完成后，我们可以将该类型重新置于强制模式：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">semanage permissive -d postfix_smtpd_t<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>这种方法不受 <code>setenforce 0</code> 的限制，并允许系统上的所有其他服务继续受益于 SELinux 的访问控制。</p>
+<h3 id="5-7运用分析工具"><a href="#5-7运用分析工具" class="headerlink" title="5.7运用分析工具"></a>5.7运用分析工具</h3><p>很多时候，当遇到 SELinux 拒绝操作时，实际上策略中是允许被拒绝的操作的，但由于文件未正确标记或进程未转换到正确的域而被拒绝。像这样的问题最好报告给策略作者和维护者，但使用<strong>setools控制台</strong>软件包提供的分析工具并非不可能解决。</p>
+<p>对于审计日志中的 AVC 记录，我们可以使用 <strong>sesearch</strong> 来识别允许请求访问目标的任何类型强制规则，以及通过布尔值切换以启用访问的任何规则。AVC 记录消息的重要部分是 <strong>scontext、tcontext</strong>、<strong>tclass</strong> 字段以及拒绝：<code>&lt;permission&gt;</code>消息中请求的权限。</p>
+<p>使用 <code>scontext</code>&#x3D;antivirus_t、<code>tcontext=antivirus_t</code>、<code>tclass=process</code> 的AVC拒绝记录示例，以及可能由于反病毒程序希望执行JIT编译而导致的 <code>&#123; denied： execmem </code>} 消息，我们可以识别依赖于布尔值的任何类型强制规则，这些布尔值可能瑜允许请求的访问：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">sesearch -AC -s antivirus_t -t antivirus_t -c process -p execmem
+Found <span class="token number">2</span> semantic av rules:
+DT allow antivirus_t antivirus_t <span class="token builtin class-name">:</span> process execmem <span class="token punctuation">;</span> <span class="token punctuation">[</span> antivirus_use_jit <span class="token punctuation">]</span>
+DT allow antivirus_t antivirus_t <span class="token builtin class-name">:</span> process execmem <span class="token punctuation">;</span> <span class="token punctuation">[</span> antivirus_use_jit <span class="token punctuation">]</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+
+<blockquote>
+<p><strong>⚠  注意：</strong>此处使用的选项记录在 <code>sesearch（1）</code> 手册中。<code>-s</code> 和 -t 指定源和目标类型，-<code>c</code> 指定 SELinux 对象类， -p 可以多次指定以搜索具有这些权限的规则，而 -A 搜索允许规则，&#96;&#96; &#96;&#96;&#96;-C&#96;将其扩展以使搜索条件允许规则。</p>
+</blockquote>
+<p>这很简单。方括号中的标识符是允许此访问的布尔值的名称，规则前缀的 <strong>DT</strong> 表示它当前已禁用。我们可以使用 <code>setsebool -P antivirus_use_jit=1</code> 来启用此功能，但我们也可能希望首先检查这个布尔值到底允许什么，而相同的 <code>sesearch</code> 实用程序让我们这样做：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">sesearch -AC -b antivirus_use_jit
+Found <span class="token number">2</span> semantic av rules:
+DT allow antivirus_t antivirus_t <span class="token builtin class-name">:</span> process execmem <span class="token punctuation">;</span> <span class="token punctuation">[</span> antivirus_use_jit <span class="token punctuation">]</span>
+DT allow antivirus_t antivirus_t <span class="token builtin class-name">:</span> process execmem <span class="token punctuation">;</span> <span class="token punctuation">[</span> antivirus_use_jit <span class="token punctuation">]</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>在这种情况下，<code>antivirus_use_jit</code>布尔值只允许我们想要的，但将来我们可以像这样使用 <code>sesearch</code> 来区分允许相同访问的 2 个布尔值，其中一个可能还允许其他不需要的操作。这方面的一个例子是，我们有标记为<code>httpd_sys_content_t</code>的HTTPD内容，希望写入其中。对此的建议可能是启用<code>布尔值httpd_unified</code>，因此我们可以看看这对我们有什么好处：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">sesearch -AC -b httpd_unified -c <span class="token function">file</span> -p <span class="token function">write</span>
+Found <span class="token number">5</span> semantic av rules:
+DT allow httpd_sys_script_t httpdcontent <span class="token builtin class-name">:</span> <span class="token function">file</span> <span class="token punctuation">&#123;</span> ioctl <span class="token builtin class-name">read</span> <span class="token function">write</span> create getattr setattr lock append unlink <span class="token function">link</span> <span class="token function">rename</span> <span class="token function">open</span> <span class="token punctuation">&#125;</span> <span class="token punctuation">;</span> <span class="token punctuation">[</span> httpd_enable_cgi httpd_unified <span class="token operator">&amp;&amp;</span> <span class="token punctuation">]</span>
+DT allow httpd_user_script_t httpd_user_content_t <span class="token builtin class-name">:</span> <span class="token function">file</span> <span class="token punctuation">&#123;</span> ioctl <span class="token builtin class-name">read</span> <span class="token function">write</span> create getattr setattr lock append unlink <span class="token function">link</span> <span class="token function">rename</span> <span class="token function">open</span> <span class="token punctuation">&#125;</span> <span class="token punctuation">;</span> <span class="token punctuation">[</span> httpd_enable_cgi httpd_unified <span class="token operator">&amp;&amp;</span> <span class="token punctuation">]</span>
+DT allow httpd_t httpd_sys_rw_content_t <span class="token builtin class-name">:</span> <span class="token function">file</span> <span class="token punctuation">&#123;</span> ioctl <span class="token builtin class-name">read</span> <span class="token function">write</span> create getattr setattr lock append unlink <span class="token function">link</span> <span class="token function">rename</span> <span class="token function">open</span> <span class="token punctuation">&#125;</span> <span class="token punctuation">;</span> <span class="token punctuation">[</span> httpd_enable_cgi httpd_unified <span class="token operator">&amp;&amp;</span> httpd_builtin_scripting <span class="token operator">&amp;&amp;</span> <span class="token punctuation">]</span>
+DT allow httpd_user_script_t httpd_user_ra_content_t <span class="token builtin class-name">:</span> <span class="token function">file</span> <span class="token punctuation">&#123;</span> ioctl <span class="token builtin class-name">read</span> <span class="token function">write</span> create getattr setattr lock append unlink <span class="token function">link</span> <span class="token function">rename</span> <span class="token function">open</span> <span class="token punctuation">&#125;</span> <span class="token punctuation">;</span> <span class="token punctuation">[</span> httpd_enable_cgi httpd_unified <span class="token operator">&amp;&amp;</span> <span class="token punctuation">]</span>
+DT allow httpd_t httpdcontent <span class="token builtin class-name">:</span> <span class="token function">file</span> <span class="token punctuation">&#123;</span> ioctl <span class="token builtin class-name">read</span> <span class="token function">write</span> create getattr setattr lock append unlink <span class="token function">link</span> <span class="token function">rename</span> <span class="token function">open</span> <span class="token punctuation">&#125;</span> <span class="token punctuation">;</span> <span class="token punctuation">[</span> httpd_enable_cgi httpd_unified <span class="token operator">&amp;&amp;</span> httpd_builtin_scripting <span class="token operator">&amp;&amp;</span> <span class="token punctuation">]</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>与此布尔值相关的规则只有少数与写入文件相关，因此很容易分析它允许的内容。上述规则告诉我们，虽然它允许将 AVC 记录所针对的文件写入此文件，但它也允许 r&#x2F;w 访问以前仅追加和只读的内容。我们可以在上面看到，根据名称，有一种<code>httpd_sys_rw_content_t</code>类型可能会解决问题。但是，我们也可以自行确定允许httpd_t写入的文件类型。请注意，可能有很多类型允许 httpd 通过属性或禁用布尔值暂时写入，因此我们使用 <strong>-R</strong> 标志，该标志指示我们提供的符号名称是正则表达式，并按以 <code>httpd</code> 开头的类型过滤<strong>目标</strong>类型。</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">sesearch -ACR -s httpd_t -t <span class="token string">"httpd.*"</span> -c <span class="token function">file</span> -p <span class="token function">write</span>
+DT allow httpd_t httpd_sys_rw_content_t <span class="token builtin class-name">:</span> <span class="token function">file</span> <span class="token punctuation">&#123;</span> ioctl <span class="token builtin class-name">read</span> <span class="token function">write</span> create getattr setattr lock append unlink <span class="token function">link</span> <span class="token function">rename</span> <span class="token function">open</span> <span class="token punctuation">&#125;</span> <span class="token punctuation">;</span> <span class="token punctuation">[</span> httpd_enable_cgi httpd_unified <span class="token operator">&amp;&amp;</span> httpd_builtin_scripting <span class="token operator">&amp;&amp;</span> <span class="token punctuation">]</span>
+ET allow httpd_t httpd_sys_rw_content_t <span class="token builtin class-name">:</span> <span class="token function">file</span> <span class="token punctuation">&#123;</span> ioctl <span class="token builtin class-name">read</span> <span class="token function">write</span> create getattr setattr lock append unlink <span class="token function">link</span> <span class="token function">rename</span> <span class="token function">open</span> <span class="token punctuation">&#125;</span> <span class="token punctuation">;</span> <span class="token punctuation">[</span> httpd_builtin_scripting <span class="token punctuation">]</span>
+DT allow httpd_t httpd_sys_rw_content_t <span class="token builtin class-name">:</span> lnk_file <span class="token punctuation">&#123;</span> ioctl <span class="token builtin class-name">read</span> <span class="token function">write</span> create getattr setattr lock append unlink <span class="token function">link</span> <span class="token function">rename</span> <span class="token punctuation">&#125;</span> <span class="token punctuation">;</span> <span class="token punctuation">[</span> httpd_enable_cgi httpd_unified <span class="token operator">&amp;&amp;</span> httpd_builtin_scripting <span class="token operator">&amp;&amp;</span> <span class="token punctuation">]</span>
+ET allow httpd_t httpd_sys_rw_content_t <span class="token builtin class-name">:</span> lnk_file <span class="token punctuation">&#123;</span> ioctl <span class="token builtin class-name">read</span> <span class="token function">write</span> create getattr setattr lock append unlink <span class="token function">link</span> <span class="token function">rename</span> <span class="token punctuation">&#125;</span> <span class="token punctuation">;</span> <span class="token punctuation">[</span> httpd_builtin_scripting <span class="token punctuation">]</span>
+ET allow httpd_t httpd_sys_rw_content_t <span class="token builtin class-name">:</span> sock_file <span class="token punctuation">&#123;</span> <span class="token builtin class-name">read</span> <span class="token function">write</span> getattr append <span class="token function">open</span> <span class="token punctuation">&#125;</span> <span class="token punctuation">;</span> <span class="token punctuation">[</span> httpd_builtin_scripting <span class="token punctuation">]</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>其中一些规则已禁用，但其中 3 个规则默认处于启用状态。因此，基于此，我们可以得出结论，HTTPD域读写的内容类型应该是<code>httpd_sys_rw_content_t</code>。利用这些知识，我们可以遵循相同的步骤来确定允许哪些域访问其他目标类型，以帮助识别使用错误上下文中运行的程序。</p>
+<h2 id="6-自定义SELinux策略"><a href="#6-自定义SELinux策略" class="headerlink" title="6.自定义SELinux策略"></a>6.自定义SELinux策略</h2><p>通过为可选功能设置布尔值，可以在不修改和重新编译策略源的情况下对 SELinux 策略进行细微调整。这些功能特性包括允许用户在 Samba 下共享其主目录，或允许 Apache 从用户主目录提供文件，否则 SELinux 策略会拒绝这些文件。</p>
+<p>有一个单独的 <a target="_blank" rel="noopener" href="https://wiki.centos.org/TipsAndTricks/SelinuxBooleans">Wiki 页面</a>处理布尔值。</p>
+<h2 id="7-适用Audit2allow创建自定义SELinux策略模块"><a href="#7-适用Audit2allow创建自定义SELinux策略模块" class="headerlink" title="7.适用Audit2allow创建自定义SELinux策略模块"></a>7.适用Audit2allow创建自定义SELinux策略模块</h2><p>有时，上述方法都不能处理特定的情况，我们需要通过创建自定义策略模块来扩展 SELinux 策略以允许一组特定的条件。例如，考虑 smtp 邮件服务器的 <a target="_blank" rel="noopener" href="https://wiki.centos.org/HowTos/postgrey">postgrey</a> 服务附加组件。我们的 smtp 服务器需要通过 Unix 套接字与 postgrey 通信，这是 smtp 服务器的默认 SELinux 策略不允许的。因此，该服务被 SELinux 阻止。这是一个无法通过更改或还原文件类型安全上下文来解决的问题，也不是我们可以切换为允许的布尔值的问题。我们可以通过布尔值禁用 smtp 服务器的 SELinux 保护，这比完全禁用 SELinux 要好，但这仍非理想的解决方案。</p>
+<p>如果我们将 SELinux 切换到宽宽容模式并运行我们的邮件服务器一段时间，我们可以在允许访问的情况下记录 SELinux 问题（如<a target="_blank" rel="noopener" href="https://wiki.centos.org/HowTos/SELinux#gathering-audit-logs-in-permissive">在宽松模式下收集审核日志</a>中所述）。检查审计日志，我们看到以下 SELinux AVC 消息：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token assign-left variable">type</span><span class="token operator">=</span>AVC <span class="token assign-left variable">msg</span><span class="token operator">=</span>audit<span class="token punctuation">(</span><span class="token number">1218128130.653</span>:334<span class="token punctuation">)</span>: avc:  denied  <span class="token punctuation">&#123;</span> connectto <span class="token punctuation">&#125;</span> <span class="token keyword">for</span>  <span class="token assign-left variable">pid</span><span class="token operator">=</span><span class="token number">9111</span> <span class="token assign-left variable">comm</span><span class="token operator">=</span><span class="token string">"smtpd"</span> <span class="token assign-left variable">path</span><span class="token operator">=</span><span class="token string">"/var/spool/postfix/postgrey/socket"</span>
+<span class="token assign-left variable">scontext</span><span class="token operator">=</span>system_u:system_r:postfix_smtpd_t:s0 <span class="token assign-left variable">tcontext</span><span class="token operator">=</span>system_u:system_r:initrc_t:s0 <span class="token assign-left variable">tclass</span><span class="token operator">=</span>unix_stream_socket
+<span class="token assign-left variable">type</span><span class="token operator">=</span>AVC <span class="token assign-left variable">msg</span><span class="token operator">=</span>audit<span class="token punctuation">(</span><span class="token number">1218128130.653</span>:334<span class="token punctuation">)</span>: avc:  denied  <span class="token punctuation">&#123;</span> <span class="token function">write</span> <span class="token punctuation">&#125;</span> <span class="token keyword">for</span>  <span class="token assign-left variable">pid</span><span class="token operator">=</span><span class="token number">9111</span> <span class="token assign-left variable">comm</span><span class="token operator">=</span><span class="token string">"smtpd"</span> <span class="token assign-left variable">name</span><span class="token operator">=</span><span class="token string">"socket"</span> <span class="token assign-left variable">dev</span><span class="token operator">=</span>sda6 <span class="token assign-left variable">ino</span><span class="token operator">=</span><span class="token number">39977017</span>
+<span class="token assign-left variable">scontext</span><span class="token operator">=</span>system_u:system_r:postfix_smtpd_t:s0 <span class="token assign-left variable">tcontext</span><span class="token operator">=</span>system_u:object_r:postfix_spool_t:s0 <span class="token assign-left variable">tclass</span><span class="token operator">=</span>sock_file <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>然后，我们可以使用“audit2allow”生成一组允许所需操作的策略规则。我们可以生成一个本地 postgrey 类型强制策略文件 （postgreylocal.te）：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># grep smtpd_t /var/log/audit/audit.log | audit2allow -m postgreylocal > postgreylocal.te</span>
+<span class="token comment"># cat postgreylocal.te</span>
+module postgreylocal <span class="token number">1.0</span><span class="token punctuation">;</span>
+require <span class="token punctuation">&#123;</span>
+        <span class="token builtin class-name">type</span> postfix_smtpd_t<span class="token punctuation">;</span>
+        <span class="token builtin class-name">type</span> postfix_spool_t<span class="token punctuation">;</span>
+        <span class="token builtin class-name">type</span> initrc_t<span class="token punctuation">;</span>
+        class sock_file <span class="token function">write</span><span class="token punctuation">;</span>
+        class unix_stream_socket connectto<span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span>
+<span class="token comment">#============= postfix_smtpd_t ==============</span>
+allow postfix_smtpd_t initrc_t:unix_stream_socket connectto<span class="token punctuation">;</span>
+allow postfix_smtpd_t postfix_spool_t:sock_file <span class="token function">write</span><span class="token punctuation">;</span> <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>上面我们看到，我们可以 grep audit.log文件，以查找与smtp 服务器相关的问题，并将这些问题传输到 audit2allow，后者生成一组规则，它认为这些规则将允许当前被 SELinux 策略拒绝的操作。回顾这些规则，我们看到smtp服务器想要连接并写入Unix套接字，我们从日志中看到的是postgrey服务正在侦听Unix套接字。由于这似乎是完全合理的，我们可以继续使用 audit2allow 制作一个自定义策略模块来允许这些操作：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># grep smtpd_t /var/log/audit/audit.log | audit2allow -M postgreylocal </span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>然后，我们使用“semodule”命令将postgray策略模块加载到当前SELinux策略中：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">semodule -i postgreylocal.pp <span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>这将把我们的 postgrey 策略模块添加到 &#x2F;etc&#x2F;selinux&#x2F;targeted&#x2F;modules&#x2F;active&#x2F;modules&#x2F;postgreylocal.pp。我们可以通过使用 ‘semodule -l’ 命令列出加载的模块来检查是否正确加载策略模块。</p>
+<p>然后，我们可以继续监视我们的 SELinux 日志文件，以检查我们的自定义策略模块是否正常工作，一旦达到我们的要求，我们可以重新启用 SELinux 强制模式，并再次受益于在功能齐全的 smtp 服务器的 SELinux 保护。</p>
+<h3 id="7-1手动自定义策略模块"><a href="#7-1手动自定义策略模块" class="headerlink" title="7.1手动自定义策略模块"></a>7.1手动自定义策略模块</h3><p>audit2allow 通常会自动创建一个自定义策略模块来解决特定问题，但有时它不能完全正确，我们可能需要手动编辑和编译策略模块。例如，考虑以下 AVC 审计日志：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">Summary:
+SELinux is preventing postdrop <span class="token punctuation">(</span>postfix_postdrop_t<span class="token punctuation">)</span> <span class="token string">"getattr"</span> to
+/var/log/httpd/error_log <span class="token punctuation">(</span>httpd_log_t<span class="token punctuation">)</span>.
+Detailed Description:
+SELinux denied access requested by postdrop. It is not expected that this access
+is required by postdrop and this access may signal an intrusion attempt. It is
+also possible that the specific version or configuration of the application is
+causing it to require additional access.
+Allowing Access:
+Sometimes labeling problems can cause SELinux denials. You could try to restore
+the default system <span class="token function">file</span> context <span class="token keyword">for</span> /var/log/httpd/error_log,
+restorecon -v <span class="token string">'/var/log/httpd/error_log'</span>
+If this does not work, there is currently no automatic way to allow this access.
+Instead, you can generate a <span class="token builtin class-name">local</span> policy module to allow this access - see FAQ
+<span class="token punctuation">(</span>http://fedora.redhat.com/docs/selinux-faq-fc5/<span class="token comment">#id2961385) Or you can disable</span>
+SELinux protection altogether. Disabling SELinux protection is not recommended.
+Please <span class="token function">file</span> a bug report <span class="token punctuation">(</span>http://bugzilla.redhat.com/bugzilla/enter_bug.cgi<span class="token punctuation">)</span>
+against this package.
+Additional Information:
+Source Context                system_u:system_r:postfix_postdrop_t
+Target Context                root:object_r:httpd_log_t
+Target Objects                /var/log/httpd/error_log <span class="token punctuation">[</span> <span class="token function">file</span> <span class="token punctuation">]</span>
+Source                        postdrop
+Source Path                   /usr/sbin/postdrop
+Port                          <span class="token operator">&lt;</span>Unknown<span class="token operator">></span>
+Host                          sanitized
+Source RPM Packages           postfix-2.3.3-2
+Target RPM Packages
+Policy RPM                    selinux-policy-2.4.6-137.1.el5
+Selinux Enabled               True
+Policy Type                   targeted
+MLS Enabled                   True
+Enforcing Mode                Enforcing
+Plugin Name                   catchall_file
+Host Name                     sanitized
+Platform                      Linux sanitized <span class="token number">2.6</span>.18-53.1.21.el5 <span class="token comment">#1 SMP Tue</span>
+                              May <span class="token number">20</span> 09:35:07 EDT <span class="token number">2008</span> x86_64 x86_64
+Alert Count                   <span class="token number">599</span>
+First Seen                    Wed Jul  <span class="token number">2</span> 08:27:15 <span class="token number">2008</span>
+Last Seen                     Sun Aug <span class="token number">10</span> <span class="token number">22</span>:47:52 <span class="token number">2008</span>
+Local ID                      c303a4ea-8e7a-4acc-9118-9cc61c6a2ec8
+Line Numbers
+Raw Audit Messages
+<span class="token assign-left variable">host</span><span class="token operator">=</span>sanitized <span class="token assign-left variable">type</span><span class="token operator">=</span>AVC <span class="token assign-left variable">msg</span><span class="token operator">=</span>audit<span class="token punctuation">(</span><span class="token number">1218397672.372</span>:352<span class="token punctuation">)</span>: avc:  denied  <span class="token punctuation">&#123;</span> getattr <span class="token punctuation">&#125;</span> <span class="token keyword">for</span>  <span class="token assign-left variable">pid</span><span class="token operator">=</span><span class="token number">4262</span> <span class="token assign-left variable">comm</span><span class="token operator">=</span><span class="token string">"postdrop"</span>
+<span class="token assign-left variable">path</span><span class="token operator">=</span><span class="token string">"/var/log/httpd/error_log"</span> <span class="token assign-left variable">dev</span><span class="token operator">=</span>md2 <span class="token assign-left variable">ino</span><span class="token operator">=</span><span class="token number">117005</span> <span class="token assign-left variable">scontext</span><span class="token operator">=</span>system_u:system_r:postfix_postdrop_t:s0
+<span class="token assign-left variable">tcontext</span><span class="token operator">=</span>root:object_r:httpd_log_t:s0 <span class="token assign-left variable">tclass</span><span class="token operator">=</span>file
+<span class="token assign-left variable">host</span><span class="token operator">=</span>sanitized <span class="token assign-left variable">type</span><span class="token operator">=</span>SYSCALL <span class="token assign-left variable">msg</span><span class="token operator">=</span>audit<span class="token punctuation">(</span><span class="token number">1218397672.372</span>:352<span class="token punctuation">)</span>: <span class="token assign-left variable">arch</span><span class="token operator">=</span>c000003e <span class="token assign-left variable">syscall</span><span class="token operator">=</span><span class="token number">5</span> <span class="token assign-left variable">success</span><span class="token operator">=</span>no <span class="token assign-left variable">exit</span><span class="token operator">=</span>-13 <span class="token assign-left variable">a0</span><span class="token operator">=</span><span class="token number">2</span>
+<span class="token assign-left variable">a1</span><span class="token operator">=</span>7fffd6febca0 <span class="token assign-left variable">a2</span><span class="token operator">=</span>7fffd6febca0 <span class="token assign-left variable">a3</span><span class="token operator">=</span><span class="token number">0</span> <span class="token assign-left variable">items</span><span class="token operator">=</span><span class="token number">0</span> <span class="token assign-left variable">ppid</span><span class="token operator">=</span><span class="token number">4261</span> <span class="token assign-left variable">pid</span><span class="token operator">=</span><span class="token number">4262</span> <span class="token assign-left variable">auid</span><span class="token operator">=</span><span class="token number">4294967295</span> <span class="token assign-left variable">uid</span><span class="token operator">=</span><span class="token number">48</span> <span class="token assign-left variable">gid</span><span class="token operator">=</span><span class="token number">48</span> <span class="token assign-left variable">euid</span><span class="token operator">=</span><span class="token number">48</span> <span class="token assign-left variable">suid</span><span class="token operator">=</span><span class="token number">48</span>
+<span class="token assign-left variable">fsuid</span><span class="token operator">=</span><span class="token number">48</span> <span class="token assign-left variable">egid</span><span class="token operator">=</span><span class="token number">90</span> <span class="token assign-left variable">sgid</span><span class="token operator">=</span><span class="token number">90</span> <span class="token assign-left variable">fsgid</span><span class="token operator">=</span><span class="token number">90</span> <span class="token assign-left variable">tty</span><span class="token operator">=</span><span class="token punctuation">(</span>none<span class="token punctuation">)</span> <span class="token assign-left variable">comm</span><span class="token operator">=</span><span class="token string">"postdrop"</span> <span class="token assign-left variable">exe</span><span class="token operator">=</span><span class="token string">"/usr/sbin/postdrop"</span>
+<span class="token assign-left variable">subj</span><span class="token operator">=</span>system_u:system_r:postfix_postdrop_t:s0 <span class="token assign-left variable">key</span><span class="token operator">=</span><span class="token punctuation">(</span>null<span class="token punctuation">)</span> <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>对上述错误运行 audit2allow，并查看生成的 postfixlocal.te 策略文件，我们看到：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># grep postdrop /var/log/audit/audit.log | audit2allow -M postfixlocal</span>
+<span class="token comment"># cat postfixlocal.te</span>
+    module postfixlocal <span class="token number">1.0</span><span class="token punctuation">;</span>
+    require <span class="token punctuation">&#123;</span>
+            <span class="token builtin class-name">type</span> httpd_log_t<span class="token punctuation">;</span>
+            <span class="token builtin class-name">type</span> postfix_postdrop_t<span class="token punctuation">;</span>
+            class <span class="token function">dir</span> getattr<span class="token punctuation">;</span>
+            class <span class="token function">file</span> <span class="token punctuation">&#123;</span> <span class="token builtin class-name">read</span> getattr <span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+    <span class="token comment">#============= postfix_postdrop_t ==============</span>
+    allow postfix_postdrop_t httpd_log_t:file getattr<span class="token punctuation">;</span> <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>希望我们首先想到的是，为什么postdrop需要访问&#x2F;var&#x2F;log&#x2F;httpd&#x2F;error_log？据推测，这不是我们所期望的，因此我们必须评估这是否是我们希望允许的行为。我们有多种选择。我们可以忽略该错误并允许 SELinux 继续阻止和记录访问尝试，或者我们可以按照audit2allow所建议的通过创建自定义策略模块来允许该操作。或者，我们可以编辑自定义策略模块 .te 文件以防止审计此特定错误，同时仍允许 SELinux 继续阻止访问。我们通过编辑<strong>allow</strong>行并将其更改为 <strong>dontaudit</strong>：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment">#============= postfix_postdrop_t ==============</span>
+dontaudit postfix_postdrop_t httpd_log_t:file getattr<span class="token punctuation">;</span> <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+
+<p>现在，我们可以手动编译和加载已编辑后的自定义策略模块：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># checkmodule -M -m -o postfixlocal.mod postfixlocal.te</span>
+<span class="token comment"># semodule_package -o postfixlocal.pp -m postfixlocal.mod</span>
+<span class="token comment"># semodule -i postfixlocal.pp </span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+
+<p>SELinux 仍然会阻止通过 postdrop 访问 &#x2F;var&#x2F;log&#x2F;httpd&#x2F;error_log，但每次访问被阻止时，我们不会在日志文件收到不断的警报和错误消息。</p>
+<h2 id="8-策略文件"><a href="#8-策略文件" class="headerlink" title="8.策略文件"></a>8.策略文件</h2><p>许多 SELinux 策略是通过 GNU m4 宏抽象出来的，这就是为什么需要 devel 包来构建依赖于现有策略 API 的新模块的原因。要查看已安装策略中可用的宏和模块列表，可以安装 selinux-policy-doc 包，该包会将 HTML 文档安装 &#x2F;usr&#x2F;share&#x2F;<strong>doc&#x2F;selinux-policy</strong>&#x2F;html&#x2F; 。它还为每个 SELinux 模块提供了手册页，简要概述了模块中声明的布尔值、文件上下文和类型。这些以手册页的形式提供，其名称采用“<module>_selinux”格式。例如，HTTPD 模块的文档以 httpd_selinux（8） 的形式提供，审计管理员角色的文档包含在<code>auditadm_selinux（8）</code> 中。</p>
+<h2 id="9-总结"><a href="#9-总结" class="headerlink" title="9.总结"></a>9.总结</h2><p>本文旨在为刚接触 SELinux 的用户说明如何使用 SELinux。默认情况下，SELinux 已安装并启用，对于大多数用户来说，它可以毫无问题地运行，从而提供增强的安全级别。SELinux 适用于所有类别的安装，包括服务器、工作站、台式机和笔记本电脑。</p>
+<p>尽管 SELinux 对于不熟悉它的用户来说可能看起来非常令人生畏和复杂，但这不是在安装时禁用它的理由。如果 SELinux 确实存在问题，那么很容易切换到宽容模式，此时问题只会被记录而不被阻止。当出现问题时，可以使用本文中介绍的技术来排除故障并解决这些问题。</p>
+<h2 id="10-其他资源"><a href="#10-其他资源" class="headerlink" title="10.其他资源"></a>10.其他资源</h2><p><a target="_blank" rel="noopener" href="https://access.redhat.com/documentation/en-US/Red_Hat_Enterprise_Linux/7/html/SELinux_Users_and_Administrators_Guide/">https://access.redhat.com/documentation/en-US/Red_Hat_Enterprise_Linux/7/html/SELinux_Users_and_Administrators_Guide/</a></p>
+<p><a target="_blank" rel="noopener" href="http://fedoraproject.org/wiki/SELinux">http://fedoraproject.org/wiki/SELinux</a></p>
+<p><a target="_blank" rel="noopener" href="http://docs.fedoraproject.org/en-US/Fedora/13/html-single/Security-Enhanced_Linux/">http://docs.fedoraproject.org/en-US/Fedora/13/html-single/Security-Enhanced_Linux/</a></p>
+<p><a target="_blank" rel="noopener" href="http://danwalsh.livejournal.com/">http://danwalsh.livejournal.com/</a></p>
+<h2 id="11-用户说明和陷阱"><a href="#11-用户说明和陷阱" class="headerlink" title="11.用户说明和陷阱"></a>11.用户说明和陷阱</h2><p>本节由从本文档中了解了SELinux大部分知识的用户提供。本文档是一个精彩而详细的资源。但是，它有点枯燥。当我试图实际操作时，它漏掉了几个我觉得相当令人沮丧的实际问题。请注意，这都是 CentOS 6 的全部内容。</p>
+<ol>
+<li><em>SeManage</em> 位于默认情况下未安装的软件包 <em>PolicyCoreutils-Python</em> 中。请注意，有一个单独的 <em>policycoreutils</em> 包。<em>semanage</em>似乎默认安装在CentOS 7中。它仍然位于<em>policycoreutils-python</em>中。</li>
+<li>在管理系统时，很难找到合适的安全上下文。可以通过 <em>ls -Z</em>，查看包预安装的目录和数据，并复制已使用的上下文。还有一个工具是 <em>seinfo -t</em>，它列出了系统上当前使用的所有上下文。可以使用grep过滤应用程序的名称。</li>
+<li>使用<em>public_content_rw_t</em>上下文可以修复某些情况。此用户具有需要由 NFS、Samba 和 Apache 共享的目录。这种上下文似乎允许这种情况发生。这可能也是一个安全漏洞，因此请注意系统安全。</li>
+<li>不要忘记 <em>chcon</em> 的 -t 参数。它只设置类型上下文，这通常是您想要执行的所有操作，并且比指定 <em>ls -Z</em> 报告的整个字符串更容易。</li>
+<li><em>audit2allow</em>实际上比这里介绍的更容易使用。当两个上下文之间存在冲突时，请在审计日志<strong>audit.log</strong>中找到错误消息并将它们提取到单独的文本文件中。将错误反馈给 <em>audit2allow</em>，如下所示：</li>
+</ol>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">audit2allow -M mynewpolicyname <span class="token operator">&lt;</span>errors.txt<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<ul>
+<li><p>将生成mynewpolicyname.te和<em>mynewpolicyname.pp</em>，以及有关如何导入新策略的说明。这项新策略将使以前发生冲突的事项得以解决。</p>
+<p>我发现这个过程试图让在postfix下运行一个脚本，这个脚本以前安装在非SELinux系统上。在 SELinux 下，脚本需要在<em>postfix_pipe_exec_t</em>上下文下运行，其后台处理目录需要<em>postfix_pipe_tmp_t</em>上下文。但是，该脚本还调用<strong>spamassazzer</strong>的<strong>spamc</strong>二进制<em>文件进行处理。唉，这个二进制文件在</em>spamc_t*下运行，因此无法读取或写入spool目录。</p>
+<p>我在 <em>audit.log</em> 中发现了两条错误消息：一条spamc_t试图读取spool目录，另一条用于试图写入。在提取的错误消息上执行此过程后，我们得到一个<em>如下所示的 .te</em> 文件：</p>
+</li>
+</ul>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">module mynewpolicy <span class="token number">1.0</span><span class="token punctuation">;</span>
+
+require <span class="token punctuation">&#123;</span>
+        <span class="token builtin class-name">type</span> spamc_t<span class="token punctuation">;</span>
+        <span class="token builtin class-name">type</span> postfix_pipe_tmp_t<span class="token punctuation">;</span>
+        class <span class="token function">file</span> <span class="token punctuation">&#123;</span> <span class="token builtin class-name">read</span> <span class="token function">write</span> <span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span>
+
+<span class="token comment">#============= spamc_t ==============</span>
+allow spamc_t postfix_pipe_tmp_t:file <span class="token punctuation">&#123;</span> <span class="token builtin class-name">read</span> <span class="token function">write</span> <span class="token punctuation">&#125;</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<ul>
+<li>如果查看最后一行，此策略允许<em>spamc_t</em>上下文在<em>postfix_pipe_tmp_t</em>上下文中读取和写入文件。<em>spamassassin</em>现在和以前一样工作。</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>☕请作者喝杯咖啡☕</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.jpg" alt="Mr Liu 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/images/alipay.jpg" alt="Mr Liu 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>Mr Liu
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://it-liupp.gitee.io/2023/01/13/selinux/" title="SELinux（安全增强型Linux）">https://it-liupp.gitee.io/2023/01/13/selinux/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/Linux/" rel="tag"># Linux</a>
+              <a href="/tags/Selinux/" rel="tag"># Selinux</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2023/01/04/openeuler-install-docker-new/" rel="prev" title="OpenEuler默认软件源安装docker">
+                  <i class="fa fa-chevron-left"></i> OpenEuler默认软件源安装docker
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2023/11/17/mac-install-deveco/" rel="next" title="MacOS Sonoma安装Huawei DevEco Studio 3.1.1">
+                  MacOS Sonoma安装Huawei DevEco Studio 3.1.1 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mr Liu</span>
+</div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+      <span>站点总字数：</span>
+    <span title="站点总字数">34k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span>站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">2:04</span>
+  </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script><script src="/js/bookmark.js"></script>
+
+  
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>
