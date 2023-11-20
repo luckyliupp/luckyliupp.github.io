@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://it-liupp.gitee.io/2023/11/17/mac-install-deveco/</loc>
-    <lastmod>2023-11-17</lastmod>
+    <lastmod>2023-11-20</lastmod>
   </url>
   <url>
     <loc>https://it-liupp.gitee.io/2023/01/13/selinux/</loc>
@@ -33,19 +33,19 @@
     <lastmod>2023-11-17</lastmod>
   </url>
   <url>
-    <loc>https://it-liupp.gitee.io/2022/05/19/data-governance-doclinks/</loc>
-    <lastmod>2023-11-17</lastmod>
-  </url>
-  <url>
     <loc>https://it-liupp.gitee.io/2022/05/19/5traps/</loc>
     <lastmod>2023-11-17</lastmod>
   </url>
   <url>
-    <loc>https://it-liupp.gitee.io/2022/05/19/data-indicators-doclinks/</loc>
+    <loc>https://it-liupp.gitee.io/2022/05/19/data-governance-doclinks/</loc>
     <lastmod>2023-11-17</lastmod>
   </url>
   <url>
     <loc>https://it-liupp.gitee.io/2022/05/19/data-warehouse-doclinks/</loc>
+    <lastmod>2023-11-17</lastmod>
+  </url>
+  <url>
+    <loc>https://it-liupp.gitee.io/2022/05/19/data-indicators-doclinks/</loc>
     <lastmod>2023-11-17</lastmod>
   </url>
   <url>
