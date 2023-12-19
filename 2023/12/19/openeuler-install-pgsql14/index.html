@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.2.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.png">
+  <link rel="mask-icon" href="/images/favicon.png" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" integrity="sha256-Z1K5uhUaJXA7Ll0XrZ/0JhX4lAtZFpT6jkKrEDT0drU=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"it-liupp.gitee.io","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.14.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":true,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta property="og:type" content="article">
+<meta property="og:title" content="安装PostgreSQL14.10并通过流复制配置主从">
+<meta property="og:url" content="https://it-liupp.gitee.io/2023/12/19/openeuler-install-pgsql14/index.html">
+<meta property="og:site_name" content="Hello Mr Liu">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://it-liupp.gitee.io/images/openeuler-install-pgsql14/image-20231219182800932.png">
+<meta property="og:image" content="https://it-liupp.gitee.io/images/openeuler-install-pgsql14/image-20231219104613593.png">
+<meta property="og:image" content="https://it-liupp.gitee.io/images/openeuler-install-pgsql14/image-20231219104938313.png">
+<meta property="og:image" content="https://it-liupp.gitee.io/images/openeuler-install-pgsql14/image-20231219105514165.png">
+<meta property="og:image" content="https://it-liupp.gitee.io/images/openeuler-install-pgsql14/image-20231219105740209.png">
+<meta property="og:image" content="https://it-liupp.gitee.io/images/openeuler-install-pgsql14/image-20231219124032227.png">
+<meta property="article:published_time" content="2023-12-19T10:41:10.000Z">
+<meta property="article:modified_time" content="2023-12-19T11:49:07.098Z">
+<meta property="article:author" content="Mr Liu">
+<meta property="article:tag" content="操作系统">
+<meta property="article:tag" content="Linux">
+<meta property="article:tag" content="OpenEuler">
+<meta property="article:tag" content="PostgreSQL14">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://it-liupp.gitee.io/images/openeuler-install-pgsql14/image-20231219182800932.png">
+
+
+<link rel="canonical" href="https://it-liupp.gitee.io/2023/12/19/openeuler-install-pgsql14/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://it-liupp.gitee.io/2023/12/19/openeuler-install-pgsql14/","path":"2023/12/19/openeuler-install-pgsql14/","title":"安装PostgreSQL14.10并通过流复制配置主从"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>安装PostgreSQL14.10并通过流复制配置主从 | Hello Mr Liu</title>
+  
+
+
+
+
+
+
+  <script async defer data-website-id="" src=""></script>
+
+  <script defer data-domain="" src=""></script>
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Hello Mr Liu</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">临江对月</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E7%8E%AF%E5%A2%83%E5%87%86%E5%A4%87"><span class="nav-number">1.</span> <span class="nav-text">1.环境准备</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E6%9B%B4%E6%96%B0%E7%B3%BB%E7%BB%9F%E5%B9%B6%E5%AE%89%E8%A3%85%E5%BF%85%E5%A4%87%E7%BB%84%E4%BB%B6"><span class="nav-number">2.</span> <span class="nav-text">2.更新系统并安装必备组件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-%E6%8C%82%E8%BD%BD%E6%95%B0%E6%8D%AE%E7%9B%98"><span class="nav-number">3.</span> <span class="nav-text">3.挂载数据盘</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-PostgreSQL%E5%AE%89%E8%A3%85"><span class="nav-number">4.</span> <span class="nav-text">4.PostgreSQL安装</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1%E4%B8%8B%E8%BD%BDPostgreSQL-14-10"><span class="nav-number">4.1.</span> <span class="nav-text">4.1下载PostgreSQL 14.10</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-2%E7%BC%96%E8%AF%91%E5%AE%89%E8%A3%85"><span class="nav-number">4.2.</span> <span class="nav-text">4.2编译安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-3%E9%85%8D%E7%BD%AEPostgreSQL"><span class="nav-number">4.3.</span> <span class="nav-text">4.3配置PostgreSQL</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#4-3-1%E4%BF%AE%E6%94%B9%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AF%86%E7%A0%81"><span class="nav-number">4.3.1.</span> <span class="nav-text">4.3.1修改数据库密码</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-3-2%E4%BF%AE%E6%94%B9%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E4%BB%A5%E6%94%AF%E6%8C%81%E8%BF%9C%E7%A8%8B%E8%BF%9E%E6%8E%A5"><span class="nav-number">4.4.</span> <span class="nav-text">4.3.2修改配置文件以支持远程连接</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E9%85%8D%E7%BD%AE"><span class="nav-number">5.</span> <span class="nav-text">5.操作系统配置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#5-1%E9%98%B2%E7%81%AB%E5%A2%99%E6%94%BE%E8%A1%8C5432%E7%AB%AF%E5%8F%A3"><span class="nav-number">5.1.</span> <span class="nav-text">5.1防火墙放行5432端口</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-2%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F%E9%85%8D%E7%BD%AE"><span class="nav-number">5.2.</span> <span class="nav-text">5.2环境变量配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-3%E5%BC%80%E6%9C%BA%E5%90%AF%E5%8A%A8%E9%85%8D%E7%BD%AE"><span class="nav-number">5.3.</span> <span class="nav-text">5.3开机启动配置</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-%E6%B5%81%E5%A4%8D%E5%88%B6%E5%88%9B%E5%BB%BA%E4%B8%BB%E4%BB%8E%EF%BC%88%E6%9C%AA%E5%AE%8C%E6%88%90%EF%BC%8C%E6%9C%AA%E6%88%90%E5%8A%9F%F0%9F%98%AD%EF%BC%89"><span class="nav-number">6.</span> <span class="nav-text">6.流复制创建主从（未完成，未成功😭）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#6-1%E4%B8%BB%E5%BA%93%E9%85%8D%E7%BD%AE%EF%BC%88pg-master%E4%B8%BB%E6%9C%BA%EF%BC%89"><span class="nav-number">6.1.</span> <span class="nav-text">6.1主库配置（pg-master主机）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#6-1-1%E5%88%9B%E5%BB%BA%E6%B5%81%E5%A4%8D%E5%88%B6%E7%9A%84%E7%94%A8%E6%88%B7"><span class="nav-number">6.1.1.</span> <span class="nav-text">6.1.1创建流复制的用户</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#6-2-2%E4%B8%BB%E5%BA%93%E4%BF%AE%E6%94%B9pg-hba-conf%E6%96%87%E4%BB%B6%EF%BC%8C%E5%85%81%E8%AE%B8%E5%A4%87%E5%BA%93IP%E9%80%9A%E8%BF%87%E5%A4%8D%E5%88%B6%E7%94%A8%E6%88%B7%E8%AE%BF%E9%97%AE%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="nav-number">6.1.2.</span> <span class="nav-text">6.2.2主库修改pg_hba.conf文件，允许备库IP通过复制用户访问数据库</span></a></li></ol></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Mr Liu"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Mr Liu</p>
+  <div class="site-description" itemprop="description">和意识先进的人在一起你才能转变意识，和心态积极的人在一起，你才能够积极，靠自己改变很难，一个人拽着自己的头发是很难把自己拎起来的。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">18</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">23</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/big/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://it-liupp.gitee.io/2023/12/19/openeuler-install-pgsql14/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Mr Liu">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hello Mr Liu">
+      <meta itemprop="description" content="和意识先进的人在一起你才能转变意识，和心态积极的人在一起，你才能够积极，靠自己改变很难，一个人拽着自己的头发是很难把自己拎起来的。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="安装PostgreSQL14.10并通过流复制配置主从 | Hello Mr Liu">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          安装PostgreSQL14.10并通过流复制配置主从
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2023-12-19 18:41:10 / 修改时间：19:49:07" itemprop="dateCreated datePublished" datetime="2023-12-19T18:41:10+08:00">2023-12-19</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" itemprop="url" rel="index"><span itemprop="name">操作系统</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E8%BD%AF%E4%BB%B6%E5%AE%89%E8%A3%85/" itemprop="url" rel="index"><span itemprop="name">软件安装</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E8%BD%AF%E4%BB%B6%E5%AE%89%E8%A3%85/%E6%95%B0%E6%8D%AE%E5%BA%93/" itemprop="url" rel="index"><span itemprop="name">数据库</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>1.8k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>7 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p><img src="/../images/openeuler-install-pgsql14/image-20231219182800932.png" alt="image-20231219182800932"></p>
+<span id="more"></span>
+
+<h2 id="1-环境准备"><a href="#1-环境准备" class="headerlink" title="1.环境准备"></a>1.环境准备</h2><table>
+<thead>
+<tr>
+<th>序号</th>
+<th>IP</th>
+<th>标识</th>
+<th>CPU&#x2F;内存配置</th>
+<th>系统盘</th>
+<th>数据盘</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>192.168.8.80</td>
+<td>master</td>
+<td>8C+16G</td>
+<td>80G</td>
+<td>500G</td>
+</tr>
+<tr>
+<td>2</td>
+<td>192.168.8.81</td>
+<td>Slave</td>
+<td>8C+16G</td>
+<td>80G</td>
+<td>500G</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>安装系统时，hostname分配配置为“pg-master”、”pg-slave”。</p>
+</blockquote>
+<h2 id="2-更新系统并安装必备组件"><a href="#2-更新系统并安装必备组件" class="headerlink" title="2.更新系统并安装必备组件"></a>2.更新系统并安装必备组件</h2><p>*（如无特殊说明代表两台机器均需要安装）</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment">#更新系统</span>
+dnf upgrade -y<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+
+<p>关于“dnf update” 和“dnf upgrade”的说明：</p>
+<blockquote>
+<p>update：更新源里的软件列表。一般指量的变化，侧重更新的意思，主要是为原有的东西增加新功能，或者对已有的部分做出更改等。更新数据源。</p>
+<p>upgrade：升级你系统里的软件。一般指质的变化，侧重升级的意思，是指从较低级版本升级到高级的版本，这种升级往往伴有新功能的增加，因此也有update的意思。</p>
+<ol>
+<li><p>更新资源</p>
+<p>sudo dnf update</p>
+</li>
+<li><p>软件更新升级，包括升级语言包等</p>
+<p>sudo dnf upgrade</p>
+</li>
+</ol>
+</blockquote>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment">#安装缺失组件,OpenEuler默认最小化安装</span>
+<span class="token comment">#不同系统安装镜像默认安装的基础组件可能不一样，根据情况安装（gcc、make有的镜像安装时默认安装，有的镜像则没有默认安装）</span>
+dnf <span class="token function">install</span> gcc <span class="token function">make</span> <span class="token function">tar</span> readline-devel zlib-devel<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+
+<h2 id="3-挂载数据盘"><a href="#3-挂载数据盘" class="headerlink" title="3.挂载数据盘"></a>3.挂载数据盘</h2><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment">#查看磁盘情况</span>
+<span class="token function">fdisk</span> -l<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+
+<p><img src="/../images/openeuler-install-pgsql14/image-20231219104613593.png" alt="image-20231219104613593"></p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment">#给“/dev/vdb分区”</span>
+<span class="token function">fdisk</span> /dev/vdb<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+
+<p>输入指令如下：</p>
+<p><img src="/../images/openeuler-install-pgsql14/image-20231219104938313.png" alt="image-20231219104938313"></p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment">#再次查看分区情况</span>
+<span class="token function">fdisk</span> -l
+<span class="token comment">#显示结果已创建vdb1分区</span>
+Device           Boot Start  End          Sectors     Size Id Type
+/dev/vdb1        <span class="token number">2048</span>        <span class="token number">1048575999</span>   <span class="token number">1048573952</span>  500G <span class="token number">83</span> Linux
+
+<span class="token comment">#格式化分区</span>
+mkfs.ext4 /dev/vdb1
+<span class="token comment">#根目录下创建data挂载目录</span>
+<span class="token function">mkdir</span> /data
+<span class="token comment">#挂载/vdb1分区到/data目录</span>
+<span class="token function">mount</span> /dev/vdb1 /data
+<span class="token comment">#查看挂载情况（见下图挂载成功）</span>
+<span class="token function">df</span> -lh<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p><img src="/../images/openeuler-install-pgsql14/image-20231219105514165.png" alt="image-20231219105514165"></p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment">#将挂载添加到启动项，否则挂载在重启后失效</span>
+<span class="token function">vi</span> /etc/fstab
+<span class="token comment">#添加一行（见下图）</span>
+/dev/vdb1               /data                      ext4    defaults        <span class="token number">0</span> <span class="token number">0</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p><img src="/../images/openeuler-install-pgsql14/image-20231219105740209.png" alt="image-20231219105740209"></p>
+<p>保存关闭fstab文件，数据盘挂载完毕。</p>
+<h2 id="4-PostgreSQL安装"><a href="#4-PostgreSQL安装" class="headerlink" title="4.PostgreSQL安装"></a>4.PostgreSQL安装</h2><h3 id="4-1下载PostgreSQL-14-10"><a href="#4-1下载PostgreSQL-14-10" class="headerlink" title="4.1下载PostgreSQL 14.10"></a>4.1下载PostgreSQL 14.10</h3><p>PostgreSQL官方下载地址：<a target="_blank" rel="noopener" href="https://www.postgresql.org/ftp/source/">PostgreSQL: File Browser</a></p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment">#下载PostgreSQL14.10版本</span>
+<span class="token function">wget</span> https://ftp.postgresql.org/pub/source/v14.10/postgresql-14.10.tar.gz<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+
+<h3 id="4-2编译安装"><a href="#4-2编译安装" class="headerlink" title="4.2编译安装"></a>4.2编译安装</h3><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment">#解压源码包</span>
+<span class="token function">tar</span> -xzvf postgresql-14.10.tar.gz
+
+<span class="token comment"># 切换到postgresql-14.10文件夹（系统当前在root用户根目录下）</span>
+<span class="token builtin class-name">cd</span> postgresql-14.10
+<span class="token comment"># 配置安装目录：</span>
+./configure --prefix<span class="token operator">=</span>/data/app/pg14
+<span class="token comment"># 编译（耗时较长，耐心等待）</span>
+<span class="token function">make</span>                             
+<span class="token comment"># 安装</span>
+<span class="token function">make</span> <span class="token function">install</span>
+<span class="token comment"># 创建PostgreSQL数据存放目录（可根据实际情况自行配置数据存储路径）</span>
+<span class="token function">mkdir</span> -p /data/appdata/pg14/data
+<span class="token comment"># 创建PostgreSQL日志存放目录（可根据实际情况自行配置日志存储路径）</span>
+<span class="token function">mkdir</span> -p /data/applogs/pg14/logs
+<span class="token comment"># 创建postgres用户</span>
+adduser postgres
+<span class="token comment"># 给postgres用户授权访问data和logs目录</span>
+<span class="token function">chown</span> postgres /data/appdata/pg14/data
+<span class="token function">chown</span> postgres /data/applogs/pg14/logs
+<span class="token comment"># 切换到postgres用户（数据库操作不允许使用root用户）</span>
+<span class="token function">su</span> - postgres
+<span class="token comment"># 创建日志文件【postgres用户】</span>
+<span class="token builtin class-name">cd</span> /data/applogs/pg14/logs
+<span class="token function">touch</span> server.log
+<span class="token comment"># 初始化数据库【postgres用户】</span>
+/data/app/pg14/bin/initdb -D /data/appdata/pg14/data
+<span class="token comment"># 启动数据库【postgres用户】</span>
+/data/app/pg14/bin/pg_ctl -D /data/appdata/pg14/data -l /data/applogs/pg14/logs/server.log start
+<span class="token comment"># 创建test数据库【postgres用户】</span>
+/data/app/pg14/bin/createdb <span class="token builtin class-name">test</span>  <span class="token comment">##创建test数据库</span>
+<span class="token comment"># 连接test数据库【postgres用户】</span>
+/data/app/pg14/bin/psql <span class="token builtin class-name">test</span>      <span class="token comment">##连接test数据库</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="4-3配置PostgreSQL"><a href="#4-3配置PostgreSQL" class="headerlink" title="4.3配置PostgreSQL"></a>4.3配置PostgreSQL</h3><p><strong>以下操作如无特殊说明，均采用postgres用户（指操作系统普通用户）操作命令。</strong></p>
+<h4 id="4-3-1修改数据库密码"><a href="#4-3-1修改数据库密码" class="headerlink" title="4.3.1修改数据库密码"></a>4.3.1修改数据库密码</h4><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># 我们从外部采用工具连接该数据库，需要知道数据库用户和对应的密码</span>
+<span class="token comment"># 连接默认postgres数据库；</span>
+/data/app/pg14/bin/psql      
+<span class="token comment"># 修改数据库用户postgres的密码为postgres；</span>
+ALTER <span class="token environment constant">USER</span> postgres WITH PASSWORD <span class="token string">'postgres'</span><span class="token punctuation">;</span> <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="4-3-2修改配置文件以支持远程连接"><a href="#4-3-2修改配置文件以支持远程连接" class="headerlink" title="4.3.2修改配置文件以支持远程连接"></a>4.3.2修改配置文件以支持远程连接</h3><p>需要修改的文件存放于postgresql的数据存储目录（&#x2F;data&#x2F;appdata&#x2F;pg14&#x2F;data）。</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># pg_hba.conf 文件</span>
+<span class="token comment"># 待修改的行：</span>
+<span class="token function">host</span>    all             all             <span class="token number">127.0</span>.0.1/32            trust
+<span class="token comment"># 修改为</span>
+<span class="token function">host</span>    all             all             <span class="token number">0.0</span>.0.0/0               md5
+
+<span class="token comment"># postgresql.conf文件</span>
+<span class="token comment"># 待修改的行</span>
+<span class="token comment">#listen_addresses = 'localhost' </span>
+<span class="token comment">#移除前方的“#”,并将localhost修改为*</span>
+listen_addresses <span class="token operator">=</span> <span class="token string">'*'</span> 
+
+<span class="token comment">#重启postgresql</span>
+/data/app/pg14/bin/pg_ctl -D /data/appdata/pg14/data -l /data/applogs/pg14/logs/server.log restart<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h2 id="5-操作系统配置"><a href="#5-操作系统配置" class="headerlink" title="5.操作系统配置"></a>5.操作系统配置</h2><h3 id="5-1防火墙放行5432端口"><a href="#5-1防火墙放行5432端口" class="headerlink" title="5.1防火墙放行5432端口"></a>5.1防火墙放行5432端口</h3><p>以<strong>root</strong>用户操作。</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># 配置防火墙放行5432端口</span>
+<span class="token function">sudo</span> firewall-cmd --zone<span class="token operator">=</span>public --add-port<span class="token operator">=</span><span class="token number">5432</span>/tcp --permanent  
+<span class="token comment">#防火墙重新加载配置文件</span>
+<span class="token function">sudo</span> firewall-cmd --reload       <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="5-2环境变量配置"><a href="#5-2环境变量配置" class="headerlink" title="5.2环境变量配置"></a>5.2环境变量配置</h3><p>截止到现在如果我们想在安装postgresql的服务器使用psql或其他提供的工具连接数据库，就必须输入psql的全路径””&#x2F;usr&#x2F;local&#x2F;postgresql&#x2F;bin&#x2F;psql “”来调用,并不是很方便，此时我们可以将postgresql配置到系统环境变量里面去，注意：请配置到postgres用户或者其他自定义操作postgresql的用户的bash_profile环境变量中，不要配置到root账号的环境变量中。</p>
+<p>以<strong>postgres</strong>用户操作。</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># 切换用户目录</span>
+<span class="token builtin class-name">cd</span> ~
+<span class="token comment"># 编辑用户环境变量文件</span>
+<span class="token function">vi</span> .bash_profile
+<span class="token comment"># 将下面两行代码添加文件末尾</span>
+<span class="token assign-left variable"><span class="token environment constant">PATH</span></span><span class="token operator">=</span>/data/app/pg14/bin:<span class="token environment constant">$PATH</span>
+<span class="token builtin class-name">export</span> <span class="token environment constant">PATH</span>
+<span class="token comment"># 使配置文件生效</span>
+<span class="token builtin class-name">source</span> .bash_profile
+
+<span class="token comment"># 此时postgres用户就可以直接输入psql调用了</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p><img src="/../images/openeuler-install-pgsql14/image-20231219124032227.png" alt="image-20231219124032227"></p>
+<h3 id="5-3开机启动配置"><a href="#5-3开机启动配置" class="headerlink" title="5.3开机启动配置"></a>5.3开机启动配置</h3><p>以<strong>root</strong>用户操作。</p>
+<p>PostgreSQL的开机自启动配置模板在源码目录的“contrib&#x2F;start-scripts”目录下,其中linux文件为linux环境下的开机自启动脚本模板，将其拷贝到“&#x2F;etc&#x2F;init.d”目录下，并改名为postgresql：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># 切换至源码开机脚本模版目录</span>
+<span class="token builtin class-name">cd</span> postgresql-14.10/contrib/start-scripts/
+<span class="token comment"># 拷贝linux脚本拷贝至启动目录修改名称为pgsql</span>
+<span class="token function">cp</span> linux /etc/init.d/pgsql
+<span class="token comment"># 编辑启动脚本</span>
+<span class="token function">vi</span> /etc/init.d/pgsql
+
+<span class="token comment"># 在Selinux开启Enforcing的情况，开启仍然无法启动，我们需要修复pgsql文件的安全上下文</span>
+<span class="token comment"># restorecon [选项】 文件或目录</span>
+<span class="token comment"># -R：递归.当前目录和目录下所有的子文件同时恢复；</span>
+<span class="token comment"># -V：把恢复过程显示到屏幕上；</span>
+restorecon /etc/init.d/pgsql 
+
+<span class="token comment"># 给启动脚本增加文件执行权限</span>
+<span class="token function">chmod</span> a+x /etc/init.d/pgsql 
+
+<span class="token comment">#添加至开机启动</span>
+<span class="token function">chkconfig</span> --add /etc/init.d/pgsql 
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>“&#x2F;etc&#x2F;init.d&#x2F;pgsql”需要编辑的内容如下：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># 安装位置，根据实际情况修改</span>
+<span class="token assign-left variable">prefix</span><span class="token operator">=</span>/data/app/pg14
+
+<span class="token comment"># Postgresql数据目录，根据实际情况修改</span>
+<span class="token assign-left variable">PGDATA</span><span class="token operator">=</span><span class="token string">"/data/appdata/pg14/data"</span>
+
+<span class="token comment"># Who to run the postmaster as, usually "postgres".  (NOT "root")</span>
+<span class="token comment"># 将启动用户修改为实际用户，这里使用postgres，所以不变。</span>
+<span class="token assign-left variable">PGUSER</span><span class="token operator">=</span>postgres
+
+<span class="token comment"># Postgresql日志文件位置，根据实际情况修改</span>
+<span class="token assign-left variable">PGLOG</span><span class="token operator">=</span><span class="token string">"/data/applogs/pg14/logs/server.log"</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>重启验证即可。</p>
+<h2 id="6-流复制创建主从（未完成，未成功😭）"><a href="#6-流复制创建主从（未完成，未成功😭）" class="headerlink" title="6.流复制创建主从（未完成，未成功😭）"></a>6.流复制创建主从（未完成，未成功😭）</h2><h3 id="6-1主库配置（pg-master主机）"><a href="#6-1主库配置（pg-master主机）" class="headerlink" title="6.1主库配置（pg-master主机）"></a>6.1主库配置（pg-master主机）</h3><h4 id="6-1-1创建流复制的用户"><a href="#6-1-1创建流复制的用户" class="headerlink" title="6.1.1创建流复制的用户"></a>6.1.1创建流复制的用户</h4><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># 切换至postgres用户</span>
+<span class="token punctuation">[</span>root@pg-master ~<span class="token punctuation">]</span><span class="token comment"># su - postgres</span>
+
+<span class="token comment"># 打开plsql</span>
+<span class="token punctuation">[</span>postgres@pg-master ~<span class="token punctuation">]</span>$ psql 
+psql <span class="token punctuation">(</span><span class="token number">14.10</span><span class="token punctuation">)</span>
+Type <span class="token string">"help"</span> <span class="token keyword">for</span> help.
+
+<span class="token comment"># 主库创建流复制的用户</span>
+<span class="token assign-left variable">postgres</span><span class="token operator">=</span><span class="token comment"># CREATE ROLE replica login replication encrypted password 'replica';</span>
+
+<span class="token comment"># </span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h4 id="6-2-2主库修改pg-hba-conf文件，允许备库IP通过复制用户访问数据库"><a href="#6-2-2主库修改pg-hba-conf文件，允许备库IP通过复制用户访问数据库" class="headerlink" title="6.2.2主库修改pg_hba.conf文件，允许备库IP通过复制用户访问数据库"></a>6.2.2<strong>主库修改pg_hba.conf文件，允许备库IP通过复制用户访问数据库</strong></h4><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token punctuation">[</span>postgres@pg-master ~<span class="token punctuation">]</span>$ <span class="token function">vi</span> /data/appdata/pg14/data/pg_hba.conf
+
+<span class="token comment"># "local" is for Unix domain socket connections only</span>
+<span class="token builtin class-name">local</span>   all             all                                     trust
+<span class="token comment"># IPv4 local connections:</span>
+<span class="token function">host</span>    all             all             <span class="token number">0.0</span>.0.0/0               md5
+<span class="token comment"># IPv6 local connections:</span>
+<span class="token function">host</span>    all             all             ::1/128                 trust
+<span class="token comment"># Allow replication connections from localhost, by a user with the</span>
+<span class="token comment"># replication privilege.</span>
+<span class="token builtin class-name">local</span>   replication     all                                     trust
+<span class="token function">host</span>    replication     all             <span class="token number">127.0</span>.0.1/32            trust
+<span class="token function">host</span>    replication     all             ::1/128                 trust
+<span class="token function">host</span>    replication     replica         <span class="token number">192.168</span>.8.81/32         md5
+
+
+<span class="token comment">#最后一行，添加了replica用户可以从备库IP 192.168.8.81访问主库。</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>☕请作者喝杯咖啡☕</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.jpg" alt="Mr Liu 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/images/alipay.jpg" alt="Mr Liu 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>Mr Liu
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://it-liupp.gitee.io/2023/12/19/openeuler-install-pgsql14/" title="安装PostgreSQL14.10并通过流复制配置主从">https://it-liupp.gitee.io/2023/12/19/openeuler-install-pgsql14/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" rel="tag"># 操作系统</a>
+              <a href="/tags/Linux/" rel="tag"># Linux</a>
+              <a href="/tags/OpenEuler/" rel="tag"># OpenEuler</a>
+              <a href="/tags/PostgreSQL14/" rel="tag"># PostgreSQL14</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2023/11/17/mac-install-deveco/" rel="prev" title="MacOS Sonoma安装Huawei DevEco Studio 3.1.1">
+                  <i class="fa fa-chevron-left"></i> MacOS Sonoma安装Huawei DevEco Studio 3.1.1
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mr Liu</span>
+</div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+      <span>站点总字数：</span>
+    <span title="站点总字数">36k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span>站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">2:11</span>
+  </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script><script src="/js/bookmark.js"></script>
+
+  
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>
