@@ -2,6 +2,15 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://it-liupp.gitee.io/2023/12/20/openeuler-install-nginx/</loc>
+    
+    <lastmod>2023-12-20</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://it-liupp.gitee.io/2022/12/28/docker-remote/</loc>
     
     <lastmod>2023-12-19</lastmod>
@@ -211,7 +220,7 @@
 
   <url>
     <loc>https://it-liupp.gitee.io/</loc>
-    <lastmod>2023-12-19</lastmod>
+    <lastmod>2023-12-20</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
@@ -219,161 +228,168 @@
   
   <url>
     <loc>https://it-liupp.gitee.io/tags/%E6%95%B0%E5%AD%97%E5%8C%96/</loc>
-    <lastmod>2023-12-19</lastmod>
+    <lastmod>2023-12-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://it-liupp.gitee.io/tags/%E6%95%B0%E5%AD%97%E5%8C%96%E9%99%B7%E9%98%B1/</loc>
-    <lastmod>2023-12-19</lastmod>
+    <lastmod>2023-12-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://it-liupp.gitee.io/tags/%E6%95%B0%E6%8D%AE%E6%B2%BB%E7%90%86/</loc>
-    <lastmod>2023-12-19</lastmod>
+    <lastmod>2023-12-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://it-liupp.gitee.io/tags/%E6%95%B0%E6%8D%AE%E4%BB%93%E5%BA%93/</loc>
-    <lastmod>2023-12-19</lastmod>
+    <lastmod>2023-12-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://it-liupp.gitee.io/tags/%E6%95%B0%E6%8D%AE%E6%8C%87%E6%A0%87/</loc>
-    <lastmod>2023-12-19</lastmod>
+    <lastmod>2023-12-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://it-liupp.gitee.io/tags/docker/</loc>
-    <lastmod>2023-12-19</lastmod>
+    <lastmod>2023-12-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://it-liupp.gitee.io/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/</loc>
-    <lastmod>2023-12-19</lastmod>
+    <lastmod>2023-12-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://it-liupp.gitee.io/tags/Linux/</loc>
-    <lastmod>2023-12-19</lastmod>
+    <lastmod>2023-12-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://it-liupp.gitee.io/tags/OpenEuler/</loc>
-    <lastmod>2023-12-19</lastmod>
+    <lastmod>2023-12-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://it-liupp.gitee.io/tags/IDE/</loc>
-    <lastmod>2023-12-19</lastmod>
+    <lastmod>2023-12-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://it-liupp.gitee.io/tags/MacOS14/</loc>
-    <lastmod>2023-12-19</lastmod>
+    <lastmod>2023-12-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://it-liupp.gitee.io/tags/HarmonyOS/</loc>
-    <lastmod>2023-12-19</lastmod>
+    <lastmod>2023-12-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://it-liupp.gitee.io/tags/OpenHarmony/</loc>
-    <lastmod>2023-12-19</lastmod>
+    <lastmod>2023-12-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://it-liupp.gitee.io/tags/Bioset/</loc>
-    <lastmod>2023-12-19</lastmod>
+    <lastmod>2023-12-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://it-liupp.gitee.io/tags/Maven/</loc>
-    <lastmod>2023-12-19</lastmod>
+    <lastmod>2023-12-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://it-liupp.gitee.io/tags/Redis/</loc>
-    <lastmod>2023-12-19</lastmod>
+    <lastmod>2023-12-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://it-liupp.gitee.io/tags/PostgreSQL/</loc>
-    <lastmod>2023-12-19</lastmod>
+    <lastmod>2023-12-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://it-liupp.gitee.io/tags/PostgreSQL-HA/</loc>
-    <lastmod>2023-12-19</lastmod>
+    <lastmod>2023-12-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://it-liupp.gitee.io/tags/Selinux/</loc>
-    <lastmod>2023-12-19</lastmod>
+    <lastmod>2023-12-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://it-liupp.gitee.io/tags/audit2why/</loc>
-    <lastmod>2023-12-19</lastmod>
+    <lastmod>2023-12-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://it-liupp.gitee.io/tags/audit2allow/</loc>
-    <lastmod>2023-12-19</lastmod>
+    <lastmod>2023-12-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://it-liupp.gitee.io/tags/%E7%94%A8%E6%88%B7%E7%94%BB%E5%83%8F/</loc>
-    <lastmod>2023-12-19</lastmod>
+    <lastmod>2023-12-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://it-liupp.gitee.io/tags/PostgreSQL14/</loc>
-    <lastmod>2023-12-19</lastmod>
+    <lastmod>2023-12-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://it-liupp.gitee.io/tags/nginx/</loc>
+    <lastmod>2023-12-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
@@ -382,105 +398,105 @@
   
   <url>
     <loc>https://it-liupp.gitee.io/categories/%E6%95%B0%E5%AD%97%E5%8C%96/</loc>
-    <lastmod>2023-12-19</lastmod>
+    <lastmod>2023-12-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://it-liupp.gitee.io/categories/%E6%95%B0%E5%AD%97%E5%8C%96/%E5%A4%A7%E6%95%B0%E6%8D%AE/</loc>
-    <lastmod>2023-12-19</lastmod>
+    <lastmod>2023-12-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://it-liupp.gitee.io/categories/docker/</loc>
-    <lastmod>2023-12-19</lastmod>
+    <lastmod>2023-12-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://it-liupp.gitee.io/categories/%E8%BD%AF%E4%BB%B6%E5%AE%89%E8%A3%85/</loc>
-    <lastmod>2023-12-19</lastmod>
+    <lastmod>2023-12-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://it-liupp.gitee.io/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/</loc>
-    <lastmod>2023-12-19</lastmod>
+    <lastmod>2023-12-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://it-liupp.gitee.io/categories/docker/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/</loc>
-    <lastmod>2023-12-19</lastmod>
+    <lastmod>2023-12-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://it-liupp.gitee.io/categories/%E8%BD%AF%E4%BB%B6%E5%AE%89%E8%A3%85/%E9%B8%BF%E8%92%99%E7%B3%BB%E7%BB%9F/</loc>
-    <lastmod>2023-12-19</lastmod>
+    <lastmod>2023-12-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://it-liupp.gitee.io/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E8%BD%AF%E4%BB%B6%E5%AE%89%E8%A3%85/</loc>
-    <lastmod>2023-12-19</lastmod>
+    <lastmod>2023-12-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://it-liupp.gitee.io/categories/docker/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E8%BD%AF%E4%BB%B6%E5%AE%89%E8%A3%85/</loc>
-    <lastmod>2023-12-19</lastmod>
+    <lastmod>2023-12-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://it-liupp.gitee.io/categories/docker/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E8%BD%AF%E4%BB%B6%E9%85%8D%E7%BD%AE/</loc>
-    <lastmod>2023-12-19</lastmod>
+    <lastmod>2023-12-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://it-liupp.gitee.io/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E5%AE%89%E5%85%A8%E5%8A%A0%E5%9B%BA/</loc>
-    <lastmod>2023-12-19</lastmod>
+    <lastmod>2023-12-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://it-liupp.gitee.io/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E8%BD%AF%E4%BB%B6%E5%AE%89%E8%A3%85/%E7%B3%BB%E7%BB%9F%E5%8A%A0%E5%9B%BA/</loc>
-    <lastmod>2023-12-19</lastmod>
+    <lastmod>2023-12-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://it-liupp.gitee.io/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E8%BD%AF%E4%BB%B6%E5%AE%89%E8%A3%85/%E6%95%B0%E6%8D%AE%E5%BA%93/</loc>
-    <lastmod>2023-12-19</lastmod>
+    <lastmod>2023-12-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://it-liupp.gitee.io/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E5%AE%89%E5%85%A8%E5%8A%A0%E5%9B%BA/%E7%BF%BB%E8%AF%91/</loc>
-    <lastmod>2023-12-19</lastmod>
+    <lastmod>2023-12-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://it-liupp.gitee.io/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E8%BD%AF%E4%BB%B6%E5%AE%89%E8%A3%85/%E6%95%B0%E6%8D%AE%E5%BA%93/PostgreSQL/</loc>
-    <lastmod>2023-12-19</lastmod>
+    <lastmod>2023-12-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
