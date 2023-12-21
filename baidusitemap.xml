@@ -1,11 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://it-liupp.gitee.io/2023/12/21/openeuler-install-miniocluster/</loc>
+    <lastmod>2023-12-21</lastmod>
+  </url>
+  <url>
     <loc>https://it-liupp.gitee.io/2023/12/20/openeuler-install-nginx/</loc>
-    <lastmod>2023-12-20</lastmod>
+    <lastmod>2023-12-21</lastmod>
+  </url>
+  <url>
+    <loc>https://it-liupp.gitee.io/2022/12/13/openeuler-bioset/</loc>
+    <lastmod>2023-12-21</lastmod>
+  </url>
+  <url>
+    <loc>https://it-liupp.gitee.io/2023/01/04/openeuler-install-docker-new/</loc>
+    <lastmod>2023-12-21</lastmod>
+  </url>
+  <url>
+    <loc>https://it-liupp.gitee.io/2023/12/19/openeuler-install-pgsql14/</loc>
+    <lastmod>2023-12-21</lastmod>
+  </url>
+  <url>
+    <loc>https://it-liupp.gitee.io/2022/12/14/openeuler-install-redis/</loc>
+    <lastmod>2023-12-21</lastmod>
+  </url>
+  <url>
+    <loc>https://it-liupp.gitee.io/2022/12/14/selinux-audit2-policy/</loc>
+    <lastmod>2023-12-21</lastmod>
+  </url>
+  <url>
+    <loc>https://it-liupp.gitee.io/2022/06/29/install-openeuler/</loc>
+    <lastmod>2023-12-21</lastmod>
   </url>
   <url>
     <loc>https://it-liupp.gitee.io/2022/12/28/docker-remote/</loc>
+    <lastmod>2023-12-19</lastmod>
+  </url>
+  <url>
+    <loc>https://it-liupp.gitee.io/2022/05/19/data-governance-doclinks/</loc>
     <lastmod>2023-12-19</lastmod>
   </url>
   <url>
@@ -13,35 +45,7 @@
     <lastmod>2023-12-19</lastmod>
   </url>
   <url>
-    <loc>https://it-liupp.gitee.io/2022/12/13/openeuler-bioset/</loc>
-    <lastmod>2023-12-19</lastmod>
-  </url>
-  <url>
-    <loc>https://it-liupp.gitee.io/2022/07/09/openeuler-pgsql03/</loc>
-    <lastmod>2023-12-19</lastmod>
-  </url>
-  <url>
-    <loc>https://it-liupp.gitee.io/2022/07/04/openeuler-pgsql02/</loc>
-    <lastmod>2023-12-19</lastmod>
-  </url>
-  <url>
-    <loc>https://it-liupp.gitee.io/2022/06/29/openeuler-pgsql01/</loc>
-    <lastmod>2023-12-19</lastmod>
-  </url>
-  <url>
-    <loc>https://it-liupp.gitee.io/2023/01/04/openeuler-install-docker-new/</loc>
-    <lastmod>2023-12-19</lastmod>
-  </url>
-  <url>
     <loc>https://it-liupp.gitee.io/2022/07/30/openeuler-install-sonatypenexus/</loc>
-    <lastmod>2023-12-19</lastmod>
-  </url>
-  <url>
-    <loc>https://it-liupp.gitee.io/2022/12/14/openeuler-install-redis/</loc>
-    <lastmod>2023-12-19</lastmod>
-  </url>
-  <url>
-    <loc>https://it-liupp.gitee.io/2023/12/19/openeuler-install-pgsql14/</loc>
     <lastmod>2023-12-19</lastmod>
   </url>
   <url>
@@ -57,15 +61,7 @@
     <lastmod>2023-11-17</lastmod>
   </url>
   <url>
-    <loc>https://it-liupp.gitee.io/2022/12/14/selinux-audit2-policy/</loc>
-    <lastmod>2023-11-17</lastmod>
-  </url>
-  <url>
     <loc>https://it-liupp.gitee.io/2022/05/19/5traps/</loc>
-    <lastmod>2023-11-17</lastmod>
-  </url>
-  <url>
-    <loc>https://it-liupp.gitee.io/2022/05/19/data-governance-doclinks/</loc>
     <lastmod>2023-11-17</lastmod>
   </url>
   <url>
