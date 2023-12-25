@@ -2,6 +2,15 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://it-liupp.gitee.io/2023/12/23/openeuler-install-etcd-patroni/</loc>
+    
+    <lastmod>2023-12-25</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://it-liupp.gitee.io/2023/12/25/mac-ssh-autologin/</loc>
     
     <lastmod>2023-12-25</lastmod>
@@ -12,15 +21,6 @@
   
   <url>
     <loc>https://it-liupp.gitee.io/2022/08/17/docker-install-in-openeuler/</loc>
-    
-    <lastmod>2023-12-23</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://it-liupp.gitee.io/2023/12/23/openeuler-install-etcd-patroni/</loc>
     
     <lastmod>2023-12-23</lastmod>
     
