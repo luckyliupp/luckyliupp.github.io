@@ -1,24 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://it-liupp.gitee.io/2024/01/11/webui-vue/</loc>
-    <lastmod>2024-01-11</lastmod>
+    <loc>https://it-liupp.gitee.io/2023/12/29/openeuler-install-pgsql14/</loc>
+    <lastmod>2024-01-12</lastmod>
   </url>
   <url>
-    <loc>https://it-liupp.gitee.io/2024/01/06/openeuler-install-ks-cluster/</loc>
+    <loc>https://it-liupp.gitee.io/2024/01/11/webui-vue/</loc>
     <lastmod>2024-01-11</lastmod>
   </url>
   <url>
     <loc>https://it-liupp.gitee.io/2024/01/02/docker-install-in-openeuler/</loc>
     <lastmod>2024-01-03</lastmod>
-  </url>
-  <url>
-    <loc>https://it-liupp.gitee.io/2023/12/29/openeuler-install-pgsql14/</loc>
-    <lastmod>2023-12-29</lastmod>
-  </url>
-  <url>
-    <loc>https://it-liupp.gitee.io/2023/12/23/openeuler-install-etcd-patroni/</loc>
-    <lastmod>2023-12-25</lastmod>
   </url>
   <url>
     <loc>https://it-liupp.gitee.io/2023/12/25/mac-ssh-autologin/</loc>
@@ -69,11 +61,11 @@
     <lastmod>2023-11-20</lastmod>
   </url>
   <url>
-    <loc>https://it-liupp.gitee.io/2022/05/19/user-portrait-doclinks/</loc>
+    <loc>https://it-liupp.gitee.io/2023/01/13/selinux/</loc>
     <lastmod>2023-11-17</lastmod>
   </url>
   <url>
-    <loc>https://it-liupp.gitee.io/2023/01/13/selinux/</loc>
+    <loc>https://it-liupp.gitee.io/2022/05/19/user-portrait-doclinks/</loc>
     <lastmod>2023-11-17</lastmod>
   </url>
   <url>
@@ -81,11 +73,11 @@
     <lastmod>2023-11-17</lastmod>
   </url>
   <url>
-    <loc>https://it-liupp.gitee.io/2022/05/19/data-warehouse-doclinks/</loc>
+    <loc>https://it-liupp.gitee.io/2022/05/19/data-indicators-doclinks/</loc>
     <lastmod>2023-11-17</lastmod>
   </url>
   <url>
-    <loc>https://it-liupp.gitee.io/2022/05/19/data-indicators-doclinks/</loc>
+    <loc>https://it-liupp.gitee.io/2022/05/19/data-warehouse-doclinks/</loc>
     <lastmod>2023-11-17</lastmod>
   </url>
 </urlset> 

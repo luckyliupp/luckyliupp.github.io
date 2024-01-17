@@ -24,14 +24,16 @@
 <meta property="og:url" content="https://it-liupp.gitee.io/2024/01/06/openeuler-install-ks-cluster/index.html">
 <meta property="og:site_name" content="Hello Mr Liu">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://it-liupp.gitee.io/images/openeuler-install-ks-cluster/image-20240116110903974.png">
 <meta property="article:published_time" content="2024-01-06T06:41:10.000Z">
-<meta property="article:modified_time" content="2024-01-11T01:27:32.388Z">
+<meta property="article:modified_time" content="2024-01-16T03:11:11.625Z">
 <meta property="article:author" content="Mr Liu">
 <meta property="article:tag" content="Linux">
 <meta property="article:tag" content="OpenEuler">
 <meta property="article:tag" content="操作系统">
 <meta property="article:tag" content="Kubesphere">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://it-liupp.gitee.io/images/openeuler-install-ks-cluster/image-20240116110903974.png">
 
 
 <link rel="canonical" href="https://it-liupp.gitee.io/2024/01/06/openeuler-install-ks-cluster/">
@@ -41,7 +43,7 @@
 <script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://it-liupp.gitee.io/2024/01/06/openeuler-install-ks-cluster/","path":"2024/01/06/openeuler-install-ks-cluster/","title":"【未完成】OpenEuler22.03 SP2 LTS安装Kubeshpere集群"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>【未完成】OpenEuler22.03 SP2 LTS安装Kubeshpere集群 | Hello Mr Liu</title>
+<title>【未完成】OpenEuler22.03 SP2 LTS安装Kubeshpere集群 | Hello Mr Liu</title><meta name="robots" content="noindex">
   
 
 
@@ -116,7 +118,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-%E7%8E%AF%E5%A2%83%E8%A7%84%E5%88%92"><span class="nav-number">1.</span> <span class="nav-text">1.环境规划</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-1%E6%9C%8D%E5%8A%A1%E5%99%A8%E8%A7%84%E5%88%92"><span class="nav-number">1.1.</span> <span class="nav-text">1.1服务器规划</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-2%E7%B3%BB%E7%BB%9F%E8%B0%83%E4%BC%98"><span class="nav-number">1.2.</span> <span class="nav-text">1.2系统调优</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-3Hosts%E9%85%8D%E7%BD%AE"><span class="nav-number">1.3.</span> <span class="nav-text">1.3Hosts配置</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-%E6%8C%82%E8%BD%BD%E6%95%B0%E6%8D%AE%E7%9B%98"><span class="nav-number">2.</span> <span class="nav-text">2.挂载数据盘</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-docker%E5%AE%89%E8%A3%85"><span class="nav-number">3.</span> <span class="nav-text">3.docker安装</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#3-1%E5%AE%89%E8%A3%85docker%E6%9C%80%E6%96%B0%E7%89%88"><span class="nav-number">3.1.</span> <span class="nav-text">3.1安装docker最新版</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-2%E8%BF%81%E7%A7%BB%E2%80%9D-x2F-var-x2F-lib-x2F-docker%E2%80%9D%E7%9B%AE%E5%BD%95"><span class="nav-number">3.2.</span> <span class="nav-text">3.2迁移”&#x2F;var&#x2F;lib&#x2F;docker”目录</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-KubeSphere%E9%9B%86%E7%BE%A4%E5%AE%89%E8%A3%85"><span class="nav-number">4.</span> <span class="nav-text">4.KubeSphere集群安装</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-%E7%8E%AF%E5%A2%83%E8%A7%84%E5%88%92"><span class="nav-number">1.</span> <span class="nav-text">1.环境规划</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-1%E6%9C%8D%E5%8A%A1%E5%99%A8%E8%A7%84%E5%88%92"><span class="nav-number">1.1.</span> <span class="nav-text">1.1服务器规划</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-2%E7%B3%BB%E7%BB%9F%E8%B0%83%E4%BC%98"><span class="nav-number">1.2.</span> <span class="nav-text">1.2系统调优</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-%E6%8C%82%E8%BD%BD%E6%95%B0%E6%8D%AE%E7%9B%98"><span class="nav-number">2.</span> <span class="nav-text">2.挂载数据盘</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-docker%E5%AE%89%E8%A3%85"><span class="nav-number">3.</span> <span class="nav-text">3.docker安装</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#3-1%E5%AE%89%E8%A3%85docker%E6%9C%80%E6%96%B0%E7%89%88"><span class="nav-number">3.1.</span> <span class="nav-text">3.1安装docker最新版</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-2%E8%BF%81%E7%A7%BB%E2%80%9D-x2F-var-x2F-lib-x2F-docker%E2%80%9D%E7%9B%AE%E5%BD%95"><span class="nav-number">3.2.</span> <span class="nav-text">3.2迁移”&#x2F;var&#x2F;lib&#x2F;docker”目录</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-KubeSphere%E9%9B%86%E7%BE%A4%E5%AE%89%E8%A3%85"><span class="nav-number">4.</span> <span class="nav-text">4.KubeSphere集群安装</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -131,18 +133,18 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">22</span>
+          <span class="site-state-item-count">20</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
           <a href="/categories/">
-        <span class="site-state-item-count">17</span>
+        <span class="site-state-item-count">16</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">29</span>
+        <span class="site-state-item-count">28</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -208,7 +210,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2024-01-11 09:27:32" itemprop="dateModified" datetime="2024-01-11T09:27:32+08:00">2024-01-11</time>
+      <time title="修改时间：2024-01-16 11:11:11" itemprop="dateModified" datetime="2024-01-16T11:11:11+08:00">2024-01-16</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -231,14 +233,14 @@
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>2.9k</span>
+      <span>3k</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
         <i class="far fa-clock"></i>
       </span>
       <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>10 分钟</span>
+      <span>11 分钟</span>
     </span>
 </div>
 
@@ -296,7 +298,7 @@
 <p>kubernetes版本： v1.22.12 </p>
 <p>kubesphere版本： v3.3.2</p>
 </blockquote>
-<h2 id="1-2系统调优"><a href="#1-2系统调优" class="headerlink" title="1.2系统调优"></a>1.2系统调优</h2><p>【2024年1月11日】在kubesphere安装过程中，发现安装文件中有对系统调优的执行操作，所以这步可以不用单独做。</p>
+<h2 id="1-2系统调优"><a href="#1-2系统调优" class="headerlink" title="1.2系统调优"></a>1.2系统调优</h2><p>【2024年1月11日】在kubesphere安装过程中，<strong>发现安装文件中有对系统调优的执行操作</strong>，所以这步可以不用单独做。</p>
 <p>修改系统最大文件连接数：</p>
 <pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token punctuation">[</span>root@ks-xxx ~<span class="token punctuation">]</span><span class="token comment"># vi /etc/security/limits.conf</span>
 
@@ -312,11 +314,6 @@
 <span class="token comment"># 可通过一下命令查看当前系统连接数</span>
 <span class="token punctuation">[</span>root@ks-xxx ~<span class="token punctuation">]</span><span class="token comment"># ulimit -n   #同一时间最多可开启的文件数</span>
 <span class="token punctuation">[</span>root@ks-xxx ~<span class="token punctuation">]</span><span class="token comment"># ulimit -a   #显示当前资源限制</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-
-<h2 id="1-3Hosts配置"><a href="#1-3Hosts配置" class="headerlink" title="1.3Hosts配置"></a>1.3Hosts配置</h2><p>三台机器均修改host（vi &#x2F;etc&#x2F;hosts），添加如下内容：</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token number">192.168</span>.5.31 ks-master01
-<span class="token number">192.168</span>.5.34 ks-worknode01
-<span class="token number">192.168</span>.5.35 ks-worknode02<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
 
 <h1 id="2-挂载数据盘"><a href="#2-挂载数据盘" class="headerlink" title="2.挂载数据盘"></a>2.挂载数据盘</h1><p><strong>全部机器执行</strong></p>
 <pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment">#查看磁盘情况</span>
@@ -454,13 +451,9 @@ Device     Boot Start        End    Sectors  Size Id Type
 <span class="token punctuation">[</span>root@ks-xxx ~<span class="token punctuation">]</span><span class="token comment"># dnf clean all</span>
 <span class="token punctuation">[</span>root@ks-xxx ~<span class="token punctuation">]</span><span class="token comment"># dnf makecache</span>
 
-<span class="token comment"># 安装docker</span>
-<span class="token punctuation">[</span>root@ks-xxx ~<span class="token punctuation">]</span><span class="token comment"># dnf install docker-ce docker-ce-cli containerd.io -y</span>
-<span class="token comment"># 安装docker-compose：</span>
-<span class="token punctuation">[</span>root@ks-xxx ~<span class="token punctuation">]</span><span class="token comment"># dnf install docker-compose -y</span>
+<span class="token comment"># 安装docker、docker-compose：</span>
+<span class="token punctuation">[</span>root@ks-xxx ~<span class="token punctuation">]</span><span class="token comment"># dnf install docker-ce docker-ce-cli containerd.io -y &amp;&amp; dnf install docker-compose -y</span>
 
-<span class="token comment"># 查看docker服务启动状态</span>
-<span class="token punctuation">[</span>root@ks-xxx ~<span class="token punctuation">]</span><span class="token comment"># systemctl status docker</span>
 <span class="token comment"># 启动docker服务</span>
 <span class="token punctuation">[</span>root@ks-xxx ~<span class="token punctuation">]</span><span class="token comment"># systemctl start docker</span>
 <span class="token comment"># 加入开机自启动</span>
@@ -468,7 +461,7 @@ Device     Boot Start        End    Sectors  Size Id Type
 
 <span class="token comment">#查看docker版本</span>
 <span class="token punctuation">[</span>root@ks-xxx ~<span class="token punctuation">]</span><span class="token comment"># docker -v</span>
-Docker version <span class="token number">24.0</span>.7, build afdd53b<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+Docker version <span class="token number">24.0</span>.7, build afdd53b<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <h2 id="3-2迁移”-x2F-var-x2F-lib-x2F-docker”目录"><a href="#3-2迁移”-x2F-var-x2F-lib-x2F-docker”目录" class="headerlink" title="3.2迁移”&#x2F;var&#x2F;lib&#x2F;docker”目录"></a>3.2迁移”&#x2F;var&#x2F;lib&#x2F;docker”目录</h2><blockquote>
 <p><code>/var/lib/docker</code> 路径主要用于存储容器数据，在使用和操作过程中数据量会逐渐增加。因此，在生产环境中，建议根据实际需求为 <code>/var/lib/docker</code> 单独挂载一个大容量的磁盘。前面给我们给&#x2F;app目录挂载了1T硬盘，我们在<code>/app</code>下创建一个存储目录，通过软链接迁移 <code>/var/lib/docker</code>目录。</p>
@@ -528,33 +521,266 @@ https://github.com/kubesphere/kubekey/releases<span aria-hidden="true" class="li
 <span class="token punctuation">[</span>root@ks-master01 ~<span class="token punctuation">]</span><span class="token comment"># chmod + x kk</span>
 <span class="token comment"># 生成kubesphere集群安装配置文件</span>
 <span class="token comment"># -f 后跟配置文件路径和文件名，不加-f 和后面的路径，会默认生成一个config-sample.yaml</span>
-<span class="token punctuation">[</span>root@ks-master01 ~<span class="token punctuation">]</span><span class="token comment"># ./kk create config --with-kubernetes v1.22.12 --with-kubesphere v3.3.2 -f ks-cluster-config.yaml</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<span class="token punctuation">[</span>root@ks-master01 ~<span class="token punctuation">]</span><span class="token comment"># ./kk create config --with-kubernetes v1.22.12 --with-kubesphere v3.4.1 -f ks-cluster-config.yaml</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
-<p>配置文件修改：</p>
+<p>完整配置文件修改：</p>
 <pre class="line-numbers language-yaml" data-language="yaml"><code class="language-yaml"><span class="token key atrule">apiVersion</span><span class="token punctuation">:</span> kubekey.kubesphere.io/v1alpha2
 <span class="token key atrule">kind</span><span class="token punctuation">:</span> Cluster
 <span class="token key atrule">metadata</span><span class="token punctuation">:</span>
-  <span class="token comment">#集群名称可以自定义</span>
   <span class="token key atrule">name</span><span class="token punctuation">:</span> dap<span class="token punctuation">-</span>ks<span class="token punctuation">-</span>cluster
 <span class="token key atrule">spec</span><span class="token punctuation">:</span>
   <span class="token key atrule">hosts</span><span class="token punctuation">:</span>
-  <span class="token comment">#注意user和password修改为正确的</span>
-  <span class="token punctuation">-</span> <span class="token punctuation">&#123;</span><span class="token key atrule">name</span><span class="token punctuation">:</span> master01<span class="token punctuation">,</span> <span class="token key atrule">address</span><span class="token punctuation">:</span> 192.168.5.31<span class="token punctuation">,</span> <span class="token key atrule">internalAddress</span><span class="token punctuation">:</span> 192.168.5.31<span class="token punctuation">,</span> <span class="token key atrule">user</span><span class="token punctuation">:</span> ubuntu<span class="token punctuation">,</span> <span class="token key atrule">password</span><span class="token punctuation">:</span> <span class="token string">"Qcloud@123"</span><span class="token punctuation">&#125;</span>
-  <span class="token punctuation">-</span> <span class="token punctuation">&#123;</span><span class="token key atrule">name</span><span class="token punctuation">:</span> worknode01<span class="token punctuation">,</span> <span class="token key atrule">address</span><span class="token punctuation">:</span> 192.168.5.34<span class="token punctuation">,</span> <span class="token key atrule">internalAddress</span><span class="token punctuation">:</span> 192.168.5.34<span class="token punctuation">,</span> <span class="token key atrule">user</span><span class="token punctuation">:</span> ubuntu<span class="token punctuation">,</span> <span class="token key atrule">password</span><span class="token punctuation">:</span> <span class="token string">"Qcloud@123"</span><span class="token punctuation">&#125;</span>
-  <span class="token punctuation">-</span> <span class="token punctuation">&#123;</span><span class="token key atrule">name</span><span class="token punctuation">:</span> worknode02<span class="token punctuation">,</span> <span class="token key atrule">address</span><span class="token punctuation">:</span> 192.168.5.35<span class="token punctuation">,</span> <span class="token key atrule">internalAddress</span><span class="token punctuation">:</span> 192.168.5.35<span class="token punctuation">,</span> <span class="token key atrule">user</span><span class="token punctuation">:</span> ubuntu<span class="token punctuation">,</span> <span class="token key atrule">password</span><span class="token punctuation">:</span> <span class="token string">"Qcloud@123"</span><span class="token punctuation">&#125;</span>
+  <span class="token punctuation">-</span> <span class="token punctuation">&#123;</span><span class="token key atrule">name</span><span class="token punctuation">:</span> ks<span class="token punctuation">-</span>master01<span class="token punctuation">,</span> <span class="token key atrule">address</span><span class="token punctuation">:</span> 192.168.5.31<span class="token punctuation">,</span> <span class="token key atrule">internalAddress</span><span class="token punctuation">:</span> 192.168.5.31<span class="token punctuation">,</span> <span class="token key atrule">user</span><span class="token punctuation">:</span> root<span class="token punctuation">,</span> <span class="token key atrule">password</span><span class="token punctuation">:</span> <span class="token string">"password"</span><span class="token punctuation">&#125;</span>
+  <span class="token punctuation">-</span> <span class="token punctuation">&#123;</span><span class="token key atrule">name</span><span class="token punctuation">:</span> ks<span class="token punctuation">-</span>master02<span class="token punctuation">,</span> <span class="token key atrule">address</span><span class="token punctuation">:</span> 192.168.5.32<span class="token punctuation">,</span> <span class="token key atrule">internalAddress</span><span class="token punctuation">:</span> 192.168.5.32<span class="token punctuation">,</span> <span class="token key atrule">user</span><span class="token punctuation">:</span> root<span class="token punctuation">,</span> <span class="token key atrule">password</span><span class="token punctuation">:</span> <span class="token string">"password"</span><span class="token punctuation">&#125;</span>
+  <span class="token punctuation">-</span> <span class="token punctuation">&#123;</span><span class="token key atrule">name</span><span class="token punctuation">:</span> ks<span class="token punctuation">-</span>master03<span class="token punctuation">,</span> <span class="token key atrule">address</span><span class="token punctuation">:</span> 192.168.5.33<span class="token punctuation">,</span> <span class="token key atrule">internalAddress</span><span class="token punctuation">:</span> 192.168.5.33<span class="token punctuation">,</span> <span class="token key atrule">user</span><span class="token punctuation">:</span> root<span class="token punctuation">,</span> <span class="token key atrule">password</span><span class="token punctuation">:</span> <span class="token string">"password"</span><span class="token punctuation">&#125;</span>
+  <span class="token punctuation">-</span> <span class="token punctuation">&#123;</span><span class="token key atrule">name</span><span class="token punctuation">:</span> ks<span class="token punctuation">-</span>worknode01<span class="token punctuation">,</span> <span class="token key atrule">address</span><span class="token punctuation">:</span> 192.168.5.34<span class="token punctuation">,</span> <span class="token key atrule">internalAddress</span><span class="token punctuation">:</span> 192.168.5.34<span class="token punctuation">,</span> <span class="token key atrule">user</span><span class="token punctuation">:</span> root<span class="token punctuation">,</span> <span class="token key atrule">password</span><span class="token punctuation">:</span> <span class="token string">"password"</span><span class="token punctuation">&#125;</span>
+  <span class="token punctuation">-</span> <span class="token punctuation">&#123;</span><span class="token key atrule">name</span><span class="token punctuation">:</span> ks<span class="token punctuation">-</span>worknode02<span class="token punctuation">,</span> <span class="token key atrule">address</span><span class="token punctuation">:</span> 192.168.5.35<span class="token punctuation">,</span> <span class="token key atrule">internalAddress</span><span class="token punctuation">:</span> 192.168.5.35<span class="token punctuation">,</span> <span class="token key atrule">user</span><span class="token punctuation">:</span> root<span class="token punctuation">,</span> <span class="token key atrule">password</span><span class="token punctuation">:</span> <span class="token string">"password"</span><span class="token punctuation">&#125;</span>
+  <span class="token punctuation">-</span> <span class="token punctuation">&#123;</span><span class="token key atrule">name</span><span class="token punctuation">:</span> ks<span class="token punctuation">-</span>worknode03<span class="token punctuation">,</span> <span class="token key atrule">address</span><span class="token punctuation">:</span> 192.168.5.36<span class="token punctuation">,</span> <span class="token key atrule">internalAddress</span><span class="token punctuation">:</span> 192.168.5.36<span class="token punctuation">,</span> <span class="token key atrule">user</span><span class="token punctuation">:</span> root<span class="token punctuation">,</span> <span class="token key atrule">password</span><span class="token punctuation">:</span> <span class="token string">"password"</span><span class="token punctuation">&#125;</span>
   <span class="token key atrule">roleGroups</span><span class="token punctuation">:</span>
     <span class="token key atrule">etcd</span><span class="token punctuation">:</span>
-    <span class="token punctuation">-</span> master01
+    <span class="token punctuation">-</span> ks<span class="token punctuation">-</span>master01
+    <span class="token punctuation">-</span> ks<span class="token punctuation">-</span>master02
+    <span class="token punctuation">-</span> ks<span class="token punctuation">-</span>master03
     <span class="token key atrule">control-plane</span><span class="token punctuation">:</span> 
-    <span class="token punctuation">-</span> master01
+    <span class="token punctuation">-</span> ks<span class="token punctuation">-</span>master01
+    <span class="token punctuation">-</span> ks<span class="token punctuation">-</span>master02
+    <span class="token punctuation">-</span> ks<span class="token punctuation">-</span>master03
     <span class="token key atrule">worker</span><span class="token punctuation">:</span>
-    <span class="token punctuation">-</span> worknode01
-    <span class="token punctuation">-</span> worknode02
+    <span class="token punctuation">-</span> ks<span class="token punctuation">-</span>worknode01
+    <span class="token punctuation">-</span> ks<span class="token punctuation">-</span>worknode02
+    <span class="token punctuation">-</span> ks<span class="token punctuation">-</span>worknode03
   <span class="token key atrule">controlPlaneEndpoint</span><span class="token punctuation">:</span>
     <span class="token comment">## Internal loadbalancer for apiservers </span>
-    <span class="token comment"># internalLoadbalancer: haproxy</span>
- <span class="token punctuation">...</span>..
- <span class="token comment"># 其他未做改动不再复制，其他属性可以参考官方说明按需配置。</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+    <span class="token key atrule">internalLoadbalancer</span><span class="token punctuation">:</span> haproxy
+
+    <span class="token key atrule">domain</span><span class="token punctuation">:</span> lb.kubesphere.local
+    <span class="token key atrule">address</span><span class="token punctuation">:</span> <span class="token string">""</span>
+    <span class="token key atrule">port</span><span class="token punctuation">:</span> <span class="token number">6443</span>
+  <span class="token key atrule">kubernetes</span><span class="token punctuation">:</span>
+    <span class="token key atrule">version</span><span class="token punctuation">:</span> v1.22.12
+    <span class="token key atrule">clusterName</span><span class="token punctuation">:</span> cluster.local
+    <span class="token key atrule">autoRenewCerts</span><span class="token punctuation">:</span> <span class="token boolean important">true</span>
+    <span class="token key atrule">containerManager</span><span class="token punctuation">:</span> docker
+  <span class="token key atrule">etcd</span><span class="token punctuation">:</span>
+    <span class="token key atrule">type</span><span class="token punctuation">:</span> kubekey
+  <span class="token key atrule">network</span><span class="token punctuation">:</span>
+    <span class="token key atrule">plugin</span><span class="token punctuation">:</span> calico
+    <span class="token key atrule">kubePodsCIDR</span><span class="token punctuation">:</span> 10.233.64.0/18
+    <span class="token key atrule">kubeServiceCIDR</span><span class="token punctuation">:</span> 10.233.0.0/18
+    <span class="token comment">## multus support. https://github.com/k8snetworkplumbingwg/multus-cni</span>
+    <span class="token key atrule">multusCNI</span><span class="token punctuation">:</span>
+      <span class="token key atrule">enabled</span><span class="token punctuation">:</span> <span class="token boolean important">false</span>
+  <span class="token key atrule">registry</span><span class="token punctuation">:</span>
+    <span class="token key atrule">privateRegistry</span><span class="token punctuation">:</span> <span class="token string">""</span>
+    <span class="token key atrule">namespaceOverride</span><span class="token punctuation">:</span> <span class="token string">""</span>
+    <span class="token key atrule">registryMirrors</span><span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
+    <span class="token key atrule">insecureRegistries</span><span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
+  <span class="token key atrule">addons</span><span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
+
+
+
+<span class="token punctuation">---</span>
+<span class="token key atrule">apiVersion</span><span class="token punctuation">:</span> installer.kubesphere.io/v1alpha1
+<span class="token key atrule">kind</span><span class="token punctuation">:</span> ClusterConfiguration
+<span class="token key atrule">metadata</span><span class="token punctuation">:</span>
+  <span class="token key atrule">name</span><span class="token punctuation">:</span> ks<span class="token punctuation">-</span>installer
+  <span class="token key atrule">namespace</span><span class="token punctuation">:</span> kubesphere<span class="token punctuation">-</span>system
+  <span class="token key atrule">labels</span><span class="token punctuation">:</span>
+    <span class="token key atrule">version</span><span class="token punctuation">:</span> v3.4.1
+<span class="token key atrule">spec</span><span class="token punctuation">:</span>
+  <span class="token key atrule">persistence</span><span class="token punctuation">:</span>
+    <span class="token key atrule">storageClass</span><span class="token punctuation">:</span> <span class="token string">""</span>
+  <span class="token key atrule">authentication</span><span class="token punctuation">:</span>
+    <span class="token key atrule">jwtSecret</span><span class="token punctuation">:</span> <span class="token string">""</span>
+  <span class="token key atrule">local_registry</span><span class="token punctuation">:</span> <span class="token string">""</span>
+  <span class="token comment"># dev_tag: ""</span>
+  <span class="token key atrule">etcd</span><span class="token punctuation">:</span>
+    <span class="token key atrule">monitoring</span><span class="token punctuation">:</span> <span class="token boolean important">true</span>
+    <span class="token key atrule">endpointIps</span><span class="token punctuation">:</span> localhost
+    <span class="token key atrule">port</span><span class="token punctuation">:</span> <span class="token number">2379</span>
+    <span class="token key atrule">tlsEnable</span><span class="token punctuation">:</span> <span class="token boolean important">true</span>
+  <span class="token key atrule">common</span><span class="token punctuation">:</span>
+    <span class="token key atrule">core</span><span class="token punctuation">:</span>
+      <span class="token key atrule">console</span><span class="token punctuation">:</span>
+        <span class="token key atrule">enableMultiLogin</span><span class="token punctuation">:</span> <span class="token boolean important">true</span>
+        <span class="token key atrule">port</span><span class="token punctuation">:</span> <span class="token number">30880</span>
+        <span class="token key atrule">type</span><span class="token punctuation">:</span> NodePort
+    <span class="token comment"># apiserver:</span>
+    <span class="token comment">#  resources: &#123;&#125;</span>
+    <span class="token comment"># controllerManager:</span>
+    <span class="token comment">#  resources: &#123;&#125;</span>
+    <span class="token key atrule">redis</span><span class="token punctuation">:</span>
+      <span class="token key atrule">enabled</span><span class="token punctuation">:</span> <span class="token boolean important">false</span>
+      <span class="token key atrule">enableHA</span><span class="token punctuation">:</span> <span class="token boolean important">false</span>
+      <span class="token key atrule">volumeSize</span><span class="token punctuation">:</span> 2Gi
+    <span class="token key atrule">openldap</span><span class="token punctuation">:</span>
+      <span class="token key atrule">enabled</span><span class="token punctuation">:</span> <span class="token boolean important">false</span>
+      <span class="token key atrule">volumeSize</span><span class="token punctuation">:</span> 2Gi
+    <span class="token key atrule">minio</span><span class="token punctuation">:</span>
+      <span class="token key atrule">volumeSize</span><span class="token punctuation">:</span> 20Gi
+    <span class="token key atrule">monitoring</span><span class="token punctuation">:</span>
+      <span class="token comment"># type: external</span>
+      <span class="token key atrule">endpoint</span><span class="token punctuation">:</span> http<span class="token punctuation">:</span>//prometheus<span class="token punctuation">-</span>operated.kubesphere<span class="token punctuation">-</span>monitoring<span class="token punctuation">-</span>system.svc<span class="token punctuation">:</span><span class="token number">9090</span>
+      <span class="token key atrule">GPUMonitoring</span><span class="token punctuation">:</span>
+        <span class="token key atrule">enabled</span><span class="token punctuation">:</span> <span class="token boolean important">false</span>
+    <span class="token key atrule">gpu</span><span class="token punctuation">:</span>
+      <span class="token key atrule">kinds</span><span class="token punctuation">:</span>
+      <span class="token punctuation">-</span> <span class="token key atrule">resourceName</span><span class="token punctuation">:</span> <span class="token string">"nvidia.com/gpu"</span>
+        <span class="token key atrule">resourceType</span><span class="token punctuation">:</span> <span class="token string">"GPU"</span>
+        <span class="token key atrule">default</span><span class="token punctuation">:</span> <span class="token boolean important">true</span>
+    <span class="token key atrule">es</span><span class="token punctuation">:</span>
+      <span class="token comment"># master:</span>
+      <span class="token comment">#   volumeSize: 4Gi</span>
+      <span class="token comment">#   replicas: 1</span>
+      <span class="token comment">#   resources: &#123;&#125;</span>
+      <span class="token comment"># data:</span>
+      <span class="token comment">#   volumeSize: 20Gi</span>
+      <span class="token comment">#   replicas: 1</span>
+      <span class="token comment">#   resources: &#123;&#125;</span>
+      <span class="token key atrule">enabled</span><span class="token punctuation">:</span> <span class="token boolean important">false</span>
+      <span class="token key atrule">logMaxAge</span><span class="token punctuation">:</span> <span class="token number">7</span>
+      <span class="token key atrule">elkPrefix</span><span class="token punctuation">:</span> logstash
+      <span class="token key atrule">basicAuth</span><span class="token punctuation">:</span>
+        <span class="token key atrule">enabled</span><span class="token punctuation">:</span> <span class="token boolean important">false</span>
+        <span class="token key atrule">username</span><span class="token punctuation">:</span> <span class="token string">""</span>
+        <span class="token key atrule">password</span><span class="token punctuation">:</span> <span class="token string">""</span>
+      <span class="token key atrule">externalElasticsearchHost</span><span class="token punctuation">:</span> <span class="token string">""</span>
+      <span class="token key atrule">externalElasticsearchPort</span><span class="token punctuation">:</span> <span class="token string">""</span>
+    <span class="token key atrule">opensearch</span><span class="token punctuation">:</span>
+      <span class="token comment"># master:</span>
+      <span class="token comment">#   volumeSize: 4Gi</span>
+      <span class="token comment">#   replicas: 1</span>
+      <span class="token comment">#   resources: &#123;&#125;</span>
+      <span class="token comment"># data:</span>
+      <span class="token comment">#   volumeSize: 20Gi</span>
+      <span class="token comment">#   replicas: 1</span>
+      <span class="token comment">#   resources: &#123;&#125;</span>
+      <span class="token key atrule">enabled</span><span class="token punctuation">:</span> <span class="token boolean important">true</span>
+      <span class="token key atrule">logMaxAge</span><span class="token punctuation">:</span> <span class="token number">7</span>
+      <span class="token key atrule">opensearchPrefix</span><span class="token punctuation">:</span> whizard
+      <span class="token key atrule">basicAuth</span><span class="token punctuation">:</span>
+        <span class="token key atrule">enabled</span><span class="token punctuation">:</span> <span class="token boolean important">true</span>
+        <span class="token key atrule">username</span><span class="token punctuation">:</span> <span class="token string">"admin"</span>
+        <span class="token key atrule">password</span><span class="token punctuation">:</span> <span class="token string">"admin"</span>
+      <span class="token key atrule">externalOpensearchHost</span><span class="token punctuation">:</span> <span class="token string">""</span>
+      <span class="token key atrule">externalOpensearchPort</span><span class="token punctuation">:</span> <span class="token string">""</span>
+      <span class="token key atrule">dashboard</span><span class="token punctuation">:</span>
+        <span class="token key atrule">enabled</span><span class="token punctuation">:</span> <span class="token boolean important">false</span>
+  <span class="token key atrule">alerting</span><span class="token punctuation">:</span>
+    <span class="token key atrule">enabled</span><span class="token punctuation">:</span> <span class="token boolean important">true</span>
+    <span class="token comment"># thanosruler:</span>
+    <span class="token comment">#   replicas: 1</span>
+    <span class="token comment">#   resources: &#123;&#125;</span>
+  <span class="token key atrule">auditing</span><span class="token punctuation">:</span>
+    <span class="token key atrule">enabled</span><span class="token punctuation">:</span> <span class="token boolean important">false</span>
+    <span class="token comment"># operator:</span>
+    <span class="token comment">#   resources: &#123;&#125;</span>
+    <span class="token comment"># webhook:</span>
+    <span class="token comment">#   resources: &#123;&#125;</span>
+  <span class="token key atrule">devops</span><span class="token punctuation">:</span>
+    <span class="token key atrule">enabled</span><span class="token punctuation">:</span> <span class="token boolean important">false</span>
+    <span class="token key atrule">jenkinsCpuReq</span><span class="token punctuation">:</span> <span class="token number">0.5</span>
+    <span class="token key atrule">jenkinsCpuLim</span><span class="token punctuation">:</span> <span class="token number">1</span>
+    <span class="token key atrule">jenkinsMemoryReq</span><span class="token punctuation">:</span> 4Gi
+    <span class="token key atrule">jenkinsMemoryLim</span><span class="token punctuation">:</span> 4Gi
+    <span class="token key atrule">jenkinsVolumeSize</span><span class="token punctuation">:</span> 16Gi
+  <span class="token key atrule">events</span><span class="token punctuation">:</span>
+    <span class="token key atrule">enabled</span><span class="token punctuation">:</span> <span class="token boolean important">false</span>
+    <span class="token comment"># operator:</span>
+    <span class="token comment">#   resources: &#123;&#125;</span>
+    <span class="token comment"># exporter:</span>
+    <span class="token comment">#   resources: &#123;&#125;</span>
+    <span class="token key atrule">ruler</span><span class="token punctuation">:</span>
+      <span class="token key atrule">enabled</span><span class="token punctuation">:</span> <span class="token boolean important">true</span>
+      <span class="token key atrule">replicas</span><span class="token punctuation">:</span> <span class="token number">2</span>
+    <span class="token comment">#   resources: &#123;&#125;</span>
+  <span class="token key atrule">logging</span><span class="token punctuation">:</span>
+    <span class="token key atrule">enabled</span><span class="token punctuation">:</span> <span class="token boolean important">false</span>
+    <span class="token key atrule">logsidecar</span><span class="token punctuation">:</span>
+      <span class="token key atrule">enabled</span><span class="token punctuation">:</span> <span class="token boolean important">true</span>
+      <span class="token key atrule">replicas</span><span class="token punctuation">:</span> <span class="token number">2</span>
+      <span class="token comment"># resources: &#123;&#125;</span>
+  <span class="token key atrule">metrics_server</span><span class="token punctuation">:</span>
+    <span class="token key atrule">enabled</span><span class="token punctuation">:</span> <span class="token boolean important">false</span>
+  <span class="token key atrule">monitoring</span><span class="token punctuation">:</span>
+    <span class="token key atrule">storageClass</span><span class="token punctuation">:</span> <span class="token string">""</span>
+    <span class="token key atrule">node_exporter</span><span class="token punctuation">:</span>
+      <span class="token key atrule">port</span><span class="token punctuation">:</span> <span class="token number">9100</span>
+      <span class="token comment"># resources: &#123;&#125;</span>
+    <span class="token comment"># kube_rbac_proxy:</span>
+    <span class="token comment">#   resources: &#123;&#125;</span>
+    <span class="token comment"># kube_state_metrics:</span>
+    <span class="token comment">#   resources: &#123;&#125;</span>
+    <span class="token comment"># prometheus:</span>
+    <span class="token comment">#   replicas: 1</span>
+    <span class="token comment">#   volumeSize: 20Gi</span>
+    <span class="token comment">#   resources: &#123;&#125;</span>
+    <span class="token comment">#   operator:</span>
+    <span class="token comment">#     resources: &#123;&#125;</span>
+    <span class="token comment"># alertmanager:</span>
+    <span class="token comment">#   replicas: 1</span>
+    <span class="token comment">#   resources: &#123;&#125;</span>
+    <span class="token comment"># notification_manager:</span>
+    <span class="token comment">#   resources: &#123;&#125;</span>
+    <span class="token comment">#   operator:</span>
+    <span class="token comment">#     resources: &#123;&#125;</span>
+    <span class="token comment">#   proxy:</span>
+    <span class="token comment">#     resources: &#123;&#125;</span>
+    <span class="token key atrule">gpu</span><span class="token punctuation">:</span>
+      <span class="token key atrule">nvidia_dcgm_exporter</span><span class="token punctuation">:</span>
+        <span class="token key atrule">enabled</span><span class="token punctuation">:</span> <span class="token boolean important">false</span>
+        <span class="token comment"># resources: &#123;&#125;</span>
+  <span class="token key atrule">multicluster</span><span class="token punctuation">:</span>
+    <span class="token key atrule">clusterRole</span><span class="token punctuation">:</span> none
+  <span class="token key atrule">network</span><span class="token punctuation">:</span>
+    <span class="token key atrule">networkpolicy</span><span class="token punctuation">:</span>
+      <span class="token key atrule">enabled</span><span class="token punctuation">:</span> <span class="token boolean important">false</span>
+    <span class="token key atrule">ippool</span><span class="token punctuation">:</span>
+      <span class="token key atrule">type</span><span class="token punctuation">:</span> none
+    <span class="token key atrule">topology</span><span class="token punctuation">:</span>
+      <span class="token key atrule">type</span><span class="token punctuation">:</span> none
+  <span class="token key atrule">openpitrix</span><span class="token punctuation">:</span>
+    <span class="token key atrule">store</span><span class="token punctuation">:</span>
+      <span class="token key atrule">enabled</span><span class="token punctuation">:</span> <span class="token boolean important">true</span>
+  <span class="token key atrule">servicemesh</span><span class="token punctuation">:</span>
+    <span class="token key atrule">enabled</span><span class="token punctuation">:</span> <span class="token boolean important">false</span>
+    <span class="token key atrule">istio</span><span class="token punctuation">:</span>
+      <span class="token key atrule">components</span><span class="token punctuation">:</span>
+        <span class="token key atrule">ingressGateways</span><span class="token punctuation">:</span>
+        <span class="token punctuation">-</span> <span class="token key atrule">name</span><span class="token punctuation">:</span> istio<span class="token punctuation">-</span>ingressgateway
+          <span class="token key atrule">enabled</span><span class="token punctuation">:</span> <span class="token boolean important">false</span>
+        <span class="token key atrule">cni</span><span class="token punctuation">:</span>
+          <span class="token key atrule">enabled</span><span class="token punctuation">:</span> <span class="token boolean important">false</span>
+  <span class="token key atrule">edgeruntime</span><span class="token punctuation">:</span>
+    <span class="token key atrule">enabled</span><span class="token punctuation">:</span> <span class="token boolean important">false</span>
+    <span class="token key atrule">kubeedge</span><span class="token punctuation">:</span>
+      <span class="token key atrule">enabled</span><span class="token punctuation">:</span> <span class="token boolean important">false</span>
+      <span class="token key atrule">cloudCore</span><span class="token punctuation">:</span>
+        <span class="token key atrule">cloudHub</span><span class="token punctuation">:</span>
+          <span class="token key atrule">advertiseAddress</span><span class="token punctuation">:</span>
+            <span class="token punctuation">-</span> <span class="token string">""</span>
+        <span class="token key atrule">service</span><span class="token punctuation">:</span>
+          <span class="token key atrule">cloudhubNodePort</span><span class="token punctuation">:</span> <span class="token string">"30000"</span>
+          <span class="token key atrule">cloudhubQuicNodePort</span><span class="token punctuation">:</span> <span class="token string">"30001"</span>
+          <span class="token key atrule">cloudhubHttpsNodePort</span><span class="token punctuation">:</span> <span class="token string">"30002"</span>
+          <span class="token key atrule">cloudstreamNodePort</span><span class="token punctuation">:</span> <span class="token string">"30003"</span>
+          <span class="token key atrule">tunnelNodePort</span><span class="token punctuation">:</span> <span class="token string">"30004"</span>
+        <span class="token comment"># resources: &#123;&#125;</span>
+        <span class="token comment"># hostNetWork: false</span>
+      <span class="token key atrule">iptables-manager</span><span class="token punctuation">:</span>
+        <span class="token key atrule">enabled</span><span class="token punctuation">:</span> <span class="token boolean important">true</span>
+        <span class="token key atrule">mode</span><span class="token punctuation">:</span> <span class="token string">"external"</span>
+        <span class="token comment"># resources: &#123;&#125;</span>
+      <span class="token comment"># edgeService:</span>
+      <span class="token comment">#   resources: &#123;&#125;</span>
+  <span class="token key atrule">gatekeeper</span><span class="token punctuation">:</span>
+    <span class="token key atrule">enabled</span><span class="token punctuation">:</span> <span class="token boolean important">false</span>
+    <span class="token comment"># controller_manager:</span>
+    <span class="token comment">#   resources: &#123;&#125;</span>
+    <span class="token comment"># audit:</span>
+    <span class="token comment">#   resources: &#123;&#125;</span>
+  <span class="token key atrule">terminal</span><span class="token punctuation">:</span>
+    <span class="token key atrule">timeout</span><span class="token punctuation">:</span> <span class="token number">600</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <p>使用配置文件创建集群：</p>
 <pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># 整个安装过程可能需要 10 到 20 分钟，具体取决于您的计算机和网络环境。</span>
@@ -582,28 +808,9 @@ Greetings, KubeKey<span class="token operator">!</span>
 <span class="token number">17</span>:36:47 CST success: <span class="token punctuation">[</span>master01<span class="token punctuation">]</span>
 <span class="token number">17</span>:36:47 CST success: <span class="token punctuation">[</span>worknode02<span class="token punctuation">]</span>
 <span class="token number">17</span>:36:47 CST success: <span class="token punctuation">[</span>worknode01<span class="token punctuation">]</span>
-<span class="token number">17</span>:36:47 CST <span class="token punctuation">[</span>ConfirmModule<span class="token punctuation">]</span> Display confirmation form
-+------------+------+------+---------+----------+-------+-------+---------+-----------+--------+--------+------------+------------+-------------+------------------+--------------+
-<span class="token operator">|</span> name       <span class="token operator">|</span> <span class="token function">sudo</span> <span class="token operator">|</span> <span class="token function">curl</span> <span class="token operator">|</span> openssl <span class="token operator">|</span> ebtables <span class="token operator">|</span> socat <span class="token operator">|</span> ipset <span class="token operator">|</span> ipvsadm <span class="token operator">|</span> conntrack <span class="token operator">|</span> chrony <span class="token operator">|</span> <span class="token function">docker</span> <span class="token operator">|</span> containerd <span class="token operator">|</span> nfs client <span class="token operator">|</span> ceph client <span class="token operator">|</span> glusterfs client <span class="token operator">|</span> <span class="token function">time</span>         <span class="token operator">|</span>
-+------------+------+------+---------+----------+-------+-------+---------+-----------+--------+--------+------------+------------+-------------+------------------+--------------+
-<span class="token operator">|</span> master01   <span class="token operator">|</span> y    <span class="token operator">|</span> y    <span class="token operator">|</span> y       <span class="token operator">|</span> y        <span class="token operator">|</span> y     <span class="token operator">|</span> y     <span class="token operator">|</span>         <span class="token operator">|</span> y         <span class="token operator">|</span> y      <span class="token operator">|</span> <span class="token number">24.0</span>.7 <span class="token operator">|</span> <span class="token number">1.6</span>.26     <span class="token operator">|</span>            <span class="token operator">|</span>             <span class="token operator">|</span>                  <span class="token operator">|</span> CST <span class="token number">17</span>:36:47 <span class="token operator">|</span>
-<span class="token operator">|</span> worknode01 <span class="token operator">|</span> y    <span class="token operator">|</span> y    <span class="token operator">|</span> y       <span class="token operator">|</span> y        <span class="token operator">|</span> y     <span class="token operator">|</span> y     <span class="token operator">|</span>         <span class="token operator">|</span> y         <span class="token operator">|</span> y      <span class="token operator">|</span> <span class="token number">24.0</span>.7 <span class="token operator">|</span> <span class="token number">1.6</span>.26     <span class="token operator">|</span>            <span class="token operator">|</span>             <span class="token operator">|</span>                  <span class="token operator">|</span> CST <span class="token number">17</span>:36:47 <span class="token operator">|</span>
-<span class="token operator">|</span> worknode02 <span class="token operator">|</span> y    <span class="token operator">|</span> y    <span class="token operator">|</span> y       <span class="token operator">|</span> y        <span class="token operator">|</span> y     <span class="token operator">|</span> y     <span class="token operator">|</span>         <span class="token operator">|</span> y         <span class="token operator">|</span> y      <span class="token operator">|</span> <span class="token number">24.0</span>.7 <span class="token operator">|</span> <span class="token number">1.6</span>.26     <span class="token operator">|</span>            <span class="token operator">|</span>             <span class="token operator">|</span>                  <span class="token operator">|</span> CST <span class="token number">17</span>:36:47 <span class="token operator">|</span>
-+------------+------+------+---------+----------+-------+-------+---------+-----------+--------+--------+------------+------------+-------------+------------------+--------------+
+<span class="token number">17</span>:36:47 CST <span class="token punctuation">[</span>ConfirmModule<span class="token punctuation">]</span> Display confirmation form<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
-This is a simple check of your environment.
-Before installation, ensure that your machines meet all requirements specified at
-https://github.com/kubesphere/kubekey<span class="token comment">#requirements-and-recommendations</span>
-
-Continue this installation? <span class="token punctuation">[</span>yes/no<span class="token punctuation">]</span>: <span class="token function">yes</span>
-<span class="token number">17</span>:36:52 CST success: <span class="token punctuation">[</span>LocalHost<span class="token punctuation">]</span>
-<span class="token number">17</span>:36:52 CST <span class="token punctuation">[</span>NodeBinariesModule<span class="token punctuation">]</span> Download installation binaries
-<span class="token number">17</span>:36:52 CST message: <span class="token punctuation">[</span>localhost<span class="token punctuation">]</span>
-downloading amd64 kubeadm v1.22.12 <span class="token punctuation">..</span>.
-  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
-<span class="token punctuation">..</span><span class="token punctuation">..</span><span class="token punctuation">..</span><span class="token punctuation">..</span>
-<span class="token comment"># 耐心等待安装完毕....</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-
+<p><img src="/../images/openeuler-install-ks-cluster/image-20240116110903974.png" alt="image-20240116110903974"></p>
 <p>重要提示信息备忘：</p>
 <pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">Your Kubernetes control-plane has initialized successfully<span class="token operator">!</span>
 
@@ -697,7 +904,7 @@ Please check the result using the command:
 
 <span class="token punctuation">[</span>root@ks-master01 ~<span class="token punctuation">]</span><span class="token comment"># </span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
-
+<!-- flag of hidden posts -->
     </div>
 
     
@@ -749,18 +956,6 @@ Please check the result using the command:
 
         
 
-          <div class="post-nav">
-            <div class="post-nav-item">
-                <a href="/2024/01/02/docker-install-in-openeuler/" rel="prev" title="openEuler安装docker最新版本">
-                  <i class="fa fa-chevron-left"></i> openEuler安装docker最新版本
-                </a>
-            </div>
-            <div class="post-nav-item">
-                <a href="/2024/01/11/webui-vue/" rel="next" title="前端框架汇总-Vue系列【持续更新ing....】">
-                  前端框架汇总-Vue系列【持续更新ing....】 <i class="fa fa-chevron-right"></i>
-                </a>
-            </div>
-          </div>
     </footer>
   </article>
 </div>
@@ -791,14 +986,14 @@ Please check the result using the command:
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">38k</span>
+    <span title="站点总字数">34k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">2:19</span>
+    <span title="站点阅读时长">2:02</span>
   </span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
