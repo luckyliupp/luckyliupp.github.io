@@ -1,0 +1,1028 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.2.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.png">
+  <link rel="mask-icon" href="/images/favicon.png" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" integrity="sha256-Z1K5uhUaJXA7Ll0XrZ/0JhX4lAtZFpT6jkKrEDT0drU=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"it-liupp.gitee.io","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.14.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":true,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="摘要：OpenEuler22.03的Heketi安装及K8s、Kubesphere的对接。 两篇： 1.OpenEuler22.03的GlusterFS集群: 2.OpenEuler22.03的Heketi安装及K8s、Kubesphere的对接（本文）。 请根据需要查看相关文章。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="OpenEuler22.03的Heketi安装及K8s、Kubesphere的对接">
+<meta property="og:url" content="https://it-liupp.gitee.io/2024/01/19/openeuler-install-heketi-k8s/index.html">
+<meta property="og:site_name" content="Hello Mr Liu">
+<meta property="og:description" content="摘要：OpenEuler22.03的Heketi安装及K8s、Kubesphere的对接。 两篇： 1.OpenEuler22.03的GlusterFS集群: 2.OpenEuler22.03的Heketi安装及K8s、Kubesphere的对接（本文）。 请根据需要查看相关文章。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://it-liupp.gitee.io/images/openeuler-install-heketi-k8s/image-20240117194554147.png">
+<meta property="og:image" content="https://it-liupp.gitee.io/images/openeuler-install-heketi-k8s/image-20240117194624625.png">
+<meta property="og:image" content="https://it-liupp.gitee.io/images/openeuler-install-heketi-k8s/image-20240117194646933.png">
+<meta property="og:image" content="https://it-liupp.gitee.io/images/openeuler-install-heketi-k8s/image-20240117194713582.png">
+<meta property="article:published_time" content="2024-01-19T01:30:10.000Z">
+<meta property="article:modified_time" content="2024-01-19T01:31:38.961Z">
+<meta property="article:author" content="Mr Liu">
+<meta property="article:tag" content="Linux">
+<meta property="article:tag" content="OpenEuler">
+<meta property="article:tag" content="Kubesphere">
+<meta property="article:tag" content="Kubernetes">
+<meta property="article:tag" content="Heketi">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://it-liupp.gitee.io/images/openeuler-install-heketi-k8s/image-20240117194554147.png">
+
+
+<link rel="canonical" href="https://it-liupp.gitee.io/2024/01/19/openeuler-install-heketi-k8s/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://it-liupp.gitee.io/2024/01/19/openeuler-install-heketi-k8s/","path":"2024/01/19/openeuler-install-heketi-k8s/","title":"OpenEuler22.03的Heketi安装及K8s、Kubesphere的对接"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>OpenEuler22.03的Heketi安装及K8s、Kubesphere的对接 | Hello Mr Liu</title>
+  
+
+
+
+
+
+
+  <script async defer data-website-id="" src=""></script>
+
+  <script defer data-domain="" src=""></script>
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Hello Mr Liu</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">临江对月</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Heketi%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE"><span class="nav-number">1.</span> <span class="nav-text">Heketi安装配置</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85Heketi"><span class="nav-number">1.1.</span> <span class="nav-text">安装Heketi</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%85%8D%E7%BD%AEHeketi"><span class="nav-number">1.2.</span> <span class="nav-text">配置Heketi</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%90%AF%E5%8A%A8Heketi%E6%9C%8D%E5%8A%A1"><span class="nav-number">1.3.</span> <span class="nav-text">启动Heketi服务</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E5%AD%98%E5%82%A8"><span class="nav-number">1.4.</span> <span class="nav-text">配置存储</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8A%9F%E8%83%BD%E9%AA%8C%E8%AF%81"><span class="nav-number">1.5.</span> <span class="nav-text">功能验证</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B8%85%E7%90%86%E6%B5%8B%E8%AF%95%E6%95%B0%E6%8D%AE"><span class="nav-number">1.6.</span> <span class="nav-text">清理测试数据</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#K8s-%E9%9B%86%E7%BE%A4%E5%AF%B9%E6%8E%A5-GlusterFS"><span class="nav-number">2.</span> <span class="nav-text">K8s 集群对接 GlusterFS</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85-GlusterFS-%E5%AE%A2%E6%88%B7%E7%AB%AF"><span class="nav-number">2.1.</span> <span class="nav-text">安装 GlusterFS 客户端</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%9B%E5%BB%BAHeketi%E4%BD%BF%E7%94%A8%E7%9A%84Secret%E7%9A%84%E8%AE%A4%E8%AF%81%E5%AF%86%E7%A0%81"><span class="nav-number">2.2.</span> <span class="nav-text">创建Heketi使用的Secret的认证密码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA-StorageClass"><span class="nav-number">2.3.</span> <span class="nav-text">创建 StorageClass</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA-pvc-%E6%B5%8B%E8%AF%95"><span class="nav-number">2.4.</span> <span class="nav-text">创建 pvc 测试</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E6%B5%8B%E8%AF%95-Pod-%E6%8C%82%E8%BD%BD-pvc"><span class="nav-number">2.5.</span> <span class="nav-text">创建测试 Pod 挂载 pvc</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%99%BB%E5%BD%95%E5%AD%98%E5%82%A8%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%9F%A5%E7%9C%8B%E5%BA%95%E5%B1%82%E5%8F%98%E5%8C%96"><span class="nav-number">2.6.</span> <span class="nav-text">登录存储服务器查看底层变化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#KubeSphere-%E7%AE%A1%E7%90%86%E6%8E%A7%E5%88%B6%E5%8F%B0%E6%9F%A5%E9%AA%8C"><span class="nav-number">2.7.</span> <span class="nav-text">KubeSphere 管理控制台查验</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B8%85%E7%90%86%E6%B5%8B%E8%AF%95%E8%B5%84%E6%BA%90"><span class="nav-number">2.8.</span> <span class="nav-text">清理测试资源</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="nav-number">3.</span> <span class="nav-text">参考资料</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Mr Liu"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Mr Liu</p>
+  <div class="site-description" itemprop="description">和意识先进的人在一起你才能转变意识，和心态积极的人在一起，你才能够积极，靠自己改变很难，一个人拽着自己的头发是很难把自己拎起来的。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">23</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">17</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">32</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/big/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://it-liupp.gitee.io/2024/01/19/openeuler-install-heketi-k8s/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Mr Liu">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hello Mr Liu">
+      <meta itemprop="description" content="和意识先进的人在一起你才能转变意识，和心态积极的人在一起，你才能够积极，靠自己改变很难，一个人拽着自己的头发是很难把自己拎起来的。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="OpenEuler22.03的Heketi安装及K8s、Kubesphere的对接 | Hello Mr Liu">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          OpenEuler22.03的Heketi安装及K8s、Kubesphere的对接
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2024-01-19 09:30:10 / 修改时间：09:31:38" itemprop="dateCreated datePublished" datetime="2024-01-19T09:30:10+08:00">2024-01-19</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E8%BD%AF%E4%BB%B6%E5%AE%89%E8%A3%85/" itemprop="url" rel="index"><span itemprop="name">软件安装</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>3k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>11 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <blockquote>
+<p>摘要：OpenEuler22.03的Heketi安装及K8s、Kubesphere的对接。</p>
+<p>两篇：</p>
+<p>1.OpenEuler22.03的GlusterFS集群:</p>
+<p>2.OpenEuler22.03的Heketi安装及K8s、Kubesphere的对接（本文）。</p>
+<p>请根据需要查看相关文章。</p>
+</blockquote>
+<span id="more"></span>
+
+<p>接上篇《OpenEuler22.03的GlusterFS集群安装》：</p>
+<h1 id="Heketi安装配置"><a href="#Heketi安装配置" class="headerlink" title="Heketi安装配置"></a>Heketi安装配置</h1><h2 id="安装Heketi"><a href="#安装Heketi" class="headerlink" title="安装Heketi"></a>安装Heketi</h2><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># 1.安装Heketi</span>
+<span class="token builtin class-name">cd</span> /root
+<span class="token function">wget</span> https://github.com/heketi/heketi/releases/download/v10.4.0/heketi-v10.4.0-release-10.linux.amd64.tar.gz
+
+<span class="token comment"># 2.解压Heketi</span>
+<span class="token function">tar</span> xvf heketi-v10.4.0-release-10.linux.amd64.tar.gz
+<span class="token builtin class-name">cd</span> heketi
+<span class="token function">cp</span> heketi heketi-cli /usr/bin/
+
+<span class="token comment"># 4.创建 Heketi 服务配置文件目录</span>
+<span class="token function">mkdir</span> /etc/heketi
+
+<span class="token comment"># 5.创建 Hekiti system 服务文件</span>
+<span class="token function">vi</span> /usr/lib/systemd/system/heketi.service<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>heketi.service内容：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token punctuation">[</span>Unit<span class="token punctuation">]</span>
+<span class="token assign-left variable">Description</span><span class="token operator">=</span>Heketi Server
+
+<span class="token punctuation">[</span>Service<span class="token punctuation">]</span>
+<span class="token assign-left variable">Type</span><span class="token operator">=</span>simple
+<span class="token assign-left variable">WorkingDirectory</span><span class="token operator">=</span>/var/lib/heketi
+<span class="token assign-left variable">ExecStart</span><span class="token operator">=</span>/usr/bin/heketi --config<span class="token operator">=</span>/etc/heketi/heketi.json
+<span class="token assign-left variable">Restart</span><span class="token operator">=</span>on-failure
+<span class="token assign-left variable">StandardOutput</span><span class="token operator">=</span>syslog
+<span class="token assign-left variable">StandardError</span><span class="token operator">=</span>syslog
+
+<span class="token punctuation">[</span>Install<span class="token punctuation">]</span>
+<span class="token assign-left variable">WantedBy</span><span class="token operator">=</span>multi-user.target<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h2 id="配置Heketi"><a href="#配置Heketi" class="headerlink" title="配置Heketi"></a>配置Heketi</h2><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># 1.创建Heketi配置文件</span>
+<span class="token comment"># 本文使用必要的配置项编写配置文件，更多的配置文件的写法和说明可以参考下载的源码中的示例。</span>
+<span class="token function">vi</span> /etc/heketi/heketi.json<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+
+<p>heketi.json内容如下：</p>
+<pre class="line-numbers language-json" data-language="json"><code class="language-json"><span class="token punctuation">&#123;</span>
+  <span class="token property">"_port_comment"</span><span class="token operator">:</span> <span class="token string">"Heketi Server Port Number"</span><span class="token punctuation">,</span>
+  <span class="token property">"port"</span><span class="token operator">:</span> <span class="token string">"18080"</span><span class="token punctuation">,</span>
+
+  <span class="token property">"_use_auth"</span><span class="token operator">:</span> <span class="token string">"Enable JWT authorization. Please enable for deployment"</span><span class="token punctuation">,</span>
+  <span class="token property">"use_auth"</span><span class="token operator">:</span> <span class="token boolean">false</span><span class="token punctuation">,</span>
+
+  <span class="token property">"_jwt"</span><span class="token operator">:</span> <span class="token string">"Private keys for access"</span><span class="token punctuation">,</span>
+  <span class="token property">"jwt"</span><span class="token operator">:</span> <span class="token punctuation">&#123;</span>
+    <span class="token property">"_admin"</span><span class="token operator">:</span> <span class="token string">"Admin has access to all APIs"</span><span class="token punctuation">,</span>
+    <span class="token property">"admin"</span><span class="token operator">:</span> <span class="token punctuation">&#123;</span>
+          <span class="token property">"key"</span><span class="token operator">:</span> <span class="token string">"heketi_admin@yicr.dap"</span>
+    <span class="token punctuation">&#125;</span><span class="token punctuation">,</span>
+    <span class="token property">"_user"</span><span class="token operator">:</span> <span class="token string">"User only has access to /volumes endpoint"</span><span class="token punctuation">,</span>
+    <span class="token property">"user"</span><span class="token operator">:</span> <span class="token punctuation">&#123;</span>
+         <span class="token property">"key"</span><span class="token operator">:</span> <span class="token string">"heketi_user@yicr.dap"</span>
+    <span class="token punctuation">&#125;</span>
+  <span class="token punctuation">&#125;</span><span class="token punctuation">,</span>
+
+  <span class="token property">"_glusterfs_comment"</span><span class="token operator">:</span> <span class="token string">"GlusterFS Configuration"</span><span class="token punctuation">,</span>
+  <span class="token property">"glusterfs"</span><span class="token operator">:</span> <span class="token punctuation">&#123;</span>
+    <span class="token property">"_executor_comment"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
+      <span class="token string">"Execute plugin. Possible choices: mock, ssh"</span><span class="token punctuation">,</span>
+      <span class="token string">"mock: This setting is used for testing and development."</span><span class="token punctuation">,</span>
+      <span class="token string">"      It will not send commands to any node."</span><span class="token punctuation">,</span>
+      <span class="token string">"ssh:  This setting will notify Heketi to ssh to the nodes."</span><span class="token punctuation">,</span>
+      <span class="token string">"      It will need the values in sshexec to be configured."</span><span class="token punctuation">,</span>
+      <span class="token string">"kubernetes: Communicate with GlusterFS containers over"</span><span class="token punctuation">,</span>
+      <span class="token string">"            Kubernetes exec api."</span>
+    <span class="token punctuation">]</span><span class="token punctuation">,</span>
+    <span class="token property">"executor"</span><span class="token operator">:</span> <span class="token string">"ssh"</span><span class="token punctuation">,</span>
+
+    <span class="token property">"_sshexec_comment"</span><span class="token operator">:</span> <span class="token string">"SSH username and private key file information"</span><span class="token punctuation">,</span>
+    <span class="token property">"sshexec"</span><span class="token operator">:</span> <span class="token punctuation">&#123;</span>
+      <span class="token property">"keyfile"</span><span class="token operator">:</span> <span class="token string">"/root/.ssh/id_ed25519"</span><span class="token punctuation">,</span>
+      <span class="token property">"user"</span><span class="token operator">:</span> <span class="token string">"root"</span>
+    <span class="token punctuation">&#125;</span><span class="token punctuation">,</span>
+
+    <span class="token property">"_kubeexec_comment"</span><span class="token operator">:</span> <span class="token string">"Kubernetes configuration"</span><span class="token punctuation">,</span>
+    <span class="token property">"kubeexec"</span><span class="token operator">:</span> <span class="token punctuation">&#123;</span>
+      <span class="token property">"host"</span> <span class="token operator">:</span><span class="token string">"https://kubernetes.host:8443"</span><span class="token punctuation">,</span>
+      <span class="token property">"cert"</span> <span class="token operator">:</span> <span class="token string">"/path/to/crt.file"</span><span class="token punctuation">,</span>
+      <span class="token property">"insecure"</span><span class="token operator">:</span> <span class="token boolean">false</span><span class="token punctuation">,</span>
+      <span class="token property">"user"</span><span class="token operator">:</span> <span class="token string">"kubernetes username"</span><span class="token punctuation">,</span>
+      <span class="token property">"password"</span><span class="token operator">:</span> <span class="token string">"password for kubernetes user"</span><span class="token punctuation">,</span>
+      <span class="token property">"namespace"</span><span class="token operator">:</span> <span class="token string">"Kubernetes namespace"</span><span class="token punctuation">,</span>
+      <span class="token property">"fstab"</span><span class="token operator">:</span> <span class="token string">"Optional: Specify fstab file on node.  Default is /etc/fstab"</span>
+    <span class="token punctuation">&#125;</span><span class="token punctuation">,</span>
+
+    <span class="token property">"_db_comment"</span><span class="token operator">:</span> <span class="token string">"Database file name"</span><span class="token punctuation">,</span>
+    <span class="token property">"db"</span><span class="token operator">:</span> <span class="token string">"/var/lib/heketi/heketi.db"</span><span class="token punctuation">,</span>
+    <span class="token property">"brick_max_size_gb"</span> <span class="token operator">:</span> <span class="token number">1024</span><span class="token punctuation">,</span>
+	  <span class="token property">"brick_min_size_gb"</span> <span class="token operator">:</span> <span class="token number">1</span><span class="token punctuation">,</span>
+	  <span class="token property">"max_bricks_per_volume"</span> <span class="token operator">:</span> <span class="token number">33</span><span class="token punctuation">,</span>
+    <span class="token property">"_loglevel_comment"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
+      <span class="token string">"Set log level. Choices are:"</span><span class="token punctuation">,</span>
+      <span class="token string">"  none, critical, error, warning, info, debug"</span><span class="token punctuation">,</span>
+      <span class="token string">"Default is warning"</span>
+    <span class="token punctuation">]</span><span class="token punctuation">,</span>
+    <span class="token property">"loglevel"</span> <span class="token operator">:</span> <span class="token string">"debug"</span>
+  <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>需要根据实际环境修改的参数说明：</p>
+<blockquote>
+<ul>
+<li>jwt.admin.key：连接 Heketi 时，admin 用户的密码：<a href="mailto:&#104;&#x65;&#107;&#x65;&#116;&#105;&#x5f;&#97;&#100;&#x6d;&#105;&#x6e;&#x40;&#x79;&#x69;&#x63;&#114;&#x2e;&#x64;&#97;&#x70;">&#104;&#x65;&#107;&#x65;&#116;&#105;&#x5f;&#97;&#100;&#x6d;&#105;&#x6e;&#x40;&#x79;&#x69;&#x63;&#114;&#x2e;&#x64;&#97;&#x70;</a></li>
+<li>jwt.user.key: 连接 Heketi 时，user 用户的密码:<a href="mailto:&#x68;&#x65;&#107;&#101;&#x74;&#x69;&#95;&#x75;&#115;&#101;&#x72;&#x40;&#121;&#105;&#99;&#x72;&#x2e;&#x64;&#x61;&#x70;">&#x68;&#x65;&#107;&#101;&#x74;&#x69;&#95;&#x75;&#115;&#101;&#x72;&#x40;&#121;&#105;&#99;&#x72;&#x2e;&#x64;&#x61;&#x70;</a></li>
+<li>port: Heketi 服务的端口号</li>
+<li>loglevel：唯一可选配置， log 日志输出的级别，开发环境可以设置为 debug，生产环境建议 warning</li>
+</ul>
+</blockquote>
+<h2 id="启动Heketi服务"><a href="#启动Heketi服务" class="headerlink" title="启动Heketi服务"></a>启动Heketi服务</h2><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># 1.启动并设置为开机启动</span>
+systemctl <span class="token builtin class-name">enable</span> heketi --now
+<span class="token comment"># 2.查看Heketi服务状态</span>
+systemctl status heketi -l<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>服务正常启动显示结果：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token punctuation">[</span>root@glusterfs01 ~<span class="token punctuation">]</span><span class="token comment"># systemctl status heketi -l</span>
+● heketi.service - Heketi Server
+     Loaded: loaded <span class="token punctuation">(</span>/usr/lib/systemd/system/heketi.service<span class="token punctuation">;</span> enabled<span class="token punctuation">;</span> vendor preset: disabled<span class="token punctuation">)</span>
+     Active: active <span class="token punctuation">(</span>running<span class="token punctuation">)</span> since Wed <span class="token number">2024</span>-01-17 <span class="token number">11</span>:23:11 CST<span class="token punctuation">;</span> 4s ago
+   Main PID: <span class="token number">20975</span> <span class="token punctuation">(</span>heketi<span class="token punctuation">)</span>
+      Tasks: <span class="token number">8</span> <span class="token punctuation">(</span>limit: <span class="token number">98892</span><span class="token punctuation">)</span>
+     Memory: <span class="token number">9</span>.8M
+     CGroup: /system.slice/heketi.service
+             └─ <span class="token number">20975</span> /usr/bin/heketi --config<span class="token operator">=</span>/etc/heketi/heketi.json
+
+Jan <span class="token number">17</span> <span class="token number">11</span>:23:11 glusterfs01 systemd<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span>: Started Heketi Server.
+Jan <span class="token number">17</span> <span class="token number">11</span>:23:11 glusterfs01 heketi<span class="token punctuation">[</span><span class="token number">20975</span><span class="token punctuation">]</span>: Heketi v10.4.0-release-10 <span class="token punctuation">(</span>using go: go1.15.14<span class="token punctuation">)</span>
+Jan <span class="token number">17</span> <span class="token number">11</span>:23:11 glusterfs01 heketi<span class="token punctuation">[</span><span class="token number">20975</span><span class="token punctuation">]</span>: <span class="token number">2024</span>/01/17 <span class="token number">11</span>:23:11 no SSH_KNOWN_HOSTS specified, skipping <span class="token function">ssh</span> <span class="token function">host</span> verification
+Jan <span class="token number">17</span> <span class="token number">11</span>:23:11 glusterfs01 heketi<span class="token punctuation">[</span><span class="token number">20975</span><span class="token punctuation">]</span>: Listening on port <span class="token number">18080</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<pre class="line-numbers language-none"><code class="language-none"># 3.查看接口状态
+curl http:&#x2F;&#x2F;192.168.8.31:18080&#x2F;hello<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+
+<blockquote>
+<p>注意：192.168.8.31 为安装 heketi 服务的节点 IP，实际使用中注意替换。</p>
+</blockquote>
+<p>接口正常输出结果：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token punctuation">[</span>root@glusterfs01 ~<span class="token punctuation">]</span><span class="token comment"># curl http://192.168.8.31:18080/hello</span>
+Hello from Heketi<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+
+<h2 id="配置存储"><a href="#配置存储" class="headerlink" title="配置存储"></a>配置存储</h2><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># 1.创建存储集群拓扑文件，该文件包含添加到 Heketi 的集群、节点和磁盘的信息</span>
+<span class="token function">vi</span> /etc/heketi/topology.json<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+
+<p>topology.json内容：</p>
+<pre class="line-numbers language-json" data-language="json"><code class="language-json"><span class="token punctuation">&#123;</span>
+    <span class="token property">"clusters"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
+        <span class="token punctuation">&#123;</span>
+            <span class="token property">"nodes"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
+                <span class="token punctuation">&#123;</span>
+                    <span class="token property">"node"</span><span class="token operator">:</span> <span class="token punctuation">&#123;</span>
+                        <span class="token property">"hostnames"</span><span class="token operator">:</span> <span class="token punctuation">&#123;</span>
+                            <span class="token property">"manage"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
+                                <span class="token string">"192.168.8.31"</span>
+                            <span class="token punctuation">]</span><span class="token punctuation">,</span>
+                            <span class="token property">"storage"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
+                                <span class="token string">"192.168.8.31"</span>
+                            <span class="token punctuation">]</span>
+                        <span class="token punctuation">&#125;</span><span class="token punctuation">,</span>
+                        <span class="token property">"zone"</span><span class="token operator">:</span> <span class="token number">1</span>
+                    <span class="token punctuation">&#125;</span><span class="token punctuation">,</span>
+                    <span class="token property">"devices"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
+                        <span class="token string">"/dev/vdb"</span>
+                    <span class="token punctuation">]</span>
+                <span class="token punctuation">&#125;</span><span class="token punctuation">,</span>
+                <span class="token punctuation">&#123;</span>
+                    <span class="token property">"node"</span><span class="token operator">:</span> <span class="token punctuation">&#123;</span>
+                        <span class="token property">"hostnames"</span><span class="token operator">:</span> <span class="token punctuation">&#123;</span>
+                            <span class="token property">"manage"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
+                                <span class="token string">"192.168.8.32"</span>
+                            <span class="token punctuation">]</span><span class="token punctuation">,</span>
+                            <span class="token property">"storage"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
+                                <span class="token string">"192.168.8.32"</span>
+                            <span class="token punctuation">]</span>
+                        <span class="token punctuation">&#125;</span><span class="token punctuation">,</span>
+                        <span class="token property">"zone"</span><span class="token operator">:</span> <span class="token number">1</span>
+                    <span class="token punctuation">&#125;</span><span class="token punctuation">,</span>
+                    <span class="token property">"devices"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
+                        <span class="token string">"/dev/vdb"</span>
+                    <span class="token punctuation">]</span>
+                <span class="token punctuation">&#125;</span><span class="token punctuation">,</span>
+                <span class="token punctuation">&#123;</span>
+                    <span class="token property">"node"</span><span class="token operator">:</span> <span class="token punctuation">&#123;</span>
+                        <span class="token property">"hostnames"</span><span class="token operator">:</span> <span class="token punctuation">&#123;</span>
+                            <span class="token property">"manage"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
+                                <span class="token string">"192.168.8.33"</span>
+                            <span class="token punctuation">]</span><span class="token punctuation">,</span>
+                            <span class="token property">"storage"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
+                                <span class="token string">"192.168.8.33"</span>
+                            <span class="token punctuation">]</span>
+                        <span class="token punctuation">&#125;</span><span class="token punctuation">,</span>
+                        <span class="token property">"zone"</span><span class="token operator">:</span> <span class="token number">1</span>
+                    <span class="token punctuation">&#125;</span><span class="token punctuation">,</span>
+                    <span class="token property">"devices"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
+                        <span class="token string">"/dev/vdb"</span>
+                    <span class="token punctuation">]</span>
+                <span class="token punctuation">&#125;</span>
+            <span class="token punctuation">]</span>
+        <span class="token punctuation">&#125;</span>
+    <span class="token punctuation">]</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>*<strong>重要提醒：</strong></p>
+<blockquote>
+<p><strong>说明：</strong></p>
+<ul>
+<li>manage 和 storage： <strong>一定要</strong>填写对应节点 IP，使用主机名后面会报错。</li>
+<li>devices：填写磁盘的全路径名称，可以写多个，<strong>一定要</strong>使用裸盘名不要使用分区名，也不需要给磁盘提前分区</li>
+</ul>
+</blockquote>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># 2.根据拓扑文件创建集群</span>
+heketi-cli --server http://192.168.8.31:18080 --user admin --secret heketi_admin@yicr.dap topology load --json<span class="token operator">=</span>/etc/heketi/topology.json
+
+<span class="token comment"># 3.配置 Heketi 管理用环境变量</span>
+<span class="token comment">#为了方便日后的运维管理，将 heketi-cli 的常用参数和命令组合成一条 alias 命令。</span>
+<span class="token builtin class-name">echo</span> <span class="token string">"alias heketi-cli='heketi-cli --server http://192.168.8.31:18080 --user admin --secret heketi_admin@yicr.dap'"</span> <span class="token operator">>></span> ~/.bashrc
+
+<span class="token comment"># 4.验证 Alias 别名是否生效</span>
+<span class="token builtin class-name">source</span> ~/.bashrc
+heketi-cli cluster list
+<span class="token comment"># 返回如下结果，说明配置成功</span>
+<span class="token punctuation">[</span>root@glusterfs01 .ssh<span class="token punctuation">]</span><span class="token comment"># heketi-cli cluster list</span>
+Clusters:
+Id:479c53edb53b6067ffc0349c0900a9e6 <span class="token punctuation">[</span>file<span class="token punctuation">]</span><span class="token punctuation">[</span>block<span class="token punctuation">]</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h2 id="功能验证"><a href="#功能验证" class="headerlink" title="功能验证"></a>功能验证</h2><ul>
+<li><p>查看集群列表</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token punctuation">[</span>root@glusterfs01 .ssh<span class="token punctuation">]</span><span class="token comment"># heketi-cli cluster list</span>
+Clusters:
+Id:479c53edb53b6067ffc0349c0900a9e6 <span class="token punctuation">[</span>file<span class="token punctuation">]</span><span class="token punctuation">[</span>block<span class="token punctuation">]</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+</li>
+<li><p>查看集群详细信息</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token punctuation">[</span>root@glusterfs01 .ssh<span class="token punctuation">]</span><span class="token comment"># heketi-cli cluster info 479c53edb53b6067ffc0349c0900a9e6</span>
+Cluster id: 479c53edb53b6067ffc0349c0900a9e6
+Nodes:
+77c961eb9872a4a715dbf296b7d2b447
+a639bda8a3673de30cdbf5e214caa7a7
+c83c1001ec0c9d5166f27ef06efca206
+Volumes:
+
+Block: <span class="token boolean">true</span>
+
+File: <span class="token boolean">true</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+</li>
+<li><p>查看集群节点列表</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token punctuation">[</span>root@glusterfs01 .ssh<span class="token punctuation">]</span><span class="token comment"># heketi-cli node list</span>
+Id:77c961eb9872a4a715dbf296b7d2b447     Cluster:479c53edb53b6067ffc0349c0900a9e6
+Id:a639bda8a3673de30cdbf5e214caa7a7     Cluster:479c53edb53b6067ffc0349c0900a9e6
+Id:c83c1001ec0c9d5166f27ef06efca206     Cluster:479c53edb53b6067ffc0349c0900a9e6<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+</li>
+<li><p>创建卷</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># 创建一个2G大小3副本的卷</span>
+<span class="token punctuation">[</span>root@glusterfs01 .ssh<span class="token punctuation">]</span><span class="token comment"># heketi-cli volume create --size=2 --replica=3</span>
+Name: vol_39049fa380cb13d3b5ff67afe8253e30
+Size: <span class="token number">2</span>
+Volume Id: 39049fa380cb13d3b5ff67afe8253e30
+Cluster Id: 479c53edb53b6067ffc0349c0900a9e6
+Mount: <span class="token number">192.168</span>.8.32:vol_39049fa380cb13d3b5ff67afe8253e30
+Mount Options: backup-volfile-servers<span class="token operator">=</span><span class="token number">192.168</span>.8.33,192.168.8.31
+Block: <span class="token boolean">false</span>
+Free Size: <span class="token number">0</span>
+Reserved Size: <span class="token number">0</span>
+Block Hosting Restriction: <span class="token punctuation">(</span>none<span class="token punctuation">)</span>
+Block Volumes: <span class="token punctuation">[</span><span class="token punctuation">]</span>
+Durability Type: replicate
+Distribute Count: <span class="token number">1</span>
+Replica Count: <span class="token number">3</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+
+</li>
+<li><p>查看创建的卷</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token punctuation">[</span>root@glusterfs01 .ssh<span class="token punctuation">]</span><span class="token comment"># heketi-cli volume list</span>
+Id:39049fa380cb13d3b5ff67afe8253e30    Cluster:479c53edb53b6067ffc0349c0900a9e6    Name:vol_39049fa380cb13d3b5ff67afe8253e30<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+</li>
+<li><p>查看服务器挂载点</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token punctuation">[</span>root@glusterfs01 .ssh<span class="token punctuation">]</span><span class="token comment"># df -h</span>
+Filesystem                                                                              Size  Used Avail Use% Mounted on
+devtmpfs                                                                                <span class="token number">4</span>.0M     <span class="token number">0</span>  <span class="token number">4</span>.0M   <span class="token number">0</span>% /dev
+tmpfs                                                                                   <span class="token number">7</span>.6G     <span class="token number">0</span>  <span class="token number">7</span>.6G   <span class="token number">0</span>% /dev/shm
+tmpfs                                                                                   <span class="token number">3</span>.1G  <span class="token number">8</span>.6M  <span class="token number">3</span>.1G   <span class="token number">1</span>% /run
+tmpfs                                                                                   <span class="token number">4</span>.0M     <span class="token number">0</span>  <span class="token number">4</span>.0M   <span class="token number">0</span>% /sys/fs/cgroup
+/dev/mapper/openeuler-root                                                               47G  <span class="token number">1</span>.7G   43G   <span class="token number">4</span>% /
+tmpfs                                                                                   <span class="token number">7</span>.6G     <span class="token number">0</span>  <span class="token number">7</span>.6G   <span class="token number">0</span>% /tmp
+/dev/vda1                                                                               974M  300M  607M  <span class="token number">34</span>% /boot
+/dev/mapper/openeuler-home                                                               23G   24K   22G   <span class="token number">1</span>% /home
+/dev/mapper/vg_f5ffbe35ff438ab548914c2d8ce337ec-brick_908cbddeabac526e2460e9259aacaa00  <span class="token number">2</span>.0G   48M  <span class="token number">2</span>.0G   <span class="token number">3</span>% /var/lib/heketi/mounts/vg_f5ffbe35ff438ab548914c2d8ce337ec/brick_908cbddeabac526e2460e9259aacaa00<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+</li>
+<li><p>挂载测试-挂载卷</p>
+<pre class="line-numbers language-none"><code class="language-none">[root@glusterfs01 .ssh]# mount -t glusterfs 192.168.8.31:vol_39049fa380cb13d3b5ff67afe8253e30 &#x2F;mnt&#x2F;
+# vol_39049fa380cb13d3b5ff67afe8253e30为上方 heketi-cli volum create 时，命令结果返回值 Mount 字段的值。<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+</li>
+<li><p>查看挂载详情</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token punctuation">[</span>root@glusterfs01 .ssh<span class="token punctuation">]</span><span class="token comment"># df -h</span>
+Filesystem                                                                              Size  Used Avail Use% Mounted on
+devtmpfs                                                                                <span class="token number">4</span>.0M     <span class="token number">0</span>  <span class="token number">4</span>.0M   <span class="token number">0</span>% /dev
+tmpfs                                                                                   <span class="token number">7</span>.6G     <span class="token number">0</span>  <span class="token number">7</span>.6G   <span class="token number">0</span>% /dev/shm
+tmpfs                                                                                   <span class="token number">3</span>.1G  <span class="token number">8</span>.6M  <span class="token number">3</span>.1G   <span class="token number">1</span>% /run
+tmpfs                                                                                   <span class="token number">4</span>.0M     <span class="token number">0</span>  <span class="token number">4</span>.0M   <span class="token number">0</span>% /sys/fs/cgroup
+/dev/mapper/openeuler-root                                                               47G  <span class="token number">1</span>.7G   43G   <span class="token number">4</span>% /
+tmpfs                                                                                   <span class="token number">7</span>.6G     <span class="token number">0</span>  <span class="token number">7</span>.6G   <span class="token number">0</span>% /tmp
+/dev/vda1                                                                               974M  300M  607M  <span class="token number">34</span>% /boot
+/dev/mapper/openeuler-home                                                               23G   24K   22G   <span class="token number">1</span>% /home
+/dev/mapper/vg_f5ffbe35ff438ab548914c2d8ce337ec-brick_908cbddeabac526e2460e9259aacaa00  <span class="token number">2</span>.0G   48M  <span class="token number">2</span>.0G   <span class="token number">3</span>% /var/lib/heketi/mounts/vg_f5ffbe35ff438ab548914c2d8ce337ec/brick_908cbddeabac526e2460e9259aacaa00
+<span class="token number">192.168</span>.8.31:vol_39049fa380cb13d3b5ff67afe8253e30                                       <span class="token number">2</span>.0G   68M  <span class="token number">2</span>.0G   <span class="token number">4</span>% /mnt<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+</li>
+<li><p>写入文件测试</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token punctuation">[</span>root@glusterfs01 .ssh<span class="token punctuation">]</span><span class="token comment"># echo "`date` test write" >> /mnt/test.txt</span>
+<span class="token punctuation">[</span>root@glusterfs01 .ssh<span class="token punctuation">]</span><span class="token comment"># cat /mnt/test.txt</span>
+Wed Jan <span class="token number">17</span> 06:59:20 PM CST <span class="token number">2024</span> <span class="token builtin class-name">test</span> <span class="token function">write</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre></li>
+</ul>
+<h2 id="清理测试数据"><a href="#清理测试数据" class="headerlink" title="清理测试数据"></a>清理测试数据</h2><p>  测试完成后，删除测试卷：</p>
+  <pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># 删除测试卷</span>
+<span class="token punctuation">[</span>root@glusterfs01 ~<span class="token punctuation">]</span><span class="token comment"># umount  /mnt/</span>
+<span class="token punctuation">[</span>root@glusterfs01 ~<span class="token punctuation">]</span><span class="token comment"># heketi-cli volume delete 39049fa380cb13d3b5ff67afe8253e30</span>
+Volume 39049fa380cb13d3b5ff67afe8253e30 deleted
+
+<span class="token comment"># 查看测试挂载情况</span>
+<span class="token punctuation">[</span>root@glusterfs01 ~<span class="token punctuation">]</span><span class="token comment"># df -h</span>
+Filesystem                  Size  Used Avail Use% Mounted on
+devtmpfs                    <span class="token number">4</span>.0M     <span class="token number">0</span>  <span class="token number">4</span>.0M   <span class="token number">0</span>% /dev
+tmpfs                       <span class="token number">7</span>.6G     <span class="token number">0</span>  <span class="token number">7</span>.6G   <span class="token number">0</span>% /dev/shm
+tmpfs                       <span class="token number">3</span>.1G  <span class="token number">8</span>.6M  <span class="token number">3</span>.1G   <span class="token number">1</span>% /run
+tmpfs                       <span class="token number">4</span>.0M     <span class="token number">0</span>  <span class="token number">4</span>.0M   <span class="token number">0</span>% /sys/fs/cgroup
+/dev/mapper/openeuler-root   47G  <span class="token number">1</span>.7G   43G   <span class="token number">4</span>% /
+tmpfs                       <span class="token number">7</span>.6G     <span class="token number">0</span>  <span class="token number">7</span>.6G   <span class="token number">0</span>% /tmp
+/dev/vda1                   974M  300M  607M  <span class="token number">34</span>% /boot
+/dev/mapper/openeuler-home   23G   24K   22G   <span class="token number">1</span>% /home
+
+
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h1 id="K8s-集群对接-GlusterFS"><a href="#K8s-集群对接-GlusterFS" class="headerlink" title="K8s 集群对接 GlusterFS"></a>K8s 集群对接 GlusterFS</h1><p><strong>如无特殊说明，所有涉及 K8s 的操作都在 master-0 节点上执行 , 操作根目录为 &#x2F;srv&#x2F;opsman&#x2F;k8s-yaml</strong>。</p>
+<p>主要的操作过程包含：</p>
+<ul>
+<li>安装 GlusterFS 客户端</li>
+<li>创建 Secret</li>
+<li>创建 StorageClass</li>
+<li>创建测试 PVC</li>
+<li>创建测试 POD</li>
+</ul>
+<h2 id="安装-GlusterFS-客户端"><a href="#安装-GlusterFS-客户端" class="headerlink" title="安装 GlusterFS 客户端"></a>安装 GlusterFS 客户端</h2><p><strong>所有 K8s 集群中的节点都需要安装</strong>。</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">dnf <span class="token function">install</span> glusterfs-fuse -y<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<h2 id="创建Heketi使用的Secret的认证密码"><a href="#创建Heketi使用的Secret的认证密码" class="headerlink" title="创建Heketi使用的Secret的认证密码"></a>创建Heketi使用的Secret的认证密码</h2><ul>
+<li>创建 glusterfs 目录 , 并切换到该目录</li>
+</ul>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">mkdir</span> -p /srv/opsman/k8s-yaml/glusterfs
+<span class="token builtin class-name">cd</span> /srv/opsman/k8s-yaml/glusterfs
+
+<span class="token comment"># 使用 base64 将密码转码生成 Secret key 使用的值 , 这里的密码为 heketi 配置文件中创建的用户密码</span>
+<span class="token punctuation">[</span>root@master glusterfs<span class="token punctuation">]</span><span class="token comment"># echo -n "heketi_admin@yicr.dap" | base64</span>
+aGVrZXRpX2FkbWluQHlpY3IuZGFw<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<ul>
+<li>创建 Secret 资源清单文件，执行 <code>vi heketi-secret.yaml</code></li>
+</ul>
+<pre class="line-numbers language-yaml" data-language="yaml"><code class="language-yaml"><span class="token key atrule">apiVersion</span><span class="token punctuation">:</span> v1
+<span class="token key atrule">kind</span><span class="token punctuation">:</span> Secret
+<span class="token key atrule">metadata</span><span class="token punctuation">:</span>
+  <span class="token key atrule">name</span><span class="token punctuation">:</span> heketi<span class="token punctuation">-</span>secret
+  <span class="token key atrule">namespace</span><span class="token punctuation">:</span> kube<span class="token punctuation">-</span>system
+<span class="token key atrule">data</span><span class="token punctuation">:</span>
+  <span class="token key atrule">key</span><span class="token punctuation">:</span> aGVrZXRpX2FkbWluQHlpY3IuZGFw
+<span class="token key atrule">type</span><span class="token punctuation">:</span> kubernetes.io/glusterfs<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<ul>
+<li><p>创建资源</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">kubectl apply -f heketi-secret.yaml<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+</li>
+<li><p>验证资源</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token punctuation">[</span>root@master glusterfs<span class="token punctuation">]</span><span class="token comment"># kubectl get secrets heketi-secret -n kube-system</span>
+NAME            TYPE                      DATA   AGE
+heketi-secret   kubernetes.io/glusterfs   <span class="token number">1</span>      25s<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre></li>
+</ul>
+<h2 id="创建-StorageClass"><a href="#创建-StorageClass" class="headerlink" title="创建 StorageClass"></a>创建 StorageClass</h2><ul>
+<li>创建 StorageClass 资源清单文件，执行 <code>vi heketi-storageclass.yaml</code></li>
+</ul>
+<pre class="line-numbers language-yaml" data-language="yaml"><code class="language-yaml"><span class="token key atrule">apiVersion</span><span class="token punctuation">:</span> storage.k8s.io/v1
+<span class="token key atrule">kind</span><span class="token punctuation">:</span> StorageClass
+<span class="token key atrule">metadata</span><span class="token punctuation">:</span>
+  <span class="token key atrule">name</span><span class="token punctuation">:</span> glusterfs
+  <span class="token key atrule">namespace</span><span class="token punctuation">:</span> kube<span class="token punctuation">-</span>system
+<span class="token key atrule">parameters</span><span class="token punctuation">:</span>
+  <span class="token key atrule">resturl</span><span class="token punctuation">:</span> <span class="token string">"http://192.168.8.31:18080"</span>
+  <span class="token key atrule">clusterid</span><span class="token punctuation">:</span> <span class="token string">"479c53edb53b6067ffc0349c0900a9e6"</span>
+  <span class="token key atrule">restauthenabled</span><span class="token punctuation">:</span> <span class="token string">"true"</span> 
+  <span class="token key atrule">restuser</span><span class="token punctuation">:</span> <span class="token string">"admin"</span>
+  <span class="token key atrule">secretName</span><span class="token punctuation">:</span> <span class="token string">"heketi-secret"</span>
+  <span class="token key atrule">secretNamespace</span><span class="token punctuation">:</span> <span class="token string">"kube-system"</span>
+  <span class="token key atrule">volumetype</span><span class="token punctuation">:</span> <span class="token string">"replicate:3"</span> 
+<span class="token key atrule">provisioner</span><span class="token punctuation">:</span> kubernetes.io/glusterfs
+<span class="token key atrule">reclaimPolicy</span><span class="token punctuation">:</span> Delete<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>参数说明：</p>
+<blockquote>
+<ul>
+<li><strong>parameters.resturl:</strong> heketi 服务的管理地址</li>
+<li><strong>parameters.clusterid:</strong> 在 heketi 节点使用 <code>heketi-cli cluster list</code> 命令返回的集群 id</li>
+<li><strong>parameters.restuser:</strong> heketi.json 配置文件中创建的用户名，默认 admin</li>
+<li><strong>parameters.secretName:</strong> k8s 中 Secret 资源定义中的 metadata.name</li>
+<li><strong>parameters.secretNamespace:</strong> k8s 中 Secret 资源定义中的 metadata.namespace</li>
+<li><strong>parameters.volumetype:</strong> 创建的卷类型和副本数，这里是 3 副本复制卷</li>
+</ul>
+</blockquote>
+<ul>
+<li><p>创建资源</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token punctuation">[</span>root@master glusterfs<span class="token punctuation">]</span><span class="token comment"># kubectl apply -f heketi-storageclass.yaml</span>
+storageclass.storage.k8s.io/glusterfs created<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+</li>
+<li><p>验证资源</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token punctuation">[</span>root@master glusterfs<span class="token punctuation">]</span><span class="token comment"># kubectl get sc</span>
+NAME              PROVISIONER               RECLAIMPOLICY   VOLUMEBINDINGMODE      ALLOWVOLUMEEXPANSION   AGE
+glusterfs         kubernetes.io/glusterfs   Delete          Immediate              <span class="token boolean">false</span>                  25s
+<span class="token builtin class-name">local</span> <span class="token punctuation">(</span>default<span class="token punctuation">)</span>   openebs.io/local          Delete          WaitForFirstConsumer   <span class="token boolean">false</span>                  314d<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre></li>
+</ul>
+<h2 id="创建-pvc-测试"><a href="#创建-pvc-测试" class="headerlink" title="创建 pvc 测试"></a>创建 pvc 测试</h2><ul>
+<li>创建 pvc 资源清单文件，执行 <code>vi heketi-pvc.yaml</code></li>
+</ul>
+<pre class="line-numbers language-yaml" data-language="yaml"><code class="language-yaml"><span class="token key atrule">apiVersion</span><span class="token punctuation">:</span> v1
+<span class="token key atrule">kind</span><span class="token punctuation">:</span> PersistentVolumeClaim
+<span class="token key atrule">metadata</span><span class="token punctuation">:</span>
+  <span class="token key atrule">name</span><span class="token punctuation">:</span> heketi<span class="token punctuation">-</span>pvc<span class="token punctuation">-</span>test
+  <span class="token key atrule">annotations</span><span class="token punctuation">:</span>
+    <span class="token key atrule">volume.beta.kubernetes.io/storage-provisioner</span><span class="token punctuation">:</span> kubernetes.io/glusterfs
+<span class="token key atrule">spec</span><span class="token punctuation">:</span>
+  <span class="token key atrule">storageClassName</span><span class="token punctuation">:</span> <span class="token string">"glusterfs"</span>
+  <span class="token key atrule">accessModes</span><span class="token punctuation">:</span>
+  <span class="token punctuation">-</span> ReadWriteOnce
+  <span class="token key atrule">resources</span><span class="token punctuation">:</span>
+    <span class="token key atrule">requests</span><span class="token punctuation">:</span>
+      <span class="token key atrule">storage</span><span class="token punctuation">:</span> 1Gi<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<ul>
+<li><p>创建资源</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token punctuation">[</span>root@master glusterfs<span class="token punctuation">]</span><span class="token comment"># kubectl apply -f heketi-pvc.yaml </span>
+persistentvolumeclaim/heketi-pvc-test created<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+</li>
+<li><p>验证资源</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token punctuation">[</span>root@master glusterfs<span class="token punctuation">]</span><span class="token comment"># kubectl get pvc -o wide</span>
+NAME              STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS   AGE   VOLUMEMODE
+heketi-pvc-test   Bound    pvc-7275300c-6a49-458b-b2de-509ae4828d60   1Gi        RWO            glusterfs      29s   Filesystem<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre></li>
+</ul>
+<h2 id="创建测试-Pod-挂载-pvc"><a href="#创建测试-Pod-挂载-pvc" class="headerlink" title="创建测试 Pod 挂载 pvc"></a>创建测试 Pod 挂载 pvc</h2><ul>
+<li>创建 Pod 资源清单文件，执行 <code>vi heketi-pod.yaml</code></li>
+</ul>
+<pre class="line-numbers language-yaml" data-language="yaml"><code class="language-yaml"><span class="token key atrule">kind</span><span class="token punctuation">:</span> Pod
+<span class="token key atrule">apiVersion</span><span class="token punctuation">:</span> v1
+<span class="token key atrule">metadata</span><span class="token punctuation">:</span>
+  <span class="token key atrule">name</span><span class="token punctuation">:</span> heketi<span class="token punctuation">-</span>pod<span class="token punctuation">-</span>test
+<span class="token key atrule">spec</span><span class="token punctuation">:</span>
+  <span class="token key atrule">containers</span><span class="token punctuation">:</span>
+  <span class="token punctuation">-</span> <span class="token key atrule">name</span><span class="token punctuation">:</span> heketi<span class="token punctuation">-</span>container
+    <span class="token key atrule">image</span><span class="token punctuation">:</span> busybox
+    <span class="token key atrule">command</span><span class="token punctuation">:</span>
+    <span class="token punctuation">-</span> sleep
+    <span class="token punctuation">-</span> <span class="token string">"3600"</span>
+    <span class="token key atrule">volumeMounts</span><span class="token punctuation">:</span>
+    <span class="token punctuation">-</span> <span class="token key atrule">name</span><span class="token punctuation">:</span> heketi<span class="token punctuation">-</span>volume
+      <span class="token key atrule">mountPath</span><span class="token punctuation">:</span> <span class="token string">"/pv-data"</span>
+      <span class="token key atrule">readOnly</span><span class="token punctuation">:</span> <span class="token boolean important">false</span>
+  <span class="token key atrule">volumes</span><span class="token punctuation">:</span>
+  <span class="token punctuation">-</span> <span class="token key atrule">name</span><span class="token punctuation">:</span> heketi<span class="token punctuation">-</span>volume
+    <span class="token key atrule">persistentVolumeClaim</span><span class="token punctuation">:</span>
+      <span class="token key atrule">claimName</span><span class="token punctuation">:</span> heketi<span class="token punctuation">-</span>pvc<span class="token punctuation">-</span>test<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<ul>
+<li><p>创建资源</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token punctuation">[</span>root@master glusterfs<span class="token punctuation">]</span><span class="token comment"># kubectl apply -f heketi-pod.yaml </span>
+pod/heketi-pod-test created<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+</li>
+<li><p>验证资源</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token punctuation">[</span>root@master glusterfs<span class="token punctuation">]</span><span class="token comment"># kubectl get pods -o wide</span>
+NAME              READY   STATUS    RESTARTS   AGE   IP              NODE         NOMINATED NODE   READINESS GATES
+heketi-pod-test   <span class="token number">1</span>/1     Running   <span class="token number">0</span>          47s   <span class="token number">10.233</span>.64.138   master.k8s   <span class="token operator">&lt;</span>none<span class="token operator">></span>           <span class="token operator">&lt;</span>none<span class="token operator">></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+</li>
+<li><p>查看 Pod 中磁盘挂载情况</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token punctuation">[</span>root@master glusterfs<span class="token punctuation">]</span><span class="token comment"># kubectl exec heketi-pod-test -- df -h</span>
+Filesystem                Size      Used Available Use% Mounted on
+overlay                 <span class="token number">195</span>.8G     <span class="token number">10</span>.1G    <span class="token number">175</span>.7G   <span class="token number">5</span>% /
+tmpfs                    <span class="token number">64</span>.0M         <span class="token number">0</span>     <span class="token number">64</span>.0M   <span class="token number">0</span>% /dev
+tmpfs                     <span class="token number">7</span>.6G         <span class="token number">0</span>      <span class="token number">7</span>.6G   <span class="token number">0</span>% /sys/fs/cgroup
+<span class="token number">192.168</span>.8.33:vol_792c91f71ff61b76b8deb64593d5abf7
+                       <span class="token number">1006</span>.0M     <span class="token number">49</span>.9M    <span class="token number">956</span>.1M   <span class="token number">5</span>% /pv-data
+/dev/mapper/openeuler-root
+                         <span class="token number">34</span>.8G      <span class="token number">9</span>.7G     <span class="token number">23</span>.3G  <span class="token number">29</span>% /dev/termination-log
+/dev/vdb                <span class="token number">195</span>.8G     <span class="token number">10</span>.1G    <span class="token number">175</span>.7G   <span class="token number">5</span>% /etc/resolv.conf
+/dev/vdb                <span class="token number">195</span>.8G     <span class="token number">10</span>.1G    <span class="token number">175</span>.7G   <span class="token number">5</span>% /etc/hostname
+/dev/mapper/openeuler-root
+                         <span class="token number">34</span>.8G      <span class="token number">9</span>.7G     <span class="token number">23</span>.3G  <span class="token number">29</span>% /etc/hosts
+shm                      <span class="token number">64</span>.0M         <span class="token number">0</span>     <span class="token number">64</span>.0M   <span class="token number">0</span>% /dev/shm
+tmpfs                    <span class="token number">13</span>.9G     <span class="token number">12</span>.0K     <span class="token number">13</span>.9G   <span class="token number">0</span>% /var/run/secrets/kubernetes.io/serviceaccount
+tmpfs                     <span class="token number">7</span>.6G         <span class="token number">0</span>      <span class="token number">7</span>.6G   <span class="token number">0</span>% /proc/acpi
+tmpfs                    <span class="token number">64</span>.0M         <span class="token number">0</span>     <span class="token number">64</span>.0M   <span class="token number">0</span>% /proc/kcore
+tmpfs                    <span class="token number">64</span>.0M         <span class="token number">0</span>     <span class="token number">64</span>.0M   <span class="token number">0</span>% /proc/keys
+tmpfs                    <span class="token number">64</span>.0M         <span class="token number">0</span>     <span class="token number">64</span>.0M   <span class="token number">0</span>% /proc/timer_list
+tmpfs                    <span class="token number">64</span>.0M         <span class="token number">0</span>     <span class="token number">64</span>.0M   <span class="token number">0</span>% /proc/sched_debug
+tmpfs                     <span class="token number">7</span>.6G         <span class="token number">0</span>      <span class="token number">7</span>.6G   <span class="token number">0</span>% /proc/scsi
+tmpfs                     <span class="token number">7</span>.6G         <span class="token number">0</span>      <span class="token number">7</span>.6G   <span class="token number">0</span>% /sys/firmware<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+</li>
+<li><p>登录 Pod 所在的节点，查看磁盘挂载情况</p>
+</li>
+</ul>
+<p>SSH 登录到Pod所在节点，演示环境是被分到了master.k8s上，所以只需要本机执行：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token punctuation">[</span>root@master glusterfs<span class="token punctuation">]</span><span class="token comment"># df -lh</span>
+Filesystem                  Size  Used Avail Use% Mounted on
+devtmpfs                    <span class="token number">4</span>.0M     <span class="token number">0</span>  <span class="token number">4</span>.0M   <span class="token number">0</span>% /dev
+tmpfs                       <span class="token number">7</span>.6G     <span class="token number">0</span>  <span class="token number">7</span>.6G   <span class="token number">0</span>% /dev/shm
+tmpfs                       <span class="token number">3</span>.1G  <span class="token number">5</span>.0M  <span class="token number">3</span>.1G   <span class="token number">1</span>% /run
+tmpfs                       <span class="token number">4</span>.0M     <span class="token number">0</span>  <span class="token number">4</span>.0M   <span class="token number">0</span>% /sys/fs/cgroup
+/dev/mapper/openeuler-root   35G  <span class="token number">9</span>.7G   24G  <span class="token number">30</span>% /
+tmpfs                       <span class="token number">7</span>.6G     <span class="token number">0</span>  <span class="token number">7</span>.6G   <span class="token number">0</span>% /tmp
+/dev/vdb                    196G   11G  176G   <span class="token number">6</span>% /data
+/dev/vda1                   974M  225M  682M  <span class="token number">25</span>% /boot
+/dev/mapper/openeuler-home   17G   24K   17G   <span class="token number">1</span>% /home
+overlay                     196G   11G  176G   <span class="token number">6</span>% /data/docker/lib/docker/overlay2/ff977fa299d60c4aeb02154fd908a992f5c2efea8374940821c43721ad01ace5/merged
+shm                          64M     <span class="token number">0</span>   64M   <span class="token number">0</span>% /data/docker/lib/docker/containers/a23fca281fa5247ea40661f9c61ef51a2d0044017add0c90cd4ff6b4b29cbee6/mounts/shm
+overlay                     196G   11G  176G   <span class="token number">6</span>% /data/docker/lib/docker/overlay2/2b1d275e2d1eabcf1526583cbca4c4d73b1b22c030d1ad48367128467ff99670/merged
+shm                          64M     <span class="token number">0</span>   64M   <span class="token number">0</span>% /data/docker/lib/docker/containers/c934b7661a9a239cc8b78fcd490d217cfbfed91c9f0430e3de369cc592d2ffdf/mounts/shm
+overlay                     196G   11G  176G   <span class="token number">6</span>% /data/docker/lib/docker/overlay2/98342b39fa1bd1f04652ee0d89cb0a5cf105379474bb27b41d9b361cb880595a/merged
+shm                          64M     <span class="token number">0</span>   64M   <span class="token number">0</span>% /data/docker/lib/docker/containers/708be14102b9b292b58128212ae20a61badee037062b84ee92d6e82b9193f4ad/mounts/shm
+overlay                     196G   11G  176G   <span class="token number">6</span>% 
+<span class="token punctuation">..</span><span class="token punctuation">..</span><span class="token punctuation">..</span><span class="token punctuation">..</span>.<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h2 id="登录存储服务器查看底层变化"><a href="#登录存储服务器查看底层变化" class="headerlink" title="登录存储服务器查看底层变化"></a>登录存储服务器查看底层变化</h2><p>登录到glusterfs服务器，然后执行：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># 查看卷的信息</span>
+<span class="token punctuation">[</span>root@glusterfs01 ~<span class="token punctuation">]</span><span class="token comment"># heketi-cli volume list</span>
+Id:792c91f71ff61b76b8deb64593d5abf7    Cluster:479c53edb53b6067ffc0349c0900a9e6    Name:vol_792c91f71ff61b76b8deb64593d5abf7
+
+<span class="token punctuation">[</span>root@glusterfs01 ~<span class="token punctuation">]</span><span class="token comment"># heketi-cli volume info 792c91f71ff61b76b8deb64593d5abf7</span>
+Name: vol_792c91f71ff61b76b8deb64593d5abf7
+Size: <span class="token number">1</span>
+Volume Id: 792c91f71ff61b76b8deb64593d5abf7
+Cluster Id: 479c53edb53b6067ffc0349c0900a9e6
+Mount: <span class="token number">192.168</span>.8.32:vol_792c91f71ff61b76b8deb64593d5abf7
+Mount Options: backup-volfile-servers<span class="token operator">=</span><span class="token number">192.168</span>.8.33,192.168.8.31
+Block: <span class="token boolean">false</span>
+Free Size: <span class="token number">0</span>
+Reserved Size: <span class="token number">0</span>
+Block Hosting Restriction: <span class="token punctuation">(</span>none<span class="token punctuation">)</span>
+Block Volumes: <span class="token punctuation">[</span><span class="token punctuation">]</span>
+Durability Type: replicate
+Distribute Count: <span class="token number">1</span>
+Replica Count: <span class="token number">3</span>
+
+<span class="token comment">#查看 VG 信息</span>
+<span class="token punctuation">[</span>root@glusterfs01 ~<span class="token punctuation">]</span><span class="token comment"># vgdisplay</span>
+  --- Volume group ---
+  VG Name               vg_f5ffbe35ff438ab548914c2d8ce337ec
+  System ID             
+  Format                lvm2
+  Metadata Areas        <span class="token number">1</span>
+  Metadata Sequence No  <span class="token number">14</span>
+  VG Access             read/write
+  VG Status             resizable
+  MAX LV                <span class="token number">0</span>
+  Cur LV                <span class="token number">2</span>
+  Open LV               <span class="token number">1</span>
+  Max PV                <span class="token number">0</span>
+  Cur PV                <span class="token number">1</span>
+  Act PV                <span class="token number">1</span>
+  VG Size               <span class="token number">499.87</span> GiB
+  PE Size               <span class="token number">4.00</span> MiB
+  Total PE              <span class="token number">127967</span>
+  Alloc PE / Size       <span class="token number">260</span> / <span class="token operator">&lt;</span><span class="token number">1.02</span> GiB
+  Free  PE / Size       <span class="token number">127707</span> / <span class="token operator">&lt;</span><span class="token number">498.86</span> GiB
+  VG UUID               wSTadm-NDoF-33LY-c8Uv-GsSv-TYR2-ttFMrI
+<span class="token punctuation">..</span><span class="token punctuation">..</span>
+ <span class="token comment">#查看 LV 信息</span>
+ <span class="token punctuation">[</span>root@glusterfs01 ~<span class="token punctuation">]</span><span class="token comment"># lvdisplay</span>
+  --- Logical volume ---
+  LV Name                tp_0602c3478c7bd2dc0c1ed3ceddd7677c
+  VG Name                vg_f5ffbe35ff438ab548914c2d8ce337ec
+  LV UUID                1ceAjp-SE5m-d6ut-RMCS-EKkb-C2CI-BXTGNI
+  LV Write Access        read/write <span class="token punctuation">(</span>activated <span class="token builtin class-name">read</span> only<span class="token punctuation">)</span>
+  LV Creation host, <span class="token function">time</span> glusterfs01, <span class="token number">2024</span>-01-17 <span class="token number">19</span>:30:21 +0800
+  LV Pool metadata       tp_0602c3478c7bd2dc0c1ed3ceddd7677c_tmeta
+  LV Pool data           tp_0602c3478c7bd2dc0c1ed3ceddd7677c_tdata
+  LV Status              available
+  <span class="token comment"># open                 0</span>
+  LV Size                <span class="token number">1.00</span> GiB
+  Allocated pool data    <span class="token number">2.00</span>%
+  Allocated metadata     <span class="token number">10.45</span>%
+  Current LE             <span class="token number">256</span>
+  Segments               <span class="token number">1</span>
+  Allocation             inherit
+  Read ahead sectors     auto
+  - currently <span class="token builtin class-name">set</span> to     <span class="token number">8192</span>
+  Block device           <span class="token number">253</span>:6
+   
+  --- Logical volume ---
+  LV Path                /dev/vg_f5ffbe35ff438ab548914c2d8ce337ec/brick_0602c3478c7bd2dc0c1ed3ceddd7677c
+  LV Name                brick_0602c3478c7bd2dc0c1ed3ceddd7677c
+  VG Name                vg_f5ffbe35ff438ab548914c2d8ce337ec
+  LV UUID                0Cd1oX-Cq1X-wJs0-Vc5y-T7gA-Xl23-ypXm3y
+  LV Write Access        read/write
+  LV Creation host, <span class="token function">time</span> glusterfs01, <span class="token number">2024</span>-01-17 <span class="token number">19</span>:30:22 +0800
+  LV Pool name           tp_0602c3478c7bd2dc0c1ed3ceddd7677c
+  LV Status              available
+  <span class="token comment"># open                 1</span>
+  LV Size                <span class="token number">1.00</span> GiB
+  Mapped size            <span class="token number">2.00</span>%
+  Current LE             <span class="token number">256</span>
+  Segments               <span class="token number">1</span>
+  Allocation             inherit
+  Read ahead sectors     auto
+  - currently <span class="token builtin class-name">set</span> to     <span class="token number">8192</span>
+  Block device           <span class="token number">253</span>:7
+   
+<span class="token punctuation">..</span><span class="token punctuation">..</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h2 id="KubeSphere-管理控制台查验"><a href="#KubeSphere-管理控制台查验" class="headerlink" title="KubeSphere 管理控制台查验"></a>KubeSphere 管理控制台查验</h2><p>接下来我们看几张图，看一下在底层创建的存储资源在 KubeSphere 管理控制台中能展示哪些，又是如何展示的?</p>
+<ul>
+<li>存储类</li>
+</ul>
+<p><img src="/../images/openeuler-install-heketi-k8s/image-20240117194554147.png" alt="image-20240117194554147"></p>
+<ul>
+<li>持久卷声明</li>
+</ul>
+<p><img src="/../images/openeuler-install-heketi-k8s/image-20240117194624625.png" alt="image-20240117194624625"></p>
+<p><img src="/../images/openeuler-install-heketi-k8s/image-20240117194646933.png" alt="image-20240117194646933"></p>
+<ul>
+<li>服务</li>
+</ul>
+<p><img src="/../images/openeuler-install-heketi-k8s/image-20240117194713582.png" alt="image-20240117194713582"></p>
+<h2 id="清理测试资源"><a href="#清理测试资源" class="headerlink" title="清理测试资源"></a>清理测试资源</h2><p>登录master.k8s主机</p>
+<ul>
+<li><p>清理测试的 Pod、pvc</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token punctuation">[</span>root@master glusterfs<span class="token punctuation">]</span><span class="token comment"># kubectl delete -f heketi-pod.yaml -f heketi-pvc.yaml </span>
+pod <span class="token string">"heketi-pod-test"</span> deleted
+persistentvolumeclaim <span class="token string">"heketi-pvc-test"</span> deleted<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre></li>
+</ul>
+<h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><p><a target="_blank" rel="noopener" href="https://my.oschina.net/u/4197945/blog/10091410">最后的组合：K8s 1.24 基于 Hekiti 实现 GlusterFS 动态存储管理实践 - KubeSphere的个人空间 - OSCHINA - 中文开源技术交流社区</a></p>
+<p><a target="_blank" rel="noopener" href="https://kubesphere.io/zh/docs/v3.4/reference/storage-system-installation/glusterfs-server/">搭建 GlusterFS 服务器 (kubesphere.io)</a></p>
+<p><a target="_blank" rel="noopener" href="https://kubesphere.io/zh/docs/v3.4/installing-on-linux/persistent-storage-configurations/install-glusterfs/">安装 GlusterFS (kubesphere.io)</a></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>☕请作者喝杯咖啡☕</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.jpg" alt="Mr Liu 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/images/alipay.jpg" alt="Mr Liu 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>Mr Liu
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://it-liupp.gitee.io/2024/01/19/openeuler-install-heketi-k8s/" title="OpenEuler22.03的Heketi安装及K8s、Kubesphere的对接">https://it-liupp.gitee.io/2024/01/19/openeuler-install-heketi-k8s/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/Linux/" rel="tag"># Linux</a>
+              <a href="/tags/OpenEuler/" rel="tag"># OpenEuler</a>
+              <a href="/tags/Kubesphere/" rel="tag"># Kubesphere</a>
+              <a href="/tags/Kubernetes/" rel="tag"># Kubernetes</a>
+              <a href="/tags/Heketi/" rel="tag"># Heketi</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2024/01/19/openeuler-install-ks-cluster/" rel="prev" title="OpenEuler22.03 SP2 LTS安装Kubeshpere集群">
+                  <i class="fa fa-chevron-left"></i> OpenEuler22.03 SP2 LTS安装Kubeshpere集群
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mr Liu</span>
+</div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+      <span>站点总字数：</span>
+    <span title="站点总字数">40k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span>站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">2:24</span>
+  </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script><script src="/js/bookmark.js"></script>
+
+  
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>

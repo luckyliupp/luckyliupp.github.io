@@ -20,30 +20,31 @@
 <script class="next-config" data-name="main" type="application/json">{"hostname":"it-liupp.gitee.io","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.14.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":true,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
 
     <meta property="og:type" content="article">
-<meta property="og:title" content="【未完成】OpenEuler22.03 SP2 LTS安装Kubeshpere集群">
-<meta property="og:url" content="https://it-liupp.gitee.io/2024/01/06/openeuler-install-ks-cluster/index.html">
+<meta property="og:title" content="OpenEuler22.03 SP2 LTS安装Kubeshpere集群">
+<meta property="og:url" content="https://it-liupp.gitee.io/2024/01/19/openeuler-install-ks-cluster/index.html">
 <meta property="og:site_name" content="Hello Mr Liu">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://it-liupp.gitee.io/images/openeuler-install-ks-cluster/image-20240116110903974.png">
-<meta property="article:published_time" content="2024-01-06T06:41:10.000Z">
-<meta property="article:modified_time" content="2024-01-16T03:11:11.625Z">
+<meta property="article:published_time" content="2024-01-19T01:00:10.000Z">
+<meta property="article:modified_time" content="2024-01-19T01:22:09.570Z">
 <meta property="article:author" content="Mr Liu">
 <meta property="article:tag" content="Linux">
 <meta property="article:tag" content="OpenEuler">
 <meta property="article:tag" content="操作系统">
 <meta property="article:tag" content="Kubesphere">
+<meta property="article:tag" content="Kubernetes">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://it-liupp.gitee.io/images/openeuler-install-ks-cluster/image-20240116110903974.png">
 
 
-<link rel="canonical" href="https://it-liupp.gitee.io/2024/01/06/openeuler-install-ks-cluster/">
+<link rel="canonical" href="https://it-liupp.gitee.io/2024/01/19/openeuler-install-ks-cluster/">
 
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://it-liupp.gitee.io/2024/01/06/openeuler-install-ks-cluster/","path":"2024/01/06/openeuler-install-ks-cluster/","title":"【未完成】OpenEuler22.03 SP2 LTS安装Kubeshpere集群"}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://it-liupp.gitee.io/2024/01/19/openeuler-install-ks-cluster/","path":"2024/01/19/openeuler-install-ks-cluster/","title":"OpenEuler22.03 SP2 LTS安装Kubeshpere集群"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>【未完成】OpenEuler22.03 SP2 LTS安装Kubeshpere集群 | Hello Mr Liu</title><meta name="robots" content="noindex">
+<title>OpenEuler22.03 SP2 LTS安装Kubeshpere集群 | Hello Mr Liu</title>
   
 
 
@@ -118,7 +119,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-%E7%8E%AF%E5%A2%83%E8%A7%84%E5%88%92"><span class="nav-number">1.</span> <span class="nav-text">1.环境规划</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-1%E6%9C%8D%E5%8A%A1%E5%99%A8%E8%A7%84%E5%88%92"><span class="nav-number">1.1.</span> <span class="nav-text">1.1服务器规划</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-2%E7%B3%BB%E7%BB%9F%E8%B0%83%E4%BC%98"><span class="nav-number">1.2.</span> <span class="nav-text">1.2系统调优</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-%E6%8C%82%E8%BD%BD%E6%95%B0%E6%8D%AE%E7%9B%98"><span class="nav-number">2.</span> <span class="nav-text">2.挂载数据盘</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-docker%E5%AE%89%E8%A3%85"><span class="nav-number">3.</span> <span class="nav-text">3.docker安装</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#3-1%E5%AE%89%E8%A3%85docker%E6%9C%80%E6%96%B0%E7%89%88"><span class="nav-number">3.1.</span> <span class="nav-text">3.1安装docker最新版</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-2%E8%BF%81%E7%A7%BB%E2%80%9D-x2F-var-x2F-lib-x2F-docker%E2%80%9D%E7%9B%AE%E5%BD%95"><span class="nav-number">3.2.</span> <span class="nav-text">3.2迁移”&#x2F;var&#x2F;lib&#x2F;docker”目录</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-KubeSphere%E9%9B%86%E7%BE%A4%E5%AE%89%E8%A3%85"><span class="nav-number">4.</span> <span class="nav-text">4.KubeSphere集群安装</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-%E7%8E%AF%E5%A2%83%E8%A7%84%E5%88%92"><span class="nav-number">1.</span> <span class="nav-text">1.环境规划</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-1%E6%9C%8D%E5%8A%A1%E5%99%A8%E8%A7%84%E5%88%92"><span class="nav-number">1.1.</span> <span class="nav-text">1.1服务器规划</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-%E6%8C%82%E8%BD%BD%E6%95%B0%E6%8D%AE%E7%9B%98"><span class="nav-number">2.</span> <span class="nav-text">2.挂载数据盘</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-docker%E5%AE%89%E8%A3%85"><span class="nav-number">3.</span> <span class="nav-text">3.docker安装</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#3-1%E5%AE%89%E8%A3%85docker%E6%9C%80%E6%96%B0%E7%89%88"><span class="nav-number">3.1.</span> <span class="nav-text">3.1安装docker最新版</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-2%E8%BF%81%E7%A7%BB%E2%80%9D-x2F-var-x2F-lib-x2F-docker%E2%80%9D%E7%9B%AE%E5%BD%95"><span class="nav-number">3.2.</span> <span class="nav-text">3.2迁移”&#x2F;var&#x2F;lib&#x2F;docker”目录</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-KubeSphere%E9%9B%86%E7%BE%A4%E5%AE%89%E8%A3%85"><span class="nav-number">4.</span> <span class="nav-text">4.KubeSphere集群安装</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -133,18 +134,18 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">20</span>
+          <span class="site-state-item-count">23</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
           <a href="/categories/">
-        <span class="site-state-item-count">16</span>
+        <span class="site-state-item-count">17</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">28</span>
+        <span class="site-state-item-count">32</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -174,7 +175,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://it-liupp.gitee.io/2024/01/06/openeuler-install-ks-cluster/">
+    <link itemprop="mainEntityOfPage" href="https://it-liupp.gitee.io/2024/01/19/openeuler-install-ks-cluster/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -187,12 +188,12 @@
     </span>
 
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="【未完成】OpenEuler22.03 SP2 LTS安装Kubeshpere集群 | Hello Mr Liu">
+      <meta itemprop="name" content="OpenEuler22.03 SP2 LTS安装Kubeshpere集群 | Hello Mr Liu">
       <meta itemprop="description" content="">
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          【未完成】OpenEuler22.03 SP2 LTS安装Kubeshpere集群
+          OpenEuler22.03 SP2 LTS安装Kubeshpere集群
         </h1>
 
         <div class="post-meta-container">
@@ -202,15 +203,9 @@
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">发表于</span>
+      
 
-      <time title="创建时间：2024-01-06 14:41:10" itemprop="dateCreated datePublished" datetime="2024-01-06T14:41:10+08:00">2024-01-06</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2024-01-16 11:11:11" itemprop="dateModified" datetime="2024-01-16T11:11:11+08:00">2024-01-16</time>
+      <time title="创建时间：2024-01-19 09:00:10 / 修改时间：09:22:09" itemprop="dateCreated datePublished" datetime="2024-01-19T09:00:10+08:00">2024-01-19</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -233,14 +228,14 @@
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>3k</span>
+      <span>2.2k</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
         <i class="far fa-clock"></i>
       </span>
       <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>11 分钟</span>
+      <span>8 分钟</span>
     </span>
 </div>
 
@@ -271,51 +266,57 @@
 <td>ks-master01</td>
 <td>8C+16G</td>
 <td>80G</td>
-<td>100G</td>
+<td>200G</td>
 </tr>
 <tr>
 <td>2</td>
+<td>192.168.5.32</td>
+<td>Ks-master02</td>
+<td>8C+16G</td>
+<td>80G</td>
+<td>200G</td>
+</tr>
+<tr>
+<td>3</td>
+<td>192.168.5.33</td>
+<td>Ks-master03</td>
+<td>8C+16G</td>
+<td>80G</td>
+<td>200G</td>
+</tr>
+<tr>
+<td>4</td>
 <td>192.168.5.34</td>
 <td>ks-worknode01</td>
 <td>16C+32G</td>
 <td>80G</td>
-<td>1000G</td>
+<td>800G</td>
 </tr>
 <tr>
-<td>3</td>
+<td>5</td>
 <td>192.168.5.35</td>
-<td>ks-worknode01</td>
+<td>Ks-worknode02</td>
 <td>16C+32G</td>
 <td>80G</td>
-<td>1000G</td>
+<td>800G</td>
+</tr>
+<tr>
+<td>6</td>
+<td>192.168.5.36</td>
+<td>Ks-worknode03</td>
+<td>16C+32G</td>
+<td>80G</td>
+<td>800G</td>
 </tr>
 </tbody></table>
 <blockquote>
-<p>*当前规划为单机群，ks-master01为控制节点，其他两台为工作节点.</p>
 <p>操作系统：OpenEuler22.03 SP2 LTS</p>
-<p>Kubesphere版本：nginx-1.24.0</p>
 <p>docker版本：24.0.7</p>
 <p>kubernetes版本： v1.22.12 </p>
-<p>kubesphere版本： v3.3.2</p>
+<p>kubesphere版本： v3.3.1</p>
 </blockquote>
-<h2 id="1-2系统调优"><a href="#1-2系统调优" class="headerlink" title="1.2系统调优"></a>1.2系统调优</h2><p>【2024年1月11日】在kubesphere安装过程中，<strong>发现安装文件中有对系统调优的执行操作</strong>，所以这步可以不用单独做。</p>
-<p>修改系统最大文件连接数：</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token punctuation">[</span>root@ks-xxx ~<span class="token punctuation">]</span><span class="token comment"># vi /etc/security/limits.conf</span>
-
-<span class="token comment"># 在文件末尾添加如下两行：</span>
-*               soft    nofile          <span class="token number">65535</span>
-*               hard    nofile          <span class="token number">65535</span>
-<span class="token comment"># 保存退出</span>
-
-<span class="token comment"># 重新加载系统配置</span>
-<span class="token punctuation">[</span>root@ks-xxx ~<span class="token punctuation">]</span><span class="token comment"># sysctl -p</span>
-<span class="token comment">#重启生效</span>
-<span class="token punctuation">[</span>root@ks-xxx ~<span class="token punctuation">]</span><span class="token comment"># reboot</span>
-<span class="token comment"># 可通过一下命令查看当前系统连接数</span>
-<span class="token punctuation">[</span>root@ks-xxx ~<span class="token punctuation">]</span><span class="token comment"># ulimit -n   #同一时间最多可开启的文件数</span>
-<span class="token punctuation">[</span>root@ks-xxx ~<span class="token punctuation">]</span><span class="token comment"># ulimit -a   #显示当前资源限制</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-
-<h1 id="2-挂载数据盘"><a href="#2-挂载数据盘" class="headerlink" title="2.挂载数据盘"></a>2.挂载数据盘</h1><p><strong>全部机器执行</strong></p>
+<h1 id="2-挂载数据盘"><a href="#2-挂载数据盘" class="headerlink" title="2.挂载数据盘"></a>2.挂载数据盘</h1><p>**通过LV进行硬盘挂载，后续磁盘空间不足的情况下可以动态扩容。</p>
+<p><strong>全部机器执行</strong></p>
 <pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment">#查看磁盘情况</span>
 <span class="token punctuation">[</span>root@ks-xxx ~<span class="token punctuation">]</span><span class="token comment"># fdisk -l</span>
 <span class="token comment">#给“/dev/vdb分区”并设置分区类型为Linux LVM。</span>
@@ -466,7 +467,7 @@ Docker version <span class="token number">24.0</span>.7, build afdd53b<span aria
 <h2 id="3-2迁移”-x2F-var-x2F-lib-x2F-docker”目录"><a href="#3-2迁移”-x2F-var-x2F-lib-x2F-docker”目录" class="headerlink" title="3.2迁移”&#x2F;var&#x2F;lib&#x2F;docker”目录"></a>3.2迁移”&#x2F;var&#x2F;lib&#x2F;docker”目录</h2><blockquote>
 <p><code>/var/lib/docker</code> 路径主要用于存储容器数据，在使用和操作过程中数据量会逐渐增加。因此，在生产环境中，建议根据实际需求为 <code>/var/lib/docker</code> 单独挂载一个大容量的磁盘。前面给我们给&#x2F;app目录挂载了1T硬盘，我们在<code>/app</code>下创建一个存储目录，通过软链接迁移 <code>/var/lib/docker</code>目录。</p>
 </blockquote>
-<p>终端下执行如下命令（三台机器都执行）：</p>
+<p>终端下执行如下命令（全部机器都执行）：</p>
 <pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># 停掉docker服务</span>
 <span class="token punctuation">[</span>root@ks-xxx ~<span class="token punctuation">]</span><span class="token comment"># systemctl stop docker</span>
 <span class="token comment"># 创建迁移目标目录</span>
@@ -521,7 +522,7 @@ https://github.com/kubesphere/kubekey/releases<span aria-hidden="true" class="li
 <span class="token punctuation">[</span>root@ks-master01 ~<span class="token punctuation">]</span><span class="token comment"># chmod + x kk</span>
 <span class="token comment"># 生成kubesphere集群安装配置文件</span>
 <span class="token comment"># -f 后跟配置文件路径和文件名，不加-f 和后面的路径，会默认生成一个config-sample.yaml</span>
-<span class="token punctuation">[</span>root@ks-master01 ~<span class="token punctuation">]</span><span class="token comment"># ./kk create config --with-kubernetes v1.22.12 --with-kubesphere v3.4.1 -f ks-cluster-config.yaml</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<span class="token punctuation">[</span>root@ks-master01 ~<span class="token punctuation">]</span><span class="token comment"># ./kk create config --with-kubernetes v1.22.12 --with-kubesphere v3.3.1 -f ks-cluster-config.yaml</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <p>完整配置文件修改：</p>
 <pre class="line-numbers language-yaml" data-language="yaml"><code class="language-yaml"><span class="token key atrule">apiVersion</span><span class="token punctuation">:</span> kubekey.kubesphere.io/v1alpha2
@@ -530,6 +531,7 @@ https://github.com/kubesphere/kubekey/releases<span aria-hidden="true" class="li
   <span class="token key atrule">name</span><span class="token punctuation">:</span> dap<span class="token punctuation">-</span>ks<span class="token punctuation">-</span>cluster
 <span class="token key atrule">spec</span><span class="token punctuation">:</span>
   <span class="token key atrule">hosts</span><span class="token punctuation">:</span>
+  <span class="token comment">## 密码请修改为正确密码</span>
   <span class="token punctuation">-</span> <span class="token punctuation">&#123;</span><span class="token key atrule">name</span><span class="token punctuation">:</span> ks<span class="token punctuation">-</span>master01<span class="token punctuation">,</span> <span class="token key atrule">address</span><span class="token punctuation">:</span> 192.168.5.31<span class="token punctuation">,</span> <span class="token key atrule">internalAddress</span><span class="token punctuation">:</span> 192.168.5.31<span class="token punctuation">,</span> <span class="token key atrule">user</span><span class="token punctuation">:</span> root<span class="token punctuation">,</span> <span class="token key atrule">password</span><span class="token punctuation">:</span> <span class="token string">"password"</span><span class="token punctuation">&#125;</span>
   <span class="token punctuation">-</span> <span class="token punctuation">&#123;</span><span class="token key atrule">name</span><span class="token punctuation">:</span> ks<span class="token punctuation">-</span>master02<span class="token punctuation">,</span> <span class="token key atrule">address</span><span class="token punctuation">:</span> 192.168.5.32<span class="token punctuation">,</span> <span class="token key atrule">internalAddress</span><span class="token punctuation">:</span> 192.168.5.32<span class="token punctuation">,</span> <span class="token key atrule">user</span><span class="token punctuation">:</span> root<span class="token punctuation">,</span> <span class="token key atrule">password</span><span class="token punctuation">:</span> <span class="token string">"password"</span><span class="token punctuation">&#125;</span>
   <span class="token punctuation">-</span> <span class="token punctuation">&#123;</span><span class="token key atrule">name</span><span class="token punctuation">:</span> ks<span class="token punctuation">-</span>master03<span class="token punctuation">,</span> <span class="token key atrule">address</span><span class="token punctuation">:</span> 192.168.5.33<span class="token punctuation">,</span> <span class="token key atrule">internalAddress</span><span class="token punctuation">:</span> 192.168.5.33<span class="token punctuation">,</span> <span class="token key atrule">user</span><span class="token punctuation">:</span> root<span class="token punctuation">,</span> <span class="token key atrule">password</span><span class="token punctuation">:</span> <span class="token string">"password"</span><span class="token punctuation">&#125;</span>
@@ -580,207 +582,9 @@ https://github.com/kubesphere/kubekey/releases<span aria-hidden="true" class="li
 
 
 <span class="token punctuation">---</span>
-<span class="token key atrule">apiVersion</span><span class="token punctuation">:</span> installer.kubesphere.io/v1alpha1
-<span class="token key atrule">kind</span><span class="token punctuation">:</span> ClusterConfiguration
-<span class="token key atrule">metadata</span><span class="token punctuation">:</span>
-  <span class="token key atrule">name</span><span class="token punctuation">:</span> ks<span class="token punctuation">-</span>installer
-  <span class="token key atrule">namespace</span><span class="token punctuation">:</span> kubesphere<span class="token punctuation">-</span>system
-  <span class="token key atrule">labels</span><span class="token punctuation">:</span>
-    <span class="token key atrule">version</span><span class="token punctuation">:</span> v3.4.1
-<span class="token key atrule">spec</span><span class="token punctuation">:</span>
-  <span class="token key atrule">persistence</span><span class="token punctuation">:</span>
-    <span class="token key atrule">storageClass</span><span class="token punctuation">:</span> <span class="token string">""</span>
-  <span class="token key atrule">authentication</span><span class="token punctuation">:</span>
-    <span class="token key atrule">jwtSecret</span><span class="token punctuation">:</span> <span class="token string">""</span>
-  <span class="token key atrule">local_registry</span><span class="token punctuation">:</span> <span class="token string">""</span>
-  <span class="token comment"># dev_tag: ""</span>
-  <span class="token key atrule">etcd</span><span class="token punctuation">:</span>
-    <span class="token key atrule">monitoring</span><span class="token punctuation">:</span> <span class="token boolean important">true</span>
-    <span class="token key atrule">endpointIps</span><span class="token punctuation">:</span> localhost
-    <span class="token key atrule">port</span><span class="token punctuation">:</span> <span class="token number">2379</span>
-    <span class="token key atrule">tlsEnable</span><span class="token punctuation">:</span> <span class="token boolean important">true</span>
-  <span class="token key atrule">common</span><span class="token punctuation">:</span>
-    <span class="token key atrule">core</span><span class="token punctuation">:</span>
-      <span class="token key atrule">console</span><span class="token punctuation">:</span>
-        <span class="token key atrule">enableMultiLogin</span><span class="token punctuation">:</span> <span class="token boolean important">true</span>
-        <span class="token key atrule">port</span><span class="token punctuation">:</span> <span class="token number">30880</span>
-        <span class="token key atrule">type</span><span class="token punctuation">:</span> NodePort
-    <span class="token comment"># apiserver:</span>
-    <span class="token comment">#  resources: &#123;&#125;</span>
-    <span class="token comment"># controllerManager:</span>
-    <span class="token comment">#  resources: &#123;&#125;</span>
-    <span class="token key atrule">redis</span><span class="token punctuation">:</span>
-      <span class="token key atrule">enabled</span><span class="token punctuation">:</span> <span class="token boolean important">false</span>
-      <span class="token key atrule">enableHA</span><span class="token punctuation">:</span> <span class="token boolean important">false</span>
-      <span class="token key atrule">volumeSize</span><span class="token punctuation">:</span> 2Gi
-    <span class="token key atrule">openldap</span><span class="token punctuation">:</span>
-      <span class="token key atrule">enabled</span><span class="token punctuation">:</span> <span class="token boolean important">false</span>
-      <span class="token key atrule">volumeSize</span><span class="token punctuation">:</span> 2Gi
-    <span class="token key atrule">minio</span><span class="token punctuation">:</span>
-      <span class="token key atrule">volumeSize</span><span class="token punctuation">:</span> 20Gi
-    <span class="token key atrule">monitoring</span><span class="token punctuation">:</span>
-      <span class="token comment"># type: external</span>
-      <span class="token key atrule">endpoint</span><span class="token punctuation">:</span> http<span class="token punctuation">:</span>//prometheus<span class="token punctuation">-</span>operated.kubesphere<span class="token punctuation">-</span>monitoring<span class="token punctuation">-</span>system.svc<span class="token punctuation">:</span><span class="token number">9090</span>
-      <span class="token key atrule">GPUMonitoring</span><span class="token punctuation">:</span>
-        <span class="token key atrule">enabled</span><span class="token punctuation">:</span> <span class="token boolean important">false</span>
-    <span class="token key atrule">gpu</span><span class="token punctuation">:</span>
-      <span class="token key atrule">kinds</span><span class="token punctuation">:</span>
-      <span class="token punctuation">-</span> <span class="token key atrule">resourceName</span><span class="token punctuation">:</span> <span class="token string">"nvidia.com/gpu"</span>
-        <span class="token key atrule">resourceType</span><span class="token punctuation">:</span> <span class="token string">"GPU"</span>
-        <span class="token key atrule">default</span><span class="token punctuation">:</span> <span class="token boolean important">true</span>
-    <span class="token key atrule">es</span><span class="token punctuation">:</span>
-      <span class="token comment"># master:</span>
-      <span class="token comment">#   volumeSize: 4Gi</span>
-      <span class="token comment">#   replicas: 1</span>
-      <span class="token comment">#   resources: &#123;&#125;</span>
-      <span class="token comment"># data:</span>
-      <span class="token comment">#   volumeSize: 20Gi</span>
-      <span class="token comment">#   replicas: 1</span>
-      <span class="token comment">#   resources: &#123;&#125;</span>
-      <span class="token key atrule">enabled</span><span class="token punctuation">:</span> <span class="token boolean important">false</span>
-      <span class="token key atrule">logMaxAge</span><span class="token punctuation">:</span> <span class="token number">7</span>
-      <span class="token key atrule">elkPrefix</span><span class="token punctuation">:</span> logstash
-      <span class="token key atrule">basicAuth</span><span class="token punctuation">:</span>
-        <span class="token key atrule">enabled</span><span class="token punctuation">:</span> <span class="token boolean important">false</span>
-        <span class="token key atrule">username</span><span class="token punctuation">:</span> <span class="token string">""</span>
-        <span class="token key atrule">password</span><span class="token punctuation">:</span> <span class="token string">""</span>
-      <span class="token key atrule">externalElasticsearchHost</span><span class="token punctuation">:</span> <span class="token string">""</span>
-      <span class="token key atrule">externalElasticsearchPort</span><span class="token punctuation">:</span> <span class="token string">""</span>
-    <span class="token key atrule">opensearch</span><span class="token punctuation">:</span>
-      <span class="token comment"># master:</span>
-      <span class="token comment">#   volumeSize: 4Gi</span>
-      <span class="token comment">#   replicas: 1</span>
-      <span class="token comment">#   resources: &#123;&#125;</span>
-      <span class="token comment"># data:</span>
-      <span class="token comment">#   volumeSize: 20Gi</span>
-      <span class="token comment">#   replicas: 1</span>
-      <span class="token comment">#   resources: &#123;&#125;</span>
-      <span class="token key atrule">enabled</span><span class="token punctuation">:</span> <span class="token boolean important">true</span>
-      <span class="token key atrule">logMaxAge</span><span class="token punctuation">:</span> <span class="token number">7</span>
-      <span class="token key atrule">opensearchPrefix</span><span class="token punctuation">:</span> whizard
-      <span class="token key atrule">basicAuth</span><span class="token punctuation">:</span>
-        <span class="token key atrule">enabled</span><span class="token punctuation">:</span> <span class="token boolean important">true</span>
-        <span class="token key atrule">username</span><span class="token punctuation">:</span> <span class="token string">"admin"</span>
-        <span class="token key atrule">password</span><span class="token punctuation">:</span> <span class="token string">"admin"</span>
-      <span class="token key atrule">externalOpensearchHost</span><span class="token punctuation">:</span> <span class="token string">""</span>
-      <span class="token key atrule">externalOpensearchPort</span><span class="token punctuation">:</span> <span class="token string">""</span>
-      <span class="token key atrule">dashboard</span><span class="token punctuation">:</span>
-        <span class="token key atrule">enabled</span><span class="token punctuation">:</span> <span class="token boolean important">false</span>
-  <span class="token key atrule">alerting</span><span class="token punctuation">:</span>
-    <span class="token key atrule">enabled</span><span class="token punctuation">:</span> <span class="token boolean important">true</span>
-    <span class="token comment"># thanosruler:</span>
-    <span class="token comment">#   replicas: 1</span>
-    <span class="token comment">#   resources: &#123;&#125;</span>
-  <span class="token key atrule">auditing</span><span class="token punctuation">:</span>
-    <span class="token key atrule">enabled</span><span class="token punctuation">:</span> <span class="token boolean important">false</span>
-    <span class="token comment"># operator:</span>
-    <span class="token comment">#   resources: &#123;&#125;</span>
-    <span class="token comment"># webhook:</span>
-    <span class="token comment">#   resources: &#123;&#125;</span>
-  <span class="token key atrule">devops</span><span class="token punctuation">:</span>
-    <span class="token key atrule">enabled</span><span class="token punctuation">:</span> <span class="token boolean important">false</span>
-    <span class="token key atrule">jenkinsCpuReq</span><span class="token punctuation">:</span> <span class="token number">0.5</span>
-    <span class="token key atrule">jenkinsCpuLim</span><span class="token punctuation">:</span> <span class="token number">1</span>
-    <span class="token key atrule">jenkinsMemoryReq</span><span class="token punctuation">:</span> 4Gi
-    <span class="token key atrule">jenkinsMemoryLim</span><span class="token punctuation">:</span> 4Gi
-    <span class="token key atrule">jenkinsVolumeSize</span><span class="token punctuation">:</span> 16Gi
-  <span class="token key atrule">events</span><span class="token punctuation">:</span>
-    <span class="token key atrule">enabled</span><span class="token punctuation">:</span> <span class="token boolean important">false</span>
-    <span class="token comment"># operator:</span>
-    <span class="token comment">#   resources: &#123;&#125;</span>
-    <span class="token comment"># exporter:</span>
-    <span class="token comment">#   resources: &#123;&#125;</span>
-    <span class="token key atrule">ruler</span><span class="token punctuation">:</span>
-      <span class="token key atrule">enabled</span><span class="token punctuation">:</span> <span class="token boolean important">true</span>
-      <span class="token key atrule">replicas</span><span class="token punctuation">:</span> <span class="token number">2</span>
-    <span class="token comment">#   resources: &#123;&#125;</span>
-  <span class="token key atrule">logging</span><span class="token punctuation">:</span>
-    <span class="token key atrule">enabled</span><span class="token punctuation">:</span> <span class="token boolean important">false</span>
-    <span class="token key atrule">logsidecar</span><span class="token punctuation">:</span>
-      <span class="token key atrule">enabled</span><span class="token punctuation">:</span> <span class="token boolean important">true</span>
-      <span class="token key atrule">replicas</span><span class="token punctuation">:</span> <span class="token number">2</span>
-      <span class="token comment"># resources: &#123;&#125;</span>
-  <span class="token key atrule">metrics_server</span><span class="token punctuation">:</span>
-    <span class="token key atrule">enabled</span><span class="token punctuation">:</span> <span class="token boolean important">false</span>
-  <span class="token key atrule">monitoring</span><span class="token punctuation">:</span>
-    <span class="token key atrule">storageClass</span><span class="token punctuation">:</span> <span class="token string">""</span>
-    <span class="token key atrule">node_exporter</span><span class="token punctuation">:</span>
-      <span class="token key atrule">port</span><span class="token punctuation">:</span> <span class="token number">9100</span>
-      <span class="token comment"># resources: &#123;&#125;</span>
-    <span class="token comment"># kube_rbac_proxy:</span>
-    <span class="token comment">#   resources: &#123;&#125;</span>
-    <span class="token comment"># kube_state_metrics:</span>
-    <span class="token comment">#   resources: &#123;&#125;</span>
-    <span class="token comment"># prometheus:</span>
-    <span class="token comment">#   replicas: 1</span>
-    <span class="token comment">#   volumeSize: 20Gi</span>
-    <span class="token comment">#   resources: &#123;&#125;</span>
-    <span class="token comment">#   operator:</span>
-    <span class="token comment">#     resources: &#123;&#125;</span>
-    <span class="token comment"># alertmanager:</span>
-    <span class="token comment">#   replicas: 1</span>
-    <span class="token comment">#   resources: &#123;&#125;</span>
-    <span class="token comment"># notification_manager:</span>
-    <span class="token comment">#   resources: &#123;&#125;</span>
-    <span class="token comment">#   operator:</span>
-    <span class="token comment">#     resources: &#123;&#125;</span>
-    <span class="token comment">#   proxy:</span>
-    <span class="token comment">#     resources: &#123;&#125;</span>
-    <span class="token key atrule">gpu</span><span class="token punctuation">:</span>
-      <span class="token key atrule">nvidia_dcgm_exporter</span><span class="token punctuation">:</span>
-        <span class="token key atrule">enabled</span><span class="token punctuation">:</span> <span class="token boolean important">false</span>
-        <span class="token comment"># resources: &#123;&#125;</span>
-  <span class="token key atrule">multicluster</span><span class="token punctuation">:</span>
-    <span class="token key atrule">clusterRole</span><span class="token punctuation">:</span> none
-  <span class="token key atrule">network</span><span class="token punctuation">:</span>
-    <span class="token key atrule">networkpolicy</span><span class="token punctuation">:</span>
-      <span class="token key atrule">enabled</span><span class="token punctuation">:</span> <span class="token boolean important">false</span>
-    <span class="token key atrule">ippool</span><span class="token punctuation">:</span>
-      <span class="token key atrule">type</span><span class="token punctuation">:</span> none
-    <span class="token key atrule">topology</span><span class="token punctuation">:</span>
-      <span class="token key atrule">type</span><span class="token punctuation">:</span> none
-  <span class="token key atrule">openpitrix</span><span class="token punctuation">:</span>
-    <span class="token key atrule">store</span><span class="token punctuation">:</span>
-      <span class="token key atrule">enabled</span><span class="token punctuation">:</span> <span class="token boolean important">true</span>
-  <span class="token key atrule">servicemesh</span><span class="token punctuation">:</span>
-    <span class="token key atrule">enabled</span><span class="token punctuation">:</span> <span class="token boolean important">false</span>
-    <span class="token key atrule">istio</span><span class="token punctuation">:</span>
-      <span class="token key atrule">components</span><span class="token punctuation">:</span>
-        <span class="token key atrule">ingressGateways</span><span class="token punctuation">:</span>
-        <span class="token punctuation">-</span> <span class="token key atrule">name</span><span class="token punctuation">:</span> istio<span class="token punctuation">-</span>ingressgateway
-          <span class="token key atrule">enabled</span><span class="token punctuation">:</span> <span class="token boolean important">false</span>
-        <span class="token key atrule">cni</span><span class="token punctuation">:</span>
-          <span class="token key atrule">enabled</span><span class="token punctuation">:</span> <span class="token boolean important">false</span>
-  <span class="token key atrule">edgeruntime</span><span class="token punctuation">:</span>
-    <span class="token key atrule">enabled</span><span class="token punctuation">:</span> <span class="token boolean important">false</span>
-    <span class="token key atrule">kubeedge</span><span class="token punctuation">:</span>
-      <span class="token key atrule">enabled</span><span class="token punctuation">:</span> <span class="token boolean important">false</span>
-      <span class="token key atrule">cloudCore</span><span class="token punctuation">:</span>
-        <span class="token key atrule">cloudHub</span><span class="token punctuation">:</span>
-          <span class="token key atrule">advertiseAddress</span><span class="token punctuation">:</span>
-            <span class="token punctuation">-</span> <span class="token string">""</span>
-        <span class="token key atrule">service</span><span class="token punctuation">:</span>
-          <span class="token key atrule">cloudhubNodePort</span><span class="token punctuation">:</span> <span class="token string">"30000"</span>
-          <span class="token key atrule">cloudhubQuicNodePort</span><span class="token punctuation">:</span> <span class="token string">"30001"</span>
-          <span class="token key atrule">cloudhubHttpsNodePort</span><span class="token punctuation">:</span> <span class="token string">"30002"</span>
-          <span class="token key atrule">cloudstreamNodePort</span><span class="token punctuation">:</span> <span class="token string">"30003"</span>
-          <span class="token key atrule">tunnelNodePort</span><span class="token punctuation">:</span> <span class="token string">"30004"</span>
-        <span class="token comment"># resources: &#123;&#125;</span>
-        <span class="token comment"># hostNetWork: false</span>
-      <span class="token key atrule">iptables-manager</span><span class="token punctuation">:</span>
-        <span class="token key atrule">enabled</span><span class="token punctuation">:</span> <span class="token boolean important">true</span>
-        <span class="token key atrule">mode</span><span class="token punctuation">:</span> <span class="token string">"external"</span>
-        <span class="token comment"># resources: &#123;&#125;</span>
-      <span class="token comment"># edgeService:</span>
-      <span class="token comment">#   resources: &#123;&#125;</span>
-  <span class="token key atrule">gatekeeper</span><span class="token punctuation">:</span>
-    <span class="token key atrule">enabled</span><span class="token punctuation">:</span> <span class="token boolean important">false</span>
-    <span class="token comment"># controller_manager:</span>
-    <span class="token comment">#   resources: &#123;&#125;</span>
-    <span class="token comment"># audit:</span>
-    <span class="token comment">#   resources: &#123;&#125;</span>
-  <span class="token key atrule">terminal</span><span class="token punctuation">:</span>
-    <span class="token key atrule">timeout</span><span class="token punctuation">:</span> <span class="token number">600</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<span class="token punctuation">...</span><span class="token punctuation">...</span>.
+<span class="token comment">#下面关于kubesphere的配置没有动，可以安装完毕后进入管理后台再开启。</span>
+<span class="token comment">###################</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <p>使用配置文件创建集群：</p>
 <pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># 整个安装过程可能需要 10 到 20 分钟，具体取决于您的计算机和网络环境。</span>
@@ -811,69 +615,8 @@ Greetings, KubeKey<span class="token operator">!</span>
 <span class="token number">17</span>:36:47 CST <span class="token punctuation">[</span>ConfirmModule<span class="token punctuation">]</span> Display confirmation form<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <p><img src="/../images/openeuler-install-ks-cluster/image-20240116110903974.png" alt="image-20240116110903974"></p>
-<p>重要提示信息备忘：</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">Your Kubernetes control-plane has initialized successfully<span class="token operator">!</span>
-
-To start using your cluster, you need to run the following as a regular user:
-
-  <span class="token function">mkdir</span> -p <span class="token environment constant">$HOME</span>/.kube
-  <span class="token function">sudo</span> <span class="token function">cp</span> -i /etc/kubernetes/admin.conf <span class="token environment constant">$HOME</span>/.kube/config
-  <span class="token function">sudo</span> <span class="token function">chown</span> <span class="token variable"><span class="token variable">$(</span><span class="token function">id</span> -u<span class="token variable">)</span></span><span class="token builtin class-name">:</span><span class="token variable"><span class="token variable">$(</span><span class="token function">id</span> -g<span class="token variable">)</span></span> <span class="token environment constant">$HOME</span>/.kube/config
-
-Alternatively, <span class="token keyword">if</span> you are the root user, you can run:
-
-  <span class="token builtin class-name">export</span> <span class="token assign-left variable">KUBECONFIG</span><span class="token operator">=</span>/etc/kubernetes/admin.conf
-
-You should now deploy a pod network to the cluster.
-Run <span class="token string">"kubectl apply -f [podnetwork].yaml"</span> with one of the options listed at:
-  https://kubernetes.io/docs/concepts/cluster-administration/addons/
-
-You can now <span class="token function">join</span> any number of control-plane nodes by copying certificate authorities
-and <span class="token function">service</span> account keys on each <span class="token function">node</span> and <span class="token keyword">then</span> running the following as root:
-
-  kubeadm <span class="token function">join</span> lb.kubesphere.local:6443 --token 3vyich.yx38hr550upccyik <span class="token punctuation">\</span>
-        --discovery-token-ca-cert-hash sha256:42ec0fa3c9a1df8fa53014175ebcf5ce9866ce000a591308793d9d9293059c8b <span class="token punctuation">\</span>
-        --control-plane 
-
-Then you can <span class="token function">join</span> any number of worker nodes by running the following on each as root:
-
-kubeadm <span class="token function">join</span> lb.kubesphere.local:6443 --token 3vyich.yx38hr550upccyik <span class="token punctuation">\</span>
-        --discovery-token-ca-cert-hash sha256:42ec0fa3c9a1df8fa53014175ebcf5ce9866ce000a591308793d9d9293059c8b
-        
-        
-<span class="token punctuation">[</span>WARNING SystemVerification<span class="token punctuation">]</span>: this Docker version is not on the list of validated versions: <span class="token number">24.0</span>.7. Latest validated version: <span class="token number">20.10</span>
-
-<span class="token punctuation">[</span>preflight<span class="token punctuation">]</span> Reading configuration from the cluster<span class="token punctuation">..</span>.
-<span class="token punctuation">[</span>preflight<span class="token punctuation">]</span> FYI: You can <span class="token function">look</span> at this config <span class="token function">file</span> with <span class="token string">'kubectl -n kube-system get cm kubeadm-config -o yaml'</span>
-W0106 <span class="token number">20</span>:35:24.670269   <span class="token number">50926</span> utils.go:69<span class="token punctuation">]</span> The recommended value <span class="token keyword">for</span> <span class="token string">"clusterDNS"</span> <span class="token keyword">in</span> <span class="token string">"KubeletConfiguration"</span> is: <span class="token punctuation">[</span><span class="token number">10.233</span>.0.10<span class="token punctuation">]</span><span class="token punctuation">;</span> the provided value is: <span class="token punctuation">[</span><span class="token number">169.254</span>.25.10<span class="token punctuation">]</span>
-<span class="token punctuation">[</span>kubelet-start<span class="token punctuation">]</span> Writing kubelet configuration to <span class="token function">file</span> <span class="token string">"/var/lib/kubelet/config.yaml"</span>
-<span class="token punctuation">[</span>kubelet-start<span class="token punctuation">]</span> Writing kubelet environment <span class="token function">file</span> with flags to <span class="token function">file</span> <span class="token string">"/var/lib/kubelet/kubeadm-flags.env"</span>
-
-
-This <span class="token function">node</span> has joined the cluster:
-* Certificate signing request was sent to apiserver and a response was received.
-* The Kubelet was informed of the new secure connection details.
-
-Run <span class="token string">'kubectl get nodes'</span> on the control-plane to see this <span class="token function">node</span> <span class="token function">join</span> the cluster.
-<span class="token number">20</span>:35:30 CST stdout: <span class="token punctuation">[</span>worknode01<span class="token punctuation">]</span>
-<span class="token punctuation">[</span>preflight<span class="token punctuation">]</span> Running pre-flight checks
-        <span class="token punctuation">[</span>WARNING SystemVerification<span class="token punctuation">]</span>: this Docker version is not on the list of validated versions: <span class="token number">24.0</span>.7. Latest validated version: <span class="token number">20.10</span>
-<span class="token punctuation">[</span>preflight<span class="token punctuation">]</span> Reading configuration from the cluster<span class="token punctuation">..</span>.
-<span class="token punctuation">[</span>preflight<span class="token punctuation">]</span> FYI: You can <span class="token function">look</span> at this config <span class="token function">file</span> with <span class="token string">'kubectl -n kube-system get cm kubeadm-config -o yaml'</span>
-W0106 <span class="token number">20</span>:35:24.683820   <span class="token number">50915</span> utils.go:69<span class="token punctuation">]</span> The recommended value <span class="token keyword">for</span> <span class="token string">"clusterDNS"</span> <span class="token keyword">in</span> <span class="token string">"KubeletConfiguration"</span> is: <span class="token punctuation">[</span><span class="token number">10.233</span>.0.10<span class="token punctuation">]</span><span class="token punctuation">;</span> the provided value is: <span class="token punctuation">[</span><span class="token number">169.254</span>.25.10<span class="token punctuation">]</span>
-<span class="token punctuation">[</span>kubelet-start<span class="token punctuation">]</span> Writing kubelet configuration to <span class="token function">file</span> <span class="token string">"/var/lib/kubelet/config.yaml"</span>
-<span class="token punctuation">[</span>kubelet-start<span class="token punctuation">]</span> Writing kubelet environment <span class="token function">file</span> with flags to <span class="token function">file</span> <span class="token string">"/var/lib/kubelet/kubeadm-flags.env"</span>
-<span class="token punctuation">[</span>kubelet-start<span class="token punctuation">]</span> Starting the kubelet
-<span class="token punctuation">[</span>kubelet-start<span class="token punctuation">]</span> Waiting <span class="token keyword">for</span> the kubelet to perform the TLS Bootstrap<span class="token punctuation">..</span>.
-
-This <span class="token function">node</span> has joined the cluster:
-* Certificate signing request was sent to apiserver and a response was received.
-* The Kubelet was informed of the new secure connection details.
-
-Run <span class="token string">'kubectl get nodes'</span> on the control-plane to see this <span class="token function">node</span> <span class="token function">join</span> the cluster.
-
-
-
+<p>安装成功提示：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">
 
 <span class="token number">20</span>:35:40 CST success: <span class="token punctuation">[</span>master01<span class="token punctuation">]</span>
 <span class="token comment">#####################################################</span>
@@ -902,9 +645,9 @@ Please check the result using the command:
 
         kubectl logs -n kubesphere-system <span class="token variable"><span class="token variable">$(</span>kubectl get pod -n kubesphere-system -l <span class="token string">'app in (ks-install, ks-installer)'</span> -o <span class="token assign-left variable">jsonpath</span><span class="token operator">=</span><span class="token string">'&#123;.items[0].metadata.name&#125;'</span><span class="token variable">)</span></span> -f
 
-<span class="token punctuation">[</span>root@ks-master01 ~<span class="token punctuation">]</span><span class="token comment"># </span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<span class="token punctuation">[</span>root@ks-master01 ~<span class="token punctuation">]</span><span class="token comment"># </span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
-<!-- flag of hidden posts -->
+
     </div>
 
     
@@ -939,7 +682,7 @@ Please check the result using the command:
   </li>
   <li class="post-copyright-link">
       <strong>本文链接：</strong>
-      <a href="https://it-liupp.gitee.io/2024/01/06/openeuler-install-ks-cluster/" title="【未完成】OpenEuler22.03 SP2 LTS安装Kubeshpere集群">https://it-liupp.gitee.io/2024/01/06/openeuler-install-ks-cluster/</a>
+      <a href="https://it-liupp.gitee.io/2024/01/19/openeuler-install-ks-cluster/" title="OpenEuler22.03 SP2 LTS安装Kubeshpere集群">https://it-liupp.gitee.io/2024/01/19/openeuler-install-ks-cluster/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
@@ -952,10 +695,23 @@ Please check the result using the command:
               <a href="/tags/OpenEuler/" rel="tag"># OpenEuler</a>
               <a href="/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" rel="tag"># 操作系统</a>
               <a href="/tags/Kubesphere/" rel="tag"># Kubesphere</a>
+              <a href="/tags/Kubernetes/" rel="tag"># Kubernetes</a>
           </div>
 
         
 
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2024/01/17/openeuler-install-glusterfs/" rel="prev" title="OpenEuler22.03的GlusterFS集群安装">
+                  <i class="fa fa-chevron-left"></i> OpenEuler22.03的GlusterFS集群安装
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2024/01/19/openeuler-install-heketi-k8s/" rel="next" title="OpenEuler22.03的Heketi安装及K8s、Kubesphere的对接">
+                  OpenEuler22.03的Heketi安装及K8s、Kubesphere的对接 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
     </footer>
   </article>
 </div>
@@ -986,14 +742,14 @@ Please check the result using the command:
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">34k</span>
+    <span title="站点总字数">40k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">2:02</span>
+    <span title="站点阅读时长">2:24</span>
   </span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
