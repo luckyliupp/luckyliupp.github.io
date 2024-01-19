@@ -19,19 +19,19 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"it-liupp.gitee.io","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.14.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":true,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
 
-    <meta name="description" content="摘要：OpenEuler22.03的Heketi安装及K8s、Kubesphere的对接。 两篇： 1.OpenEuler22.03的GlusterFS集群: 2.OpenEuler22.03的Heketi安装及K8s、Kubesphere的对接（本文）。 请根据需要查看相关文章。">
+    <meta name="description" content="摘要：OpenEuler22.03的Heketi安装及K8s、Kubesphere的对接。 相关文章： 1.OpenEuler22.03的GlusterFS集群安装  2.OpenEuler22.03的Heketi安装及K8s、Kubesphere的对接（本文）。 请根据需要查看相关文章。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="OpenEuler22.03的Heketi安装及K8s、Kubesphere的对接">
 <meta property="og:url" content="https://it-liupp.gitee.io/2024/01/19/openeuler-install-heketi-k8s/index.html">
 <meta property="og:site_name" content="Hello Mr Liu">
-<meta property="og:description" content="摘要：OpenEuler22.03的Heketi安装及K8s、Kubesphere的对接。 两篇： 1.OpenEuler22.03的GlusterFS集群: 2.OpenEuler22.03的Heketi安装及K8s、Kubesphere的对接（本文）。 请根据需要查看相关文章。">
+<meta property="og:description" content="摘要：OpenEuler22.03的Heketi安装及K8s、Kubesphere的对接。 相关文章： 1.OpenEuler22.03的GlusterFS集群安装  2.OpenEuler22.03的Heketi安装及K8s、Kubesphere的对接（本文）。 请根据需要查看相关文章。">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://it-liupp.gitee.io/images/openeuler-install-heketi-k8s/image-20240117194554147.png">
 <meta property="og:image" content="https://it-liupp.gitee.io/images/openeuler-install-heketi-k8s/image-20240117194624625.png">
 <meta property="og:image" content="https://it-liupp.gitee.io/images/openeuler-install-heketi-k8s/image-20240117194646933.png">
 <meta property="og:image" content="https://it-liupp.gitee.io/images/openeuler-install-heketi-k8s/image-20240117194713582.png">
 <meta property="article:published_time" content="2024-01-19T01:30:10.000Z">
-<meta property="article:modified_time" content="2024-01-19T01:31:38.961Z">
+<meta property="article:modified_time" content="2024-01-19T01:35:25.520Z">
 <meta property="article:author" content="Mr Liu">
 <meta property="article:tag" content="Linux">
 <meta property="article:tag" content="OpenEuler">
@@ -210,7 +210,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2024-01-19 09:30:10 / 修改时间：09:31:38" itemprop="dateCreated datePublished" datetime="2024-01-19T09:30:10+08:00">2024-01-19</time>
+      <time title="创建时间：2024-01-19 09:30:10 / 修改时间：09:35:25" itemprop="dateCreated datePublished" datetime="2024-01-19T09:30:10+08:00">2024-01-19</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -249,8 +249,8 @@
     <div class="post-body" itemprop="articleBody">
         <blockquote>
 <p>摘要：OpenEuler22.03的Heketi安装及K8s、Kubesphere的对接。</p>
-<p>两篇：</p>
-<p>1.OpenEuler22.03的GlusterFS集群:</p>
+<p>相关文章：</p>
+<p>1.<a href="https://it-liupp.gitee.io/2024/01/17/openeuler-install-glusterfs/">OpenEuler22.03的GlusterFS集群安装 </a></p>
 <p>2.OpenEuler22.03的Heketi安装及K8s、Kubesphere的对接（本文）。</p>
 <p>请根据需要查看相关文章。</p>
 </blockquote>
@@ -358,8 +358,8 @@
 <p>需要根据实际环境修改的参数说明：</p>
 <blockquote>
 <ul>
-<li>jwt.admin.key：连接 Heketi 时，admin 用户的密码：<a href="mailto:&#104;&#x65;&#107;&#x65;&#116;&#105;&#x5f;&#97;&#100;&#x6d;&#105;&#x6e;&#x40;&#x79;&#x69;&#x63;&#114;&#x2e;&#x64;&#97;&#x70;">&#104;&#x65;&#107;&#x65;&#116;&#105;&#x5f;&#97;&#100;&#x6d;&#105;&#x6e;&#x40;&#x79;&#x69;&#x63;&#114;&#x2e;&#x64;&#97;&#x70;</a></li>
-<li>jwt.user.key: 连接 Heketi 时，user 用户的密码:<a href="mailto:&#x68;&#x65;&#107;&#101;&#x74;&#x69;&#95;&#x75;&#115;&#101;&#x72;&#x40;&#121;&#105;&#99;&#x72;&#x2e;&#x64;&#x61;&#x70;">&#x68;&#x65;&#107;&#101;&#x74;&#x69;&#95;&#x75;&#115;&#101;&#x72;&#x40;&#121;&#105;&#99;&#x72;&#x2e;&#x64;&#x61;&#x70;</a></li>
+<li>jwt.admin.key：连接 Heketi 时，admin 用户的密码：<a href="mailto:&#x68;&#101;&#107;&#101;&#x74;&#x69;&#95;&#x61;&#100;&#109;&#x69;&#x6e;&#64;&#x79;&#x69;&#99;&#114;&#46;&#100;&#97;&#112;">&#x68;&#101;&#107;&#101;&#x74;&#x69;&#95;&#x61;&#100;&#109;&#x69;&#x6e;&#64;&#x79;&#x69;&#99;&#114;&#46;&#100;&#97;&#112;</a></li>
+<li>jwt.user.key: 连接 Heketi 时，user 用户的密码:<a href="mailto:&#x68;&#x65;&#x6b;&#x65;&#116;&#105;&#95;&#117;&#x73;&#x65;&#x72;&#64;&#121;&#x69;&#99;&#x72;&#46;&#100;&#x61;&#x70;">&#x68;&#x65;&#x6b;&#x65;&#116;&#105;&#95;&#117;&#x73;&#x65;&#x72;&#64;&#121;&#x69;&#99;&#x72;&#46;&#100;&#x61;&#x70;</a></li>
 <li>port: Heketi 服务的端口号</li>
 <li>loglevel：唯一可选配置， log 日志输出的级别，开发环境可以设置为 debug，生产环境建议 warning</li>
 </ul>
@@ -980,7 +980,7 @@ persistentvolumeclaim <span class="token string">"heketi-pvc-test"</span> delete
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">40k</span>
+    <span title="站点总字数">39k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
