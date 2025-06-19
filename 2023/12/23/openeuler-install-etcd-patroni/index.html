@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.2.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.png">
+  <link rel="mask-icon" href="/images/favicon.png" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" integrity="sha256-Z1K5uhUaJXA7Ll0XrZ/0JhX4lAtZFpT6jkKrEDT0drU=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"luckyliupp.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.14.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":true,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="摘要：基于Etcd+Patroni的PostgreSQL高可用方案的实操。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="基于Etcd+Patroni的PostgreSQL高可用(暂未完成)">
+<meta property="og:url" content="https://luckyliupp.github.io/2023/12/23/openeuler-install-etcd-patroni/index.html">
+<meta property="og:site_name" content="Hello Mr Liu">
+<meta property="og:description" content="摘要：基于Etcd+Patroni的PostgreSQL高可用方案的实操。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-12-23T05:41:10.000Z">
+<meta property="article:modified_time" content="2025-06-19T01:55:13.314Z">
+<meta property="article:author" content="Mr Liu">
+<meta property="article:tag" content="Linux">
+<meta property="article:tag" content="OpenEuler">
+<meta property="article:tag" content="PostgreSQL">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://luckyliupp.github.io/2023/12/23/openeuler-install-etcd-patroni/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://luckyliupp.github.io/2023/12/23/openeuler-install-etcd-patroni/","path":"2023/12/23/openeuler-install-etcd-patroni/","title":"基于Etcd+Patroni的PostgreSQL高可用(暂未完成)"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>基于Etcd+Patroni的PostgreSQL高可用(暂未完成) | Hello Mr Liu</title><meta name="robots" content="noindex">
+  
+
+
+
+
+
+
+  <script async defer data-website-id="" src=""></script>
+
+  <script defer data-domain="" src=""></script>
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Hello Mr Liu</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">临江对月</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%8E%AF%E5%A2%83%E5%87%86%E5%A4%87"><span class="nav-number">1.</span> <span class="nav-text">环境准备</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Etcd%E9%9B%86%E7%BE%A4"><span class="nav-number">2.</span> <span class="nav-text">Etcd集群</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85etcd"><span class="nav-number">2.1.</span> <span class="nav-text">安装etcd</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%85%8D%E7%BD%AEetcd"><span class="nav-number">2.2.</span> <span class="nav-text">配置etcd</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%AF%E5%8A%A8etcd%E9%9B%86%E7%BE%A4"><span class="nav-number">2.3.</span> <span class="nav-text">启动etcd集群</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%E4%B8%8E%E5%BB%BA%E8%AE%AE"><span class="nav-number">2.4.</span> <span class="nav-text">常见问题与建议</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%97%AE%E9%A2%981%EF%BC%9A-cluster-ID-mismatch%E2%80%A6"><span class="nav-number">2.4.1.</span> <span class="nav-text">问题1： cluster ID mismatch….</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%97%AE%E9%A2%982%EF%BC%9A-cannot-understand-the-cluster-version"><span class="nav-number">2.4.2.</span> <span class="nav-text">问题2： cannot understand the cluster version</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%BB%BA%E8%AE%AE"><span class="nav-number">2.4.3.</span> <span class="nav-text">建议</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Patroni%E9%9B%86%E7%BE%A4"><span class="nav-number">3.</span> <span class="nav-text">Patroni集群</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Mr Liu"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Mr Liu</p>
+  <div class="site-description" itemprop="description">和意识先进的人在一起你才能转变意识，和心态积极的人在一起，你才能够积极，靠自己改变很难，一个人拽着自己的头发是很难把自己拎起来的。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">26</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">20</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">41</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/big/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://luckyliupp.github.io/2023/12/23/openeuler-install-etcd-patroni/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Mr Liu">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hello Mr Liu">
+      <meta itemprop="description" content="和意识先进的人在一起你才能转变意识，和心态积极的人在一起，你才能够积极，靠自己改变很难，一个人拽着自己的头发是很难把自己拎起来的。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="基于Etcd+Patroni的PostgreSQL高可用(暂未完成) | Hello Mr Liu">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          基于Etcd+Patroni的PostgreSQL高可用(暂未完成)
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2023-12-23 13:41:10" itemprop="dateCreated datePublished" datetime="2023-12-23T13:41:10+08:00">2023-12-23</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-06-19 09:55:13" itemprop="dateModified" datetime="2025-06-19T09:55:13+08:00">2025-06-19</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E8%BD%AF%E4%BB%B6%E5%AE%89%E8%A3%85/" itemprop="url" rel="index"><span itemprop="name">软件安装</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E8%BD%AF%E4%BB%B6%E5%AE%89%E8%A3%85/%E6%95%B0%E6%8D%AE%E5%BA%93/" itemprop="url" rel="index"><span itemprop="name">数据库</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>1.7k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>6 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <blockquote>
+<p>摘要：基于Etcd+Patroni的PostgreSQL高可用方案的实操。</p>
+</blockquote>
+<span id="more"></span>
+
+<h2 id="环境准备"><a href="#环境准备" class="headerlink" title="环境准备"></a>环境准备</h2><p>本文承接自：<a target="_blank" rel="noopener" href="https://it-liupp.gitee.io/2023/12/23/openeuler-install-pgsql14/">安装PostgreSQL15.5并配置一主二从 | Hello Mr Liu (gitee.io)</a></p>
+<p>操作系统的配置和数据库的安装请参考上文，本文不再赘述。</p>
+<p><strong>环境规划回顾</strong></p>
+<table>
+<thead>
+<tr>
+<th>序号</th>
+<th>IP</th>
+<th>安装内容</th>
+<th>CPU&#x2F;内存配置</th>
+<th>系统盘</th>
+<th>数据盘</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>192.168.8.190</td>
+<td>etcd、patroni、postgresql</td>
+<td>8C+16G</td>
+<td>80G</td>
+<td>500G</td>
+</tr>
+<tr>
+<td>2</td>
+<td>192.168.8.191</td>
+<td>etcd、patroni、postgresql</td>
+<td>8C+16G</td>
+<td>80G</td>
+<td>500G</td>
+</tr>
+<tr>
+<td>3</td>
+<td>192.168.8.192</td>
+<td>etcd、patroni、postgresql</td>
+<td>8C+16G</td>
+<td>80G</td>
+<td>500G</td>
+</tr>
+</tbody></table>
+<p><strong>hostname</strong>参照</p>
+<table>
+<thead>
+<tr>
+<th>序号</th>
+<th>IP</th>
+<th>hostname</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>192.168.8.190</td>
+<td>pg01</td>
+</tr>
+<tr>
+<td>2</td>
+<td>192.168.8.190</td>
+<td>Pg02</td>
+</tr>
+<tr>
+<td>3</td>
+<td>192.168.8.190</td>
+<td>Pg03</td>
+</tr>
+</tbody></table>
+<p><strong>重要提醒：</strong></p>
+<blockquote>
+<p>Selinux 关闭或者设置为permissive模式，否则可能会遇到千奇百怪的问题。</p>
+</blockquote>
+<h2 id="Etcd集群"><a href="#Etcd集群" class="headerlink" title="Etcd集群"></a>Etcd集群</h2><h3 id="安装etcd"><a href="#安装etcd" class="headerlink" title="安装etcd"></a>安装etcd</h3><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># 查询dnf库内的etcd版本</span>
+<span class="token punctuation">[</span>root@pg02 ~<span class="token punctuation">]</span><span class="token comment"># dnf search etcd -v</span>
+<span class="token comment">## etcd版本为3.4.14-5</span>
+<span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">=</span>Name Exactly Matched: etcd <span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span>
+etcd.x86_64 <span class="token builtin class-name">:</span> Distributed reliable key-value store <span class="token keyword">for</span> the <span class="token function">most</span> critical data of a distributed system
+Repo        <span class="token builtin class-name">:</span> everything
+Matched from:
+Provide    <span class="token builtin class-name">:</span> etcd <span class="token operator">=</span> <span class="token number">3.4</span>.14-5.oe2203sp2
+
+<span class="token comment"># 安装etcd</span>
+<span class="token punctuation">[</span>root@pg02 ~<span class="token punctuation">]</span><span class="token comment"># dnf install etcd -y</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="配置etcd"><a href="#配置etcd" class="headerlink" title="配置etcd"></a>配置etcd</h3><p>先不启动Etcd，编辑一下etcd的配置文件，配置文件路径为“&#x2F;etc&#x2F;etcd&#x2F;etcd.conf”</p>
+<p><strong>pg01主机：</strong></p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># 编辑配置文件</span>
+<span class="token punctuation">[</span>root@pg01 ~<span class="token punctuation">]</span><span class="token comment"># vi /etc/etcd/etcd.conf</span>
+
+<span class="token comment">###文件内容如下：</span>
+<span class="token comment"># [member]</span>
+<span class="token comment"># etcd实例名称</span>
+<span class="token assign-left variable">ETCD_NAME</span><span class="token operator">=</span>etcd_01
+<span class="token comment"># 修改Etcd数据存放目录(注意改成自己的地址或者保持默认)</span>
+<span class="token assign-left variable">ETCD_DATA_DIR</span><span class="token operator">=</span><span class="token string">"/app/appdata/etcd_data"</span>
+
+<span class="token comment"># 集群内部通信使用的URL</span>
+<span class="token assign-left variable">ETCD_LISTEN_PEER_URLS</span><span class="token operator">=</span><span class="token string">"http://192.168.8.190:2380"</span>
+<span class="token comment"># 供外部客户端使用的url</span>
+<span class="token assign-left variable">ETCD_LISTEN_CLIENT_URLS</span><span class="token operator">=</span><span class="token string">"http://192.168.8.190:2379,http://127.0.0.1:2379"</span>
+<span class="token comment">#</span>
+<span class="token comment">#[cluster]</span>
+<span class="token comment">#ETCD_INITIAL_ADVERTISE_PEER_URLS="http://localhost:2380"</span>
+<span class="token comment"># 广播给集群内其他成员访问的URL</span>
+<span class="token assign-left variable">ETCD_INITIAL_ADVERTISE_PEER_URLS</span><span class="token operator">=</span><span class="token string">"http://192.168.8.190:2380"</span>
+<span class="token comment"># if you use different ETCD_NAME (e.g. test), set ETCD_INITIAL_CLUSTER value for this name, i.e. "test=http://..."</span>
+<span class="token comment"># 初始集群成员列表</span>
+<span class="token comment"># 这个属性增加多个监听地址 ETCD_INITIAL_CLUSTER="default=http://IP1:2380,etcd02=http://IP2:2380,...."</span>
+<span class="token assign-left variable">ETCD_INITIAL_CLUSTER</span><span class="token operator">=</span><span class="token string">"etcd_01=http://192.168.8.190:2380,etcd_02=http://192.168.8.191:2380,etcd_03=http://192.168.8.192:2380"</span>
+<span class="token comment"># 初始集群状态，new为新建集群</span>
+<span class="token assign-left variable">ETCD_INITIAL_CLUSTER_STATE</span><span class="token operator">=</span><span class="token string">"new"</span>
+<span class="token comment"># 集群的名称</span>
+<span class="token assign-left variable">ETCD_INITIAL_CLUSTER_TOKEN</span><span class="token operator">=</span><span class="token string">"etcd-cluster"</span>
+<span class="token comment"># 客户端(etcdctl/curl等)跟etcd服务进行交互时请求的url</span>
+<span class="token assign-left variable">ETCD_ADVERTISE_CLIENT_URLS</span><span class="token operator">=</span><span class="token string">"http://192.168.8.190:2379"</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p><strong>pg02主机：</strong></p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># 编辑配置文件</span>
+<span class="token punctuation">[</span>root@pg02 ~<span class="token punctuation">]</span><span class="token comment"># vi /etc/etcd/etcd.conf</span>
+
+<span class="token comment">###文件内容如下：</span>
+<span class="token comment"># [member]</span>
+<span class="token comment"># etcd实例名称</span>
+<span class="token assign-left variable">ETCD_NAME</span><span class="token operator">=</span>etcd_02
+<span class="token comment"># 修改Etcd数据存放目录(注意改成自己的地址或者保持默认)</span>
+<span class="token assign-left variable">ETCD_DATA_DIR</span><span class="token operator">=</span><span class="token string">"/app/appdata/etcd_data"</span>
+
+<span class="token comment"># 集群内部通信使用的URL</span>
+<span class="token assign-left variable">ETCD_LISTEN_PEER_URLS</span><span class="token operator">=</span><span class="token string">"http://192.168.8.191:2380"</span>
+<span class="token comment"># 供外部客户端使用的url</span>
+<span class="token assign-left variable">ETCD_LISTEN_CLIENT_URLS</span><span class="token operator">=</span><span class="token string">"http://192.168.8.191:2379,http://127.0.0.1:2379"</span>
+<span class="token comment">#</span>
+<span class="token comment">#[cluster]</span>
+<span class="token comment">#ETCD_INITIAL_ADVERTISE_PEER_URLS="http://localhost:2380"</span>
+<span class="token comment"># 广播给集群内其他成员访问的URL</span>
+<span class="token assign-left variable">ETCD_INITIAL_ADVERTISE_PEER_URLS</span><span class="token operator">=</span><span class="token string">"http://192.168.8.191:2380"</span>
+<span class="token comment"># if you use different ETCD_NAME (e.g. test), set ETCD_INITIAL_CLUSTER value for this name, i.e. "test=http://..."</span>
+<span class="token comment"># 初始集群成员列表</span>
+<span class="token comment"># 这个属性增加多个监听地址 ETCD_INITIAL_CLUSTER="default=http://IP1:2380,etcd02=http://IP2:2380,...."</span>
+<span class="token assign-left variable">ETCD_INITIAL_CLUSTER</span><span class="token operator">=</span><span class="token string">"etcd_01=http://192.168.8.190:2380,etcd_02=http://192.168.8.191:2380,etcd_03=http://192.168.8.192:2380"</span>
+<span class="token comment"># 初始集群状态，new为新建集群</span>
+<span class="token assign-left variable">ETCD_INITIAL_CLUSTER_STATE</span><span class="token operator">=</span><span class="token string">"new"</span>
+<span class="token comment"># 集群的名称</span>
+<span class="token assign-left variable">ETCD_INITIAL_CLUSTER_TOKEN</span><span class="token operator">=</span><span class="token string">"etcd-cluster"</span>
+<span class="token comment"># 客户端(etcdctl/curl等)跟etcd服务进行交互时请求的url</span>
+<span class="token assign-left variable">ETCD_ADVERTISE_CLIENT_URLS</span><span class="token operator">=</span><span class="token string">"http://192.168.8.191:2379"</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p><strong>pg03主机：</strong></p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># 编辑配置文件</span>
+<span class="token punctuation">[</span>root@pg03 ~<span class="token punctuation">]</span><span class="token comment"># vi /etc/etcd/etcd.conf</span>
+
+<span class="token comment">###文件内容如下：</span>
+<span class="token comment"># [member]</span>
+<span class="token comment"># etcd实例名称</span>
+<span class="token assign-left variable">ETCD_NAME</span><span class="token operator">=</span>etcd_03
+<span class="token comment"># 修改Etcd数据存放目录(注意改成自己的地址或者保持默认)</span>
+<span class="token assign-left variable">ETCD_DATA_DIR</span><span class="token operator">=</span><span class="token string">"/app/appdata/etcd_data"</span>
+
+<span class="token comment"># 集群内部通信使用的URL</span>
+<span class="token assign-left variable">ETCD_LISTEN_PEER_URLS</span><span class="token operator">=</span><span class="token string">"http://192.168.8.192:2380"</span>
+<span class="token comment"># 供外部客户端使用的url</span>
+<span class="token assign-left variable">ETCD_LISTEN_CLIENT_URLS</span><span class="token operator">=</span><span class="token string">"http://192.168.8.192:2379,http://127.0.0.1:2379"</span>
+<span class="token comment">#</span>
+<span class="token comment">#[cluster]</span>
+<span class="token comment">#ETCD_INITIAL_ADVERTISE_PEER_URLS="http://localhost:2380"</span>
+<span class="token comment"># 广播给集群内其他成员访问的URL</span>
+<span class="token assign-left variable">ETCD_INITIAL_ADVERTISE_PEER_URLS</span><span class="token operator">=</span><span class="token string">"http://192.168.8.192:2380"</span>
+<span class="token comment"># if you use different ETCD_NAME (e.g. test), set ETCD_INITIAL_CLUSTER value for this name, i.e. "test=http://..."</span>
+<span class="token comment"># 初始集群成员列表</span>
+<span class="token comment"># 这个属性增加多个监听地址 ETCD_INITIAL_CLUSTER="default=http://IP1:2380,etcd02=http://IP2:2380,...."</span>
+<span class="token assign-left variable">ETCD_INITIAL_CLUSTER</span><span class="token operator">=</span><span class="token string">"etcd_01=http://192.168.8.190:2380,etcd_02=http://192.168.8.191:2380,etcd_03=http://192.168.8.192:2380"</span>
+<span class="token comment"># 初始集群状态，new为新建集群</span>
+<span class="token assign-left variable">ETCD_INITIAL_CLUSTER_STATE</span><span class="token operator">=</span><span class="token string">"new"</span>
+<span class="token comment"># 集群的名称</span>
+<span class="token assign-left variable">ETCD_INITIAL_CLUSTER_TOKEN</span><span class="token operator">=</span><span class="token string">"etcd-cluster"</span>
+<span class="token comment"># 客户端(etcdctl/curl等)跟etcd服务进行交互时请求的url</span>
+<span class="token assign-left variable">ETCD_ADVERTISE_CLIENT_URLS</span><span class="token operator">=</span><span class="token string">"http://192.168.8.192:2379"</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>保存并退出配置文件编辑。</p>
+<p>Etcd数据存放目录我们目前并没有创建，在<strong>三台主机</strong>上创建目录被将目录授权给etcd用户（安装etcd时会自动创建etcd用户）：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># 创建Etcd数据目录</span>
+<span class="token punctuation">[</span>root@pg0x ~<span class="token punctuation">]</span><span class="token comment"># mkdir -p /app/appdata/etcd_data</span>
+<span class="token comment"># 授权Etcd用户</span>
+<span class="token punctuation">[</span>root@pg0x ~<span class="token punctuation">]</span><span class="token comment"># chown -R etcd:  /app/appdata/etcd_data</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>此时配置结束，检查本机防火墙是否开放了2380和2379端口，如未开放则打开，如果防火墙关闭状态，可跳过此步骤：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># 查询防火墙参数</span>
+<span class="token punctuation">[</span>root@pg0x ~<span class="token punctuation">]</span><span class="token comment"># firewall-cmd --list-all</span>
+<span class="token comment"># 如果ports 中无2380和2379，则执行如下命令开放端口</span>
+<span class="token punctuation">[</span>root@pg0x ~<span class="token punctuation">]</span><span class="token comment"># firewall-cmd --add-port=2380/tcp --permanent</span>
+<span class="token punctuation">[</span>root@pg0x ~<span class="token punctuation">]</span><span class="token comment"># firewall-cmd --add-port=2379/tcp --permanent</span>
+<span class="token punctuation">[</span>root@pg0x ~<span class="token punctuation">]</span><span class="token comment"># firewall-cmd --reload</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="启动etcd集群"><a href="#启动etcd集群" class="headerlink" title="启动etcd集群"></a>启动etcd集群</h3><p>依次在pg01&#x2F;pg02&#x2F;pg03上执行：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># 启动etcd服务</span>
+systemctl start etcd	<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+
+<p>当三台机器依次启动完毕后，可在任意一台机器上执行如下命令查看集群状态：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># Etcd集群节点状态</span>
+<span class="token punctuation">[</span>root@pg02 etcd_data<span class="token punctuation">]</span><span class="token comment"># etcdctl endpoint status --cluster -w table</span>
++---------------------------+------------------+---------+---------+-----------+------------+-----------+------------+--------------------+--------+
+<span class="token operator">|</span>         ENDPOINT          <span class="token operator">|</span>        ID        <span class="token operator">|</span> VERSION <span class="token operator">|</span> DB SIZE <span class="token operator">|</span> IS LEADER <span class="token operator">|</span> IS LEARNER <span class="token operator">|</span> RAFT <span class="token environment constant">TERM</span> <span class="token operator">|</span> RAFT INDEX <span class="token operator">|</span> RAFT APPLIED INDEX <span class="token operator">|</span> ERRORS <span class="token operator">|</span>
++---------------------------+------------------+---------+---------+-----------+------------+-----------+------------+--------------------+--------+
+<span class="token operator">|</span> http://192.168.8.191:2379 <span class="token operator">|</span> 304468618d07ef91 <span class="token operator">|</span>  <span class="token number">3.4</span>.14 <span class="token operator">|</span>   <span class="token number">20</span> kB <span class="token operator">|</span>     <span class="token boolean">false</span> <span class="token operator">|</span>      <span class="token boolean">false</span> <span class="token operator">|</span>         <span class="token number">6</span> <span class="token operator">|</span>         <span class="token number">10</span> <span class="token operator">|</span>                 <span class="token number">10</span> <span class="token operator">|</span>        <span class="token operator">|</span>
+<span class="token operator">|</span> http://192.168.8.192:2379 <span class="token operator">|</span> 4920f227c748218a <span class="token operator">|</span>  <span class="token number">3.4</span>.14 <span class="token operator">|</span>   <span class="token number">20</span> kB <span class="token operator">|</span>     <span class="token boolean">false</span> <span class="token operator">|</span>      <span class="token boolean">false</span> <span class="token operator">|</span>         <span class="token number">6</span> <span class="token operator">|</span>         <span class="token number">10</span> <span class="token operator">|</span>                 <span class="token number">10</span> <span class="token operator">|</span>        <span class="token operator">|</span>
+<span class="token operator">|</span> http://192.168.8.190:2379 <span class="token operator">|</span> 9ba0dd8b8c3631b0 <span class="token operator">|</span>  <span class="token number">3.4</span>.14 <span class="token operator">|</span>   <span class="token number">20</span> kB <span class="token operator">|</span>      <span class="token boolean">true</span> <span class="token operator">|</span>      <span class="token boolean">false</span> <span class="token operator">|</span>         <span class="token number">6</span> <span class="token operator">|</span>         <span class="token number">10</span> <span class="token operator">|</span>                 <span class="token number">10</span> <span class="token operator">|</span>        <span class="token operator">|</span>
++---------------------------+------------------+---------+---------+-----------+------------+-----------+------------+--------------------+--------+
+
+<span class="token comment"># Etcd集群节点健康检查</span>
+<span class="token punctuation">[</span>root@pg02 etcd_data<span class="token punctuation">]</span><span class="token comment"># etcdctl endpoint health --cluster</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>将etcd设置为开机自启动：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># 各节点执行</span>
+systemctl <span class="token builtin class-name">enable</span> etcd<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+
+
+
+<h3 id="常见问题与建议"><a href="#常见问题与建议" class="headerlink" title="常见问题与建议"></a>常见问题与建议</h3><h4 id="问题1：-cluster-ID-mismatch…"><a href="#问题1：-cluster-ID-mismatch…" class="headerlink" title="问题1： cluster ID mismatch…."></a>问题1： cluster ID mismatch….</h4><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># 报错大致如下：</span>
+request sent was ignored <span class="token punctuation">(</span>cluster ID mismatch: remote<span class="token punctuation">[</span>4xxx6<span class="token punctuation">]</span><span class="token operator">=</span>6xxxb, <span class="token assign-left variable">local</span><span class="token operator">=</span>9xxxb<span class="token punctuation">)</span>
+
+<span class="token comment"># 解决方法</span>
+需要把所有节点的etc数据目录下的缓存都删除一遍，然后重启etcd。
+示例：rm -rf /app/appdata/etcd_data <span class="token punctuation">(</span>本文配置的etcd数据目录<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h4 id="问题2：-cannot-understand-the-cluster-version"><a href="#问题2：-cannot-understand-the-cluster-version" class="headerlink" title="问题2： cannot understand the cluster version"></a>问题2： cannot understand the cluster version</h4><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># 报错大致如下：</span>
+cannot understand the cluster version of member 4xxx6 <span class="token punctuation">(</span>not_decided is not <span class="token keyword">in</span> dotted-tri <span class="token function">format</span><span class="token punctuation">)</span>
+incompatible with current running cluster<span class="token punctuation">..</span><span class="token punctuation">..</span>
+
+<span class="token comment"># 解决方法</span>
+可能是因为配置文件中“ETCD_INITIAL_CLUSTER_STATE<span class="token operator">=</span><span class="token string">"existing"</span>”修改为“ETCD_INITIAL_CLUSTER_STATE<span class="token operator">=</span><span class="token string">"new"</span>”
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h4 id="建议"><a href="#建议" class="headerlink" title="建议"></a>建议</h4><blockquote>
+<p>问题可能千奇百怪，甚至启动服务时也不看到有用的错误信息。</p>
+<p>需要注意的是：</p>
+<p>1.本文配置的Etcd集群，是在三台机器配置文件都修改完毕时才依次启动的服务，如果在配置各个节点时，有单独启动测试的，在集群启动时，应先停掉所有etcd服务，清空etcd数据目录文件，然后再依次启动，否则可能会导致集群无法启动成功。遇到其他无法正常启动的问题时，可以尝试清空数据目录后再启动。</p>
+<p>2.可以通过 journalctl命令来实时监测服务启动情况，建议同一个节点打开两个终端会话，先执行 journalctl -f 命令，该命令会实时输出日志，然后再另一个会话中启动etcd服务，此时在journalctl会话终端界面会实时显示启动日志，便于排错。</p>
+</blockquote>
+<h2 id="Patroni集群"><a href="#Patroni集群" class="headerlink" title="Patroni集群"></a>Patroni集群</h2><pre class="line-numbers language-none"><code class="language-none"># 当前系统默认安装了python3.9。不建议使用root用户安装，使用postgres用户安装
+[postgres@pg01 ~]$ pip3 install psycopg2_binary
+[postgres@pg01 ~]$ pip3 install patroni[etcd]<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+
+<!-- flag of hidden posts -->
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>☕请作者喝杯咖啡☕</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.jpg" alt="Mr Liu 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/images/alipay.jpg" alt="Mr Liu 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>Mr Liu
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://luckyliupp.github.io/2023/12/23/openeuler-install-etcd-patroni/" title="基于Etcd+Patroni的PostgreSQL高可用(暂未完成)">https://luckyliupp.github.io/2023/12/23/openeuler-install-etcd-patroni/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/Linux/" rel="tag"># Linux</a>
+              <a href="/tags/OpenEuler/" rel="tag"># OpenEuler</a>
+              <a href="/tags/PostgreSQL/" rel="tag"># PostgreSQL</a>
+          </div>
+
+        
+
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mr Liu</span>
+</div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+      <span>站点总字数：</span>
+    <span title="站点总字数">46k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span>站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">2:48</span>
+  </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script><script src="/js/bookmark.js"></script>
+
+  
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>

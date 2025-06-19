@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.2.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.png">
+  <link rel="mask-icon" href="/images/favicon.png" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" integrity="sha256-Z1K5uhUaJXA7Ll0XrZ/0JhX4lAtZFpT6jkKrEDT0drU=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"luckyliupp.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.14.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":true,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="摘要：OpenEuler22.03的GlusterFS集群创建。 相关文章： 1.OpenEuler22.03的GlusterFS集群安装（本文） 2.OpenEuler22.03的Heketi安装及K8s、Kubesphere的对接) 请根据需要查看相关文章。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="OpenEuler22.03的GlusterFS集群安装">
+<meta property="og:url" content="https://luckyliupp.github.io/2024/01/17/openeuler-install-glusterfs/index.html">
+<meta property="og:site_name" content="Hello Mr Liu">
+<meta property="og:description" content="摘要：OpenEuler22.03的GlusterFS集群创建。 相关文章： 1.OpenEuler22.03的GlusterFS集群安装（本文） 2.OpenEuler22.03的Heketi安装及K8s、Kubesphere的对接) 请根据需要查看相关文章。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2024-01-17T05:41:10.000Z">
+<meta property="article:modified_time" content="2025-06-19T01:55:13.314Z">
+<meta property="article:author" content="Mr Liu">
+<meta property="article:tag" content="Linux">
+<meta property="article:tag" content="OpenEuler">
+<meta property="article:tag" content="GlusterFS">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://luckyliupp.github.io/2024/01/17/openeuler-install-glusterfs/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://luckyliupp.github.io/2024/01/17/openeuler-install-glusterfs/","path":"2024/01/17/openeuler-install-glusterfs/","title":"OpenEuler22.03的GlusterFS集群安装"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>OpenEuler22.03的GlusterFS集群安装 | Hello Mr Liu</title>
+  
+
+
+
+
+
+
+  <script async defer data-website-id="" src=""></script>
+
+  <script defer data-domain="" src=""></script>
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Hello Mr Liu</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">临江对月</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%8E%AF%E5%A2%83%E5%87%86%E5%A4%87"><span class="nav-number">1.</span> <span class="nav-text">环境准备</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%85%8D%E7%BD%AEHosts%E6%96%87%E4%BB%B6"><span class="nav-number">1.1.</span> <span class="nav-text">配置Hosts文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%85%8D%E7%BD%AESSH%E5%85%8D%E5%AF%86%E7%99%BB%E5%BD%95"><span class="nav-number">1.2.</span> <span class="nav-text">配置SSH免密登录</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#GlusterFS%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE"><span class="nav-number">2.</span> <span class="nav-text">GlusterFS安装配置</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85GlusterFS%E6%9C%8D%E5%8A%A1"><span class="nav-number">2.1.</span> <span class="nav-text">安装GlusterFS服务</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A3%80%E6%B5%8BGlusterFS%E9%9B%86%E7%BE%A4%E8%8A%82%E7%82%B9%E4%B9%8B%E9%97%B4%E7%9A%84%E8%BF%9E%E9%80%9A%E6%80%A7"><span class="nav-number">2.2.</span> <span class="nav-text">检测GlusterFS集群节点之间的连通性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E5%8F%AF%E4%BF%A1%E6%B1%A0"><span class="nav-number">2.3.</span> <span class="nav-text">配置可信池</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="nav-number">3.</span> <span class="nav-text">参考资料</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Mr Liu"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Mr Liu</p>
+  <div class="site-description" itemprop="description">和意识先进的人在一起你才能转变意识，和心态积极的人在一起，你才能够积极，靠自己改变很难，一个人拽着自己的头发是很难把自己拎起来的。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">26</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">20</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">41</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/big/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://luckyliupp.github.io/2024/01/17/openeuler-install-glusterfs/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Mr Liu">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hello Mr Liu">
+      <meta itemprop="description" content="和意识先进的人在一起你才能转变意识，和心态积极的人在一起，你才能够积极，靠自己改变很难，一个人拽着自己的头发是很难把自己拎起来的。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="OpenEuler22.03的GlusterFS集群安装 | Hello Mr Liu">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          OpenEuler22.03的GlusterFS集群安装
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2024-01-17 13:41:10" itemprop="dateCreated datePublished" datetime="2024-01-17T13:41:10+08:00">2024-01-17</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-06-19 09:55:13" itemprop="dateModified" datetime="2025-06-19T09:55:13+08:00">2025-06-19</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E8%BD%AF%E4%BB%B6%E5%AE%89%E8%A3%85/" itemprop="url" rel="index"><span itemprop="name">软件安装</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E8%BD%AF%E4%BB%B6%E5%AE%89%E8%A3%85/%E6%8C%81%E4%B9%85%E5%8C%96/" itemprop="url" rel="index"><span itemprop="name">持久化</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>727</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>3 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <blockquote>
+<p>摘要：OpenEuler22.03的GlusterFS集群创建。</p>
+<p>相关文章：</p>
+<p>1.OpenEuler22.03的GlusterFS集群安装（本文）</p>
+<p>2.<a target="_blank" rel="noopener" href="https://it-liupp.gitee.io/2024/01/19/openeuler-install-heketi-k8s/">OpenEuler22.03的Heketi安装及K8s、Kubesphere的对接)</a></p>
+<p>请根据需要查看相关文章。</p>
+</blockquote>
+<span id="more"></span>
+
+<h1 id="环境准备"><a href="#环境准备" class="headerlink" title="环境准备"></a>环境准备</h1><p>操作系统的配置请参考上文，本文不再赘述。</p>
+<p><strong>环境规划回顾</strong></p>
+<table>
+<thead>
+<tr>
+<th>序号</th>
+<th>IP</th>
+<th>安装内容</th>
+<th>CPU&#x2F;内存配置</th>
+<th>系统盘</th>
+<th>数据盘</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>192.168.8.31</td>
+<td>glusterfs-server10.0-8</td>
+<td>8C+16G</td>
+<td>80G</td>
+<td>500G</td>
+</tr>
+<tr>
+<td>2</td>
+<td>192.168.8.32</td>
+<td>glusterfs-server10.0-8</td>
+<td>8C+16G</td>
+<td>80G</td>
+<td>500G</td>
+</tr>
+<tr>
+<td>3</td>
+<td>192.168.8.33</td>
+<td>glusterfs-server10.0-8</td>
+<td>8C+16G</td>
+<td>80G</td>
+<td>500G</td>
+</tr>
+</tbody></table>
+<p><strong>hostname</strong>参照</p>
+<table>
+<thead>
+<tr>
+<th>序号</th>
+<th>IP</th>
+<th>hostname</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>192.168.8.31</td>
+<td>glusterfs01</td>
+</tr>
+<tr>
+<td>2</td>
+<td>192.168.8.32</td>
+<td>glusterfs02</td>
+</tr>
+<tr>
+<td>3</td>
+<td>192.168.8.33</td>
+<td>glusterfs03</td>
+</tr>
+</tbody></table>
+<p><strong>重要提醒：</strong></p>
+<blockquote>
+<p>Selinux 关闭或者设置为permissive模式，否则可能会遇到千奇百怪的问题。</p>
+<p>关闭防火墙:systemctl stop firewalld &amp;&amp; systemctl disable firewalld</p>
+<p>安装tar包：dnf install tar</p>
+</blockquote>
+<h2 id="配置Hosts文件"><a href="#配置Hosts文件" class="headerlink" title="配置Hosts文件"></a>配置Hosts文件</h2><p>三台机器均编辑：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">vi</span> /etc/hosts<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>hosts文件新增：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token number">192.168</span>.8.31 glusterfs01
+<span class="token number">192.168</span>.8.32 glusterfs02
+<span class="token number">192.168</span>.8.33 glusterfs03
+
+<span class="token comment"># 正式环境</span>
+<span class="token number">192.168</span>.5.37 glusterfs01
+<span class="token number">192.168</span>.5.38 glusterfs02
+<span class="token number">192.168</span>.5.38 glusterfs03<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h2 id="配置SSH免密登录"><a href="#配置SSH免密登录" class="headerlink" title="配置SSH免密登录"></a>配置SSH免密登录</h2><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># 1.创建用于管理用的SSH密钥（别用默认的rsa，血的教训，无）</span>
+ssh-keygen -t ed25519 
+<span class="token comment"># 默认生成到~/.ssh/ 目录下，默认文件名为：id_ed25519 和 id_ed25519.pub</span>
+
+<span class="token comment"># 2.分发密钥到所有节点</span>
+ssh-copy-id root@glusterfs01
+ssh-copy-id root@glusterfs02
+ssh-copy-id root@glusterfs03<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>执行分发可能会报如下错误：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token punctuation">[</span>root@glusterfs01 heketi<span class="token punctuation">]</span><span class="token comment"># ssh-copy-id root@glusterfs02</span>
+/usr/bin/ssh-copy-id: INFO: Source of key<span class="token punctuation">(</span>s<span class="token punctuation">)</span> to be installed: <span class="token string">"/root/.ssh/id_ed25519.pub"</span>
+mktemp: failed to create directory via template ‘/root/.ssh/ssh-copy-id.XXXXXXXXXX’: No such <span class="token function">file</span> or directory
+/usr/bin/ssh-copy-id: ERROR: failed to create required temporary directory under ~/.ssh<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>原因是本地系统还没有.ssh路径，不建议自己创建，可能创建出现权限问题，通过以下命令执行以下即可。</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">ssh</span> root@127.0.0.1
+<span class="token comment"># 出现输入密码时退出即可，这个时候本地会自动生成.ssh目录</span>
+<span class="token comment"># 在各台主机上执行以下，如果已经有.ssh目录的可以忽略</span>
+
+<span class="token comment"># 3.验证免密登录</span>
+<span class="token function">ssh</span> root@glusterfs01<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h1 id="GlusterFS安装配置"><a href="#GlusterFS安装配置" class="headerlink" title="GlusterFS安装配置"></a>GlusterFS安装配置</h1><h2 id="安装GlusterFS服务"><a href="#安装GlusterFS服务" class="headerlink" title="安装GlusterFS服务"></a>安装GlusterFS服务</h2><p>OpenEuler22.03默认软件仓库已经包含了glusterFS相关软件包，版本：10.0-8</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># 查询 glusterfs-server 是否存在</span>
+dnf search glusterfs-server -v
+
+<span class="token comment"># 安装 glusterfs-server</span>
+dnf <span class="token function">install</span> -y glusterfs-server
+
+<span class="token comment"># 启动并设置为开机自动启动</span>
+systemctl <span class="token builtin class-name">enable</span> glusterd --now
+<span class="token comment"># 验证服务状态</span>
+systemctl status glusterd
+<span class="token comment"># 验证服务端口状态</span>
+ss -ntlup <span class="token operator">|</span> <span class="token function">grep</span> glusterd<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h2 id="检测GlusterFS集群节点之间的连通性"><a href="#检测GlusterFS集群节点之间的连通性" class="headerlink" title="检测GlusterFS集群节点之间的连通性"></a>检测GlusterFS集群节点之间的连通性</h2><p>利用ping验证(节点glusterfs01去ping glusterfs02、glusterfs03)：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">ping</span> glusterfs02 -c <span class="token number">2</span>
+<span class="token function">ping</span> glusterfs03 -c <span class="token number">2</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+
+<h2 id="配置可信池"><a href="#配置可信池" class="headerlink" title="配置可信池"></a>配置可信池</h2><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># 使用管理命令 gluster 创建可信池子</span>
+gluster peer probe glusterfs02
+gluster peer probe glusterfs03
+
+<span class="token comment"># 检查peer状态</span>
+gluster peer status<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>输出结果：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token punctuation">[</span>root@glusterfs01 ~<span class="token punctuation">]</span><span class="token comment"># gluster peer status</span>
+Number of Peers: <span class="token number">2</span>
+
+Hostname: glusterfs02
+Uuid: 63864d95-a420-4640-ba09-e2cac6ebfc0a
+State: Peer <span class="token keyword">in</span> Cluster <span class="token punctuation">(</span>Connected<span class="token punctuation">)</span>
+
+Hostname: glusterfs03
+Uuid: 419c009a-55f2-4ea3-8eab-1e78b2d81788
+State: Peer <span class="token keyword">in</span> Cluster <span class="token punctuation">(</span>Connected<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+
+
+<h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><p><a target="_blank" rel="noopener" href="https://my.oschina.net/u/4197945/blog/10091410">最后的组合：K8s 1.24 基于 Hekiti 实现 GlusterFS 动态存储管理实践 - KubeSphere的个人空间 - OSCHINA - 中文开源技术交流社区</a></p>
+<p><a target="_blank" rel="noopener" href="https://kubesphere.io/zh/docs/v3.4/reference/storage-system-installation/glusterfs-server/">搭建 GlusterFS 服务器 (kubesphere.io)</a></p>
+<p><a target="_blank" rel="noopener" href="https://kubesphere.io/zh/docs/v3.4/installing-on-linux/persistent-storage-configurations/install-glusterfs/">安装 GlusterFS (kubesphere.io)</a></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>☕请作者喝杯咖啡☕</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.jpg" alt="Mr Liu 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/images/alipay.jpg" alt="Mr Liu 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>Mr Liu
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://luckyliupp.github.io/2024/01/17/openeuler-install-glusterfs/" title="OpenEuler22.03的GlusterFS集群安装">https://luckyliupp.github.io/2024/01/17/openeuler-install-glusterfs/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/Linux/" rel="tag"># Linux</a>
+              <a href="/tags/OpenEuler/" rel="tag"># OpenEuler</a>
+              <a href="/tags/GlusterFS/" rel="tag"># GlusterFS</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2024/01/11/webui-vue/" rel="prev" title="前端框架汇总-Vue系列【持续更新ing....】">
+                  <i class="fa fa-chevron-left"></i> 前端框架汇总-Vue系列【持续更新ing....】
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2024/01/19/openeuler-install-ks-cluster/" rel="next" title="OpenEuler22.03 SP2 LTS安装Kubeshpere集群">
+                  OpenEuler22.03 SP2 LTS安装Kubeshpere集群 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mr Liu</span>
+</div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+      <span>站点总字数：</span>
+    <span title="站点总字数">46k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span>站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">2:48</span>
+  </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script><script src="/js/bookmark.js"></script>
+
+  
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>

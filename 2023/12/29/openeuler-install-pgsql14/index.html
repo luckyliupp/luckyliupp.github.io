@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.2.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.png">
+  <link rel="mask-icon" href="/images/favicon.png" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" integrity="sha256-Z1K5uhUaJXA7Ll0XrZ/0JhX4lAtZFpT6jkKrEDT0drU=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"luckyliupp.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.14.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":true,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta property="og:type" content="article">
+<meta property="og:title" content="安装PostgreSQL15.5并配置一主二从">
+<meta property="og:url" content="https://luckyliupp.github.io/2023/12/29/openeuler-install-pgsql14/index.html">
+<meta property="og:site_name" content="Hello Mr Liu">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://luckyliupp.github.io/images/openeuler-install-pgsql14/image-20231221173621661.png">
+<meta property="og:image" content="https://luckyliupp.github.io/images/openeuler-install-pgsql14/image-20231219104613593.png">
+<meta property="og:image" content="https://luckyliupp.github.io/images/openeuler-install-pgsql14/image-20231219104938313.png">
+<meta property="article:published_time" content="2023-12-29T04:41:10.000Z">
+<meta property="article:modified_time" content="2025-06-19T01:55:13.315Z">
+<meta property="article:author" content="Mr Liu">
+<meta property="article:tag" content="操作系统">
+<meta property="article:tag" content="Linux">
+<meta property="article:tag" content="OpenEuler">
+<meta property="article:tag" content="PostgreSQL">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://luckyliupp.github.io/images/openeuler-install-pgsql14/image-20231221173621661.png">
+
+
+<link rel="canonical" href="https://luckyliupp.github.io/2023/12/29/openeuler-install-pgsql14/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://luckyliupp.github.io/2023/12/29/openeuler-install-pgsql14/","path":"2023/12/29/openeuler-install-pgsql14/","title":"安装PostgreSQL15.5并配置一主二从"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>安装PostgreSQL15.5并配置一主二从 | Hello Mr Liu</title>
+  
+
+
+
+
+
+
+  <script async defer data-website-id="" src=""></script>
+
+  <script defer data-domain="" src=""></script>
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Hello Mr Liu</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">临江对月</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%8E%AF%E5%A2%83%E5%87%86%E5%A4%87"><span class="nav-number">1.</span> <span class="nav-text">环境准备</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9B%B4%E6%96%B0%E7%B3%BB%E7%BB%9F%E5%B9%B6%E5%AE%89%E8%A3%85%E5%BF%85%E5%A4%87%E7%BB%84%E4%BB%B6"><span class="nav-number">2.</span> <span class="nav-text">更新系统并安装必备组件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8C%82%E8%BD%BD%E6%95%B0%E6%8D%AE%E7%9B%98"><span class="nav-number">3.</span> <span class="nav-text">挂载数据盘</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#PostgreSQL%E5%AE%89%E8%A3%85"><span class="nav-number">4.</span> <span class="nav-text">PostgreSQL安装</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%8B%E8%BD%BDPostgreSQL-15-5"><span class="nav-number">4.1.</span> <span class="nav-text">下载PostgreSQL 15.5</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BC%96%E8%AF%91%E5%AE%89%E8%A3%85"><span class="nav-number">4.2.</span> <span class="nav-text">编译安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%85%8D%E7%BD%AEPostgreSQL"><span class="nav-number">4.3.</span> <span class="nav-text">配置PostgreSQL</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BF%AE%E6%94%B9%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AF%86%E7%A0%81"><span class="nav-number">4.3.1.</span> <span class="nav-text">修改数据库密码</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BF%AE%E6%94%B9%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E4%BB%A5%E6%94%AF%E6%8C%81%E8%BF%9C%E7%A8%8B%E8%BF%9E%E6%8E%A5"><span class="nav-number">4.4.</span> <span class="nav-text">修改配置文件以支持远程连接</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E9%85%8D%E7%BD%AE"><span class="nav-number">5.</span> <span class="nav-text">操作系统配置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%98%B2%E7%81%AB%E5%A2%99%E6%94%BE%E8%A1%8C5432%E7%AB%AF%E5%8F%A3"><span class="nav-number">5.1.</span> <span class="nav-text">防火墙放行5432端口</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F%E9%85%8D%E7%BD%AE"><span class="nav-number">5.2.</span> <span class="nav-text">环境变量配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%80%E6%9C%BA%E5%90%AF%E5%8A%A8%E9%85%8D%E7%BD%AE"><span class="nav-number">5.3.</span> <span class="nav-text">开机启动配置</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E4%B8%80%E4%B8%BB%E4%BA%8C%E4%BB%8E"><span class="nav-number">6.</span> <span class="nav-text">创建一主二从</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BB%E5%BA%93%E9%85%8D%E7%BD%AE%EF%BC%9A"><span class="nav-number">6.1.</span> <span class="nav-text">主库配置：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%8E%E5%BA%93%E9%85%8D%E7%BD%AE-pg02-x2F-03%E4%B8%BB%E6%9C%BA%E9%85%8D%E7%BD%AE%E7%9B%B8%E5%90%8C"><span class="nav-number">6.2.</span> <span class="nav-text">从库配置[pg02&#x2F;03主机配置相同]</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BB%E4%BB%8E%E5%90%8C%E6%AD%A5%E9%AA%8C%E8%AF%81"><span class="nav-number">6.3.</span> <span class="nav-text">主从同步验证</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%80%E5%90%AF%E5%BD%92%E6%A1%A3%E6%A8%A1%E5%BC%8F"><span class="nav-number">6.4.</span> <span class="nav-text">开启归档模式</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%B6%E4%BB%96%E5%BB%BA%E8%AE%AE"><span class="nav-number">7.</span> <span class="nav-text">其他建议</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Mr Liu"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Mr Liu</p>
+  <div class="site-description" itemprop="description">和意识先进的人在一起你才能转变意识，和心态积极的人在一起，你才能够积极，靠自己改变很难，一个人拽着自己的头发是很难把自己拎起来的。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">26</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">20</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">41</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/big/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://luckyliupp.github.io/2023/12/29/openeuler-install-pgsql14/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Mr Liu">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hello Mr Liu">
+      <meta itemprop="description" content="和意识先进的人在一起你才能转变意识，和心态积极的人在一起，你才能够积极，靠自己改变很难，一个人拽着自己的头发是很难把自己拎起来的。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="安装PostgreSQL15.5并配置一主二从 | Hello Mr Liu">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          安装PostgreSQL15.5并配置一主二从
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2023-12-29 12:41:10" itemprop="dateCreated datePublished" datetime="2023-12-29T12:41:10+08:00">2023-12-29</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-06-19 09:55:13" itemprop="dateModified" datetime="2025-06-19T09:55:13+08:00">2025-06-19</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" itemprop="url" rel="index"><span itemprop="name">操作系统</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E8%BD%AF%E4%BB%B6%E5%AE%89%E8%A3%85/" itemprop="url" rel="index"><span itemprop="name">软件安装</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E8%BD%AF%E4%BB%B6%E5%AE%89%E8%A3%85/%E6%95%B0%E6%8D%AE%E5%BA%93/" itemprop="url" rel="index"><span itemprop="name">数据库</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>3.1k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>11 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p><img src="/../images/openeuler-install-pgsql14/image-20231221173621661.png" alt="image-20231221173621661"></p>
+<span id="more"></span>
+
+<h2 id="环境准备"><a href="#环境准备" class="headerlink" title="环境准备"></a>环境准备</h2><table>
+<thead>
+<tr>
+<th>序号</th>
+<th>IP</th>
+<th>标识(hostname)</th>
+<th>CPU&#x2F;内存配置</th>
+<th>系统盘</th>
+<th>数据盘</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>192.168.8.190</td>
+<td>pg01</td>
+<td>8C+16G</td>
+<td>80G</td>
+<td>500G</td>
+</tr>
+<tr>
+<td>2</td>
+<td>192.168.8.191</td>
+<td>pg02</td>
+<td>8C+16G</td>
+<td>80G</td>
+<td>500G</td>
+</tr>
+<tr>
+<td>3</td>
+<td>192.168.8.192</td>
+<td>pg03</td>
+<td>8C+16G</td>
+<td>80G</td>
+<td>500G</td>
+</tr>
+</tbody></table>
+<p>规划的文件夹目录（所有主机）：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment">## 以下目录为本文规划的目录，在硬盘挂载完毕后创建，也可以跟着说明一步步创建。</span>
+<span class="token comment">## 可以根据各自情况自行规划，注意更改后替换后文里面对应的路径。</span>
+<span class="token comment"># app目录为数据盘挂载目录，将所有程序和数据保存在该目录下</span>
+/app
+<span class="token comment"># postgresql应用的安装目录</span>
+/app/pg15
+<span class="token comment"># 保存解压后的应用源代码</span>
+/app/source
+<span class="token comment"># 存储临时文件(如下载的应用压缩包)</span>
+/app/temp-files
+<span class="token comment">#保存应用数据</span>
+/app/appdata
+<span class="token comment"># postgresql15的数据目录 即是环境变量$PGDATA （建议用postgres用户创建或创建后给postgres授权）</span>
+/app/appdata/pg15/data
+<span class="token comment"># postgresql15的日志 即是环境变量$PGLOG（建议用postgres用户创建或创建后给postgres授权）</span>
+/app/appdata/pg15/logs<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>系统和组件版本（所有主机）：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># 操作系统：</span>
+OpenEuler:22.03 <span class="token punctuation">(</span>LTS-SP2<span class="token punctuation">)</span>
+<span class="token comment"># 数据库：</span>
+postgresql:15.5<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>系统环境状态（所有主机）：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># SeLinux（cat /etc/selinux/config）变更需重启系统</span>
+<span class="token assign-left variable">SELINUX</span><span class="token operator">=</span>permissive
+
+<span class="token comment"># Firewalld 防火墙保持开启状态(systemctl status/start/stop/restart firewalld)</span>
+active<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+
+
+<h2 id="更新系统并安装必备组件"><a href="#更新系统并安装必备组件" class="headerlink" title="更新系统并安装必备组件"></a>更新系统并安装必备组件</h2><p>*（如无特殊说明代表<strong>所有主机</strong>）</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># 查看系统版本</span>
+<span class="token punctuation">[</span>root@pg01 ~<span class="token punctuation">]</span>$ <span class="token function">cat</span> /etc/os-release
+<span class="token assign-left variable">NAME</span><span class="token operator">=</span><span class="token string">"openEuler"</span>
+<span class="token assign-left variable">VERSION</span><span class="token operator">=</span><span class="token string">"22.03 (LTS-SP2)"</span>
+<span class="token assign-left variable">ID</span><span class="token operator">=</span><span class="token string">"openEuler"</span>
+<span class="token assign-left variable">VERSION_ID</span><span class="token operator">=</span><span class="token string">"22.03"</span>
+<span class="token assign-left variable">PRETTY_NAME</span><span class="token operator">=</span><span class="token string">"openEuler 22.03 (LTS-SP2)"</span>
+<span class="token assign-left variable">ANSI_COLOR</span><span class="token operator">=</span><span class="token string">"0;31"</span>
+<span class="token comment"># 更新系统</span>
+<span class="token punctuation">[</span>root@pg01 ~<span class="token punctuation">]</span>$ dnf upgrade -y<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>关于“dnf update” 和“dnf upgrade”的说明：</p>
+<blockquote>
+<p>update：更新源里的软件列表。一般指量的变化，侧重更新的意思，主要是为原有的东西增加新功能，或者对已有的部分做出更改等。更新数据源。</p>
+<p>upgrade：升级你系统里的软件。一般指质的变化，侧重升级的意思，是指从较低级版本升级到高级的版本，这种升级往往伴有新功能的增加，因此也有update的意思。</p>
+<ol>
+<li><p>更新资源</p>
+<p>sudo dnf update</p>
+</li>
+<li><p>软件更新升级，包括升级语言包等</p>
+<p>sudo dnf upgrade</p>
+</li>
+</ol>
+</blockquote>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment">#安装缺失组件,OpenEuler默认最小化安装</span>
+<span class="token comment">#不同系统安装镜像默认安装的基础组件可能不一样，根据情况安装（gcc、make有的镜像安装时默认安装，有的镜像则没有默认安装）</span>
+<span class="token punctuation">[</span>root@pg01 ~<span class="token punctuation">]</span>$ dnf <span class="token function">install</span> gcc <span class="token function">make</span> <span class="token function">tar</span> readline-devel zlib-devel -y<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+
+<h2 id="挂载数据盘"><a href="#挂载数据盘" class="headerlink" title="挂载数据盘"></a>挂载数据盘</h2><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment">#查看磁盘情况</span>
+<span class="token punctuation">[</span>root@pg01 ~<span class="token punctuation">]</span>$ <span class="token function">fdisk</span> -l<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+
+<p><img src="/../images/openeuler-install-pgsql14/image-20231219104613593.png" alt="image-20231219104613593"></p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment">#给“/dev/vdb分区”</span>
+<span class="token punctuation">[</span>root@pg01 ~<span class="token punctuation">]</span>$ <span class="token function">fdisk</span> /dev/vdb<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+
+<p>输入指令如下：</p>
+<p><img src="/../images/openeuler-install-pgsql14/image-20231219104938313.png" alt="image-20231219104938313"></p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># 再次查看分区情况</span>
+<span class="token punctuation">[</span>root@pg01 ~<span class="token punctuation">]</span>$ <span class="token function">fdisk</span> -l
+<span class="token comment"># 显示结果已创建vdb1分区</span>
+Device           Boot Start  End          Sectors     Size Id Type
+/dev/vdb1        <span class="token number">2048</span>        <span class="token number">1048575999</span>   <span class="token number">1048573952</span>  500G <span class="token number">83</span> Linux
+
+<span class="token comment"># 格式化分区</span>
+<span class="token punctuation">[</span>root@pg01 ~<span class="token punctuation">]</span>$ mkfs.ext4 /dev/vdb1
+<span class="token comment"># 根目录下创建data挂载目录</span>
+<span class="token punctuation">[</span>root@pg01 ~<span class="token punctuation">]</span>$ <span class="token function">mkdir</span> /app
+<span class="token comment"># 挂载/vdb1分区到/app</span>
+<span class="token punctuation">[</span>root@pg01 ~<span class="token punctuation">]</span>$ <span class="token function">mount</span> /dev/vdb1 /app
+<span class="token comment"># 查看挂载情况</span>
+<span class="token punctuation">[</span>root@pg01 ~<span class="token punctuation">]</span>$ <span class="token function">df</span> -lh
+
+<span class="token comment"># 将挂载添加到启动项，否则挂载在重启后失效</span>
+<span class="token punctuation">[</span>root@pg01 ~<span class="token punctuation">]</span>$ <span class="token function">vi</span> /etc/fstab
+<span class="token comment"># 末尾添加一行</span>
+/dev/vdb1               /app                      ext4    defaults        <span class="token number">0</span> <span class="token number">0</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>保存关闭fstab文件，数据盘挂载完毕。</p>
+<h2 id="PostgreSQL安装"><a href="#PostgreSQL安装" class="headerlink" title="PostgreSQL安装"></a>PostgreSQL安装</h2><h3 id="下载PostgreSQL-15-5"><a href="#下载PostgreSQL-15-5" class="headerlink" title="下载PostgreSQL 15.5"></a>下载PostgreSQL 15.5</h3><p>PostgreSQL官方下载地址：<a target="_blank" rel="noopener" href="https://www.postgresql.org/ftp/source/">PostgreSQL: File Browser</a></p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment">#下载PostgreSQL15.5版本</span>
+<span class="token punctuation">[</span>root@pg01 ~<span class="token punctuation">]</span>$ <span class="token builtin class-name">cd</span> /app/temp-files/
+<span class="token punctuation">[</span>root@pg01 temp-files<span class="token punctuation">]</span>$ <span class="token function">wget</span> https://ftp.postgresql.org/pub/source/v15.5/postgresql-15.5.tar.gz<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="编译安装"><a href="#编译安装" class="headerlink" title="编译安装"></a>编译安装</h3><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment">#解压源码包</span>
+<span class="token punctuation">[</span>root@pg01 temp-files<span class="token punctuation">]</span>$ <span class="token function">tar</span> -xzvf postgresql-15.5.tar.gz
+<span class="token comment"># 将解压后的文件夹（postgresql-15.5）移动到规划的source目录</span>
+<span class="token punctuation">[</span>root@pg01 temp-files<span class="token punctuation">]</span>$ <span class="token function">mv</span> postgresql-15.5 /app/source/
+<span class="token comment"># 切换到postgresql-15.5文件夹（系统当前在root用户根目录下）</span>
+<span class="token punctuation">[</span>root@pg01 temp-files<span class="token punctuation">]</span>$ <span class="token builtin class-name">cd</span> /app/source/source/postgresql-15.5
+<span class="token comment"># 配置安装目录：</span>
+<span class="token punctuation">[</span>root@pg01 postgresql-15.5<span class="token punctuation">]</span>$ ./configure --prefix<span class="token operator">=</span>/app/pg15
+<span class="token comment"># 编译（耗时较长，耐心等待）</span>
+<span class="token punctuation">[</span>root@pg01 postgresql-15.5<span class="token punctuation">]</span>$ <span class="token function">make</span>                             
+<span class="token comment"># 安装</span>
+<span class="token punctuation">[</span>root@pg01 postgresql-15.5<span class="token punctuation">]</span>$ <span class="token function">make</span> <span class="token function">install</span>
+<span class="token comment"># 创建PostgreSQL数据存放目录（可根据实际情况自行配置数据存储路径）</span>
+<span class="token punctuation">[</span>root@pg01 postgresql-15.5<span class="token punctuation">]</span>$ <span class="token function">mkdir</span> -p /app/appdata/pg15/data
+<span class="token comment"># 创建PostgreSQL日志存放目录（可根据实际情况自行配置日志存储路径）</span>
+<span class="token punctuation">[</span>root@pg01 postgresql-15.5<span class="token punctuation">]</span>$ <span class="token function">mkdir</span> -p /app/appdata/pg15/logs
+<span class="token comment"># 创建postgres用户</span>
+<span class="token punctuation">[</span>root@pg01 postgresql-15.5<span class="token punctuation">]</span>$ adduser postgres
+<span class="token comment"># 给postgres用户授权访问data和logs目录</span>
+<span class="token punctuation">[</span>root@pg01 postgresql-15.5<span class="token punctuation">]</span>$ <span class="token function">chown</span> postgres /app/appdata/pg15/data
+<span class="token punctuation">[</span>root@pg01 postgresql-15.5<span class="token punctuation">]</span>$ <span class="token function">chown</span> postgres /app/appdata/pg15/logs
+<span class="token comment"># 切换到postgres用户（数据库操作不允许使用root用户）</span>
+<span class="token punctuation">[</span>root@pg01 postgresql-15.5<span class="token punctuation">]</span>$ <span class="token function">su</span> - postgres
+<span class="token comment"># 创建日志文件【postgres用户】</span>
+<span class="token punctuation">[</span>postgres@pg01 ~<span class="token punctuation">]</span>$ <span class="token function">touch</span> /app/appdata/pg15/logs/server.log
+<span class="token comment"># 初始化数据库【postgres用户】</span>
+<span class="token punctuation">[</span>postgres@pg01 ~<span class="token punctuation">]</span>$ /app/pg15/bin/initdb -D /app/appdata/pg15/data
+<span class="token comment"># 启动数据库【postgres用户】</span>
+<span class="token punctuation">[</span>postgres@pg01 ~<span class="token punctuation">]</span>$ /app/pg15/bin/pg_ctl -D /app/appdata/pg15/data -l /app/appdata/pg15/logs/server.log start
+<span class="token comment"># 创建test数据库【postgres用户】</span>
+<span class="token punctuation">[</span>postgres@pg01 ~<span class="token punctuation">]</span>$ /app/pg15/bin/createdb <span class="token builtin class-name">test</span>  <span class="token comment">##创建test数据库</span>
+<span class="token comment"># 连接test数据库【postgres用户】</span>
+<span class="token punctuation">[</span>postgres@pg01 ~<span class="token punctuation">]</span>$ /app/pg15/bin/psql <span class="token builtin class-name">test</span>      <span class="token comment">##连接test数据库</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="配置PostgreSQL"><a href="#配置PostgreSQL" class="headerlink" title="配置PostgreSQL"></a>配置PostgreSQL</h3><p><strong>以下操作如无特殊说明，均采用postgres用户（指操作系统普通用户）操作命令。</strong></p>
+<h4 id="修改数据库密码"><a href="#修改数据库密码" class="headerlink" title="修改数据库密码"></a>修改数据库密码</h4><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># 我们从外部采用工具连接该数据库，需要知道数据库用户和对应的密码</span>
+<span class="token comment"># 连接默认postgres数据库；</span>
+<span class="token punctuation">[</span>postgres@pg01 ~<span class="token punctuation">]</span>$ /app/pg15/bin/psql      
+<span class="token comment"># 修改数据库用户postgres的密码为postgres；</span>
+<span class="token assign-left variable">postgres</span><span class="token operator">=</span><span class="token comment"># ALTER USER postgres WITH PASSWORD 'postgres'; </span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="修改配置文件以支持远程连接"><a href="#修改配置文件以支持远程连接" class="headerlink" title="修改配置文件以支持远程连接"></a>修改配置文件以支持远程连接</h3><p>需要修改的文件存放于postgresql的数据存储目录（&#x2F;app&#x2F;appdata&#x2F;pg15&#x2F;data）。</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># pg_hba.conf 文件</span>
+<span class="token comment"># 待修改的行：</span>
+<span class="token function">host</span>    all             all             <span class="token number">127.0</span>.0.1/32            trust
+<span class="token comment"># 修改为</span>
+<span class="token function">host</span>    all             all             <span class="token number">0.0</span>.0.0/0               md5<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># postgresql.conf文件</span>
+<span class="token comment"># 待修改的行</span>
+<span class="token comment">#listen_addresses = 'localhost' </span>
+<span class="token comment">#移除前方的“#”,并将localhost修改为*</span>
+listen_addresses <span class="token operator">=</span> <span class="token string">'*'</span> <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>重启postgresql</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment">#重启postgresql</span>
+<span class="token punctuation">[</span>postgres@pg01 ~<span class="token punctuation">]</span>$ /app/pg15/bin/pg_ctl -D /app/appdata/pg15/data -l /app/appdata/pg15/logs/server.log restart<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+
+<h2 id="操作系统配置"><a href="#操作系统配置" class="headerlink" title="操作系统配置"></a>操作系统配置</h2><h3 id="防火墙放行5432端口"><a href="#防火墙放行5432端口" class="headerlink" title="防火墙放行5432端口"></a>防火墙放行5432端口</h3><p>以<strong>root</strong>用户操作。</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># 配置防火墙放行5432端口</span>
+<span class="token function">sudo</span> firewall-cmd --zone<span class="token operator">=</span>public --add-port<span class="token operator">=</span><span class="token number">5432</span>/tcp --permanent  
+<span class="token comment">#防火墙重新加载配置文件</span>
+<span class="token function">sudo</span> firewall-cmd --reload       <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="环境变量配置"><a href="#环境变量配置" class="headerlink" title="环境变量配置"></a>环境变量配置</h3><p>我们想在安装postgresql的服务器使用psql或其他提供的工具连接数据库，就必须输入psql的全路径“&#x2F;app&#x2F;pg15&#x2F;bin&#x2F;psql”，环境变量配置完毕后，我们可以以postgres用户在任意位置输入psql来使用psql工具。</p>
+<p>以<strong>postgres</strong>用户操作。</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># 切换用户目录</span>
+<span class="token punctuation">[</span>postgres@pg01 ~<span class="token punctuation">]</span>$ <span class="token builtin class-name">cd</span> ~
+<span class="token comment"># 编辑用户环境变量文件</span>
+<span class="token punctuation">[</span>postgres@pg01 ~<span class="token punctuation">]</span>$ <span class="token function">vi</span> .bash_profile
+<span class="token comment"># 将下面两行代码添加文件末尾后保存退出</span>
+<span class="token assign-left variable"><span class="token environment constant">PATH</span></span><span class="token operator">=</span>/app/pg15/bin:<span class="token environment constant">$PATH</span>
+<span class="token builtin class-name">export</span> <span class="token environment constant">PATH</span>
+<span class="token comment"># 使配置文件生效</span>
+<span class="token punctuation">[</span>postgres@pg01 ~<span class="token punctuation">]</span>$ <span class="token builtin class-name">source</span> .bash_profile
+
+<span class="token comment"># 此时postgres用户就可以直接输入psql调用了</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="开机启动配置"><a href="#开机启动配置" class="headerlink" title="开机启动配置"></a>开机启动配置</h3><p>以<strong>root</strong>用户操作。</p>
+<p>PostgreSQL的开机自启动配置模板在源码目录的“contrib&#x2F;start-scripts”目录下,其中linux文件为linux环境下的开机自启动脚本模板，将其拷贝到“&#x2F;etc&#x2F;init.d”目录下，并改名为postgresql：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># 切换至源码开机脚本模版目录</span>
+<span class="token builtin class-name">cd</span> postgresql-15.5/contrib/start-scripts/
+<span class="token comment"># 拷贝linux脚本拷贝至启动目录修改名称为pgsql</span>
+<span class="token function">cp</span> linux /etc/init.d/pgsql
+<span class="token comment"># 编辑启动脚本</span>
+<span class="token function">vi</span> /etc/init.d/pgsql
+
+<span class="token comment"># 在Selinux开启Enforcing的情况，开启仍然无法启动，我们需要修复pgsql文件的安全上下文</span>
+<span class="token comment"># restorecon [选项】 文件或目录</span>
+<span class="token comment"># -R：递归.当前目录和目录下所有的子文件同时恢复；</span>
+<span class="token comment"># -V：把恢复过程显示到屏幕上；</span>
+<span class="token comment"># 执行如下命令即可 （本文环境将selinux修改为宽容模式，不需要进行修复）</span>
+<span class="token comment"># restorecon /etc/init.d/pgsql </span>
+
+<span class="token comment"># 给启动脚本增加文件执行权限</span>
+<span class="token function">chmod</span> a+x /etc/init.d/pgsql 
+
+<span class="token comment">#添加至开机启动</span>
+<span class="token function">chkconfig</span> --add /etc/init.d/pgsql 
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>“&#x2F;etc&#x2F;init.d&#x2F;pgsql”需要编辑的内容如下：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># 安装位置，根据实际情况修改</span>
+<span class="token assign-left variable">prefix</span><span class="token operator">=</span>/app/pg15
+
+<span class="token comment"># Postgresql数据目录，根据实际情况修改</span>
+<span class="token assign-left variable">PGDATA</span><span class="token operator">=</span><span class="token string">"/app/appdata/pg15/data"</span>
+
+<span class="token comment"># Who to run the postmaster as, usually "postgres".  (NOT "root")</span>
+<span class="token comment"># 将启动用户修改为实际用户，这里使用postgres，所以不变。</span>
+<span class="token assign-left variable">PGUSER</span><span class="token operator">=</span>postgres
+
+<span class="token comment"># Postgresql日志文件位置，根据实际情况修改</span>
+<span class="token assign-left variable">PGLOG</span><span class="token operator">=</span><span class="token string">"/app/appdata/pg15/logs/server.log"</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>重启验证即可。</p>
+<h2 id="创建一主二从"><a href="#创建一主二从" class="headerlink" title="创建一主二从"></a>创建一主二从</h2><h3 id="主库配置："><a href="#主库配置：" class="headerlink" title="主库配置："></a>主库配置：</h3><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># 创建同步账号 psql下执行：</span>
+<span class="token assign-left variable">postgres</span><span class="token operator">=</span><span class="token comment"># CREATE ROLE replica login replication encrypted password 'replica';</span>
+CREATE ROLE
+
+<span class="token comment"># 修改postgresql.conf文件，添加同步参数</span>
+wal_level <span class="token operator">=</span> replica
+max_wal_senders <span class="token operator">=</span> <span class="token number">8</span> 
+wal_keep_size <span class="token operator">=</span> <span class="token number">500</span> 
+wal_sender_timeout <span class="token operator">=</span> 60s
+max_connections <span class="token operator">=</span> <span class="token number">100</span>
+
+<span class="token comment"># 重启主库服务</span>
+<span class="token punctuation">[</span>postgres@pg01 ~<span class="token punctuation">]</span>$ /app/pg15/bin/pg_ctl -D /app/appdata/pg15/data -l /app/appdata/pg15/logs/server.log restart
+
+<span class="token comment"># 从库验证是否可以连接主库</span>
+<span class="token comment"># 返回输入密码即表示可访问</span>
+<span class="token punctuation">[</span>postgres@pg02 ~<span class="token punctuation">]</span>$  psql -h <span class="token number">192.168</span>.8.190 -U postgres
+Password <span class="token keyword">for</span> user postgres:
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p><strong>主库 pg_hba.conf 文件增加备库访问控制</strong></p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># 文件末尾增加允许复制的从机</span>
+<span class="token function">host</span>    replication     replica         <span class="token number">192.168</span>.5.52/32            md5
+<span class="token comment"># 保存退出</span>
+
+<span class="token comment"># 重启主库服务</span>
+<span class="token punctuation">[</span>postgres@pg01 ~<span class="token punctuation">]</span>$ /app/pg15/bin/pg_ctl -D /app/appdata/pg15/data -l /app/appdata/pg15/logs/server.log restart<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="从库配置-pg02-x2F-03主机配置相同"><a href="#从库配置-pg02-x2F-03主机配置相同" class="headerlink" title="从库配置[pg02&#x2F;03主机配置相同]"></a>从库配置[pg02&#x2F;03主机配置相同]</h3><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># 停掉从库</span>
+<span class="token punctuation">[</span>postgres@pg02 ~<span class="token punctuation">]</span>$ /app/pg15/bin/pg_ctl -D /app/appdata/pg15/data -l /app/appdata/pg15/logs/server.log stop
+
+<span class="token comment"># 清空从库数据文件</span>
+<span class="token punctuation">[</span>postgres@pg02 ~<span class="token punctuation">]</span>$ <span class="token function">rm</span> -rf /app/appdata/pg15/data/*
+<span class="token punctuation">[</span>postgres@pg02 ~<span class="token punctuation">]</span>$ ll /app/appdata/pg15/data
+total <span class="token number">0</span>
+
+<span class="token comment"># 拉取主库文件</span>
+<span class="token punctuation">[</span>postgres@pg02 ~<span class="token punctuation">]</span>$ pg_basebackup -h <span class="token number">192.168</span>.8.80 -D /app/appdata/pg15/data -p <span class="token number">5432</span> -U replica -Fp -Xs -Pv -R --checkpoint<span class="token operator">=</span>fast
+Password:
+pg_basebackup: initiating base backup, waiting <span class="token keyword">for</span> checkpoint to complete
+pg_basebackup: checkpoint completed
+pg_basebackup: write-ahead log start point: <span class="token number">0</span>/D000028 on timeline <span class="token number">1</span>
+pg_basebackup: starting background WAL receiver
+pg_basebackup: created temporary replication slot <span class="token string">"pg_basebackup_17064"</span>
+<span class="token number">50729</span>/50729 kB <span class="token punctuation">(</span><span class="token number">100</span>%<span class="token punctuation">)</span>, <span class="token number">1</span>/1 tablespace
+pg_basebackup: write-ahead log end point: <span class="token number">0</span>/D000100
+pg_basebackup: waiting <span class="token keyword">for</span> background process to finish streaming <span class="token punctuation">..</span>.
+pg_basebackup: syncing data to disk <span class="token punctuation">..</span>.
+pg_basebackup: base backup completed
+<span class="token punctuation">[</span>postgres@dj data<span class="token punctuation">]</span>$ ll /app/appdata/pg15/data
+total <span class="token number">128</span>
+-rw-------. <span class="token number">1</span> postgres postgres   <span class="token number">224</span> Jul <span class="token number">12</span> 03:43 backup_label
+drwx------. <span class="token number">7</span> postgres postgres  <span class="token number">4096</span> Jul <span class="token number">12</span> 03:43 base
+drwx------. <span class="token number">2</span> postgres postgres  <span class="token number">4096</span> Jul <span class="token number">12</span> 03:43 global
+drwx------. <span class="token number">2</span> postgres postgres  <span class="token number">4096</span> Jul <span class="token number">12</span> 03:43 pg_commit_ts
+drwx------. <span class="token number">2</span> postgres postgres  <span class="token number">4096</span> Jul <span class="token number">12</span> 03:43 pg_dynshmem
+-rw-------. <span class="token number">1</span> postgres postgres  <span class="token number">4886</span> Jul <span class="token number">12</span> 03:43 pg_hba.conf
+-rw-------. <span class="token number">1</span> postgres postgres  <span class="token number">1636</span> Jul <span class="token number">12</span> 03:43 pg_ident.conf
+drwx------. <span class="token number">4</span> postgres postgres  <span class="token number">4096</span> Jul <span class="token number">12</span> 03:43 pg_logical
+drwx------. <span class="token number">4</span> postgres postgres  <span class="token number">4096</span> Jul <span class="token number">12</span> 03:43 pg_multixact
+drwx------. <span class="token number">2</span> postgres postgres  <span class="token number">4096</span> Jul <span class="token number">12</span> 03:43 pg_notify
+drwx------. <span class="token number">2</span> postgres postgres  <span class="token number">4096</span> Jul <span class="token number">12</span> 03:43 pg_replslot
+drwx------. <span class="token number">2</span> postgres postgres  <span class="token number">4096</span> Jul <span class="token number">12</span> 03:43 pg_serial
+drwx------. <span class="token number">2</span> postgres postgres  <span class="token number">4096</span> Jul <span class="token number">12</span> 03:43 pg_snapshots
+drwx------. <span class="token number">2</span> postgres postgres  <span class="token number">4096</span> Jul <span class="token number">12</span> 03:43 pg_stat
+drwx------. <span class="token number">2</span> postgres postgres  <span class="token number">4096</span> Jul <span class="token number">12</span> 03:43 pg_stat_tmp
+drwx------. <span class="token number">2</span> postgres postgres  <span class="token number">4096</span> Jul <span class="token number">12</span> 03:43 pg_subtrans
+drwx------. <span class="token number">2</span> postgres postgres  <span class="token number">4096</span> Jul <span class="token number">12</span> 03:43 pg_tblspc
+drwx------. <span class="token number">2</span> postgres postgres  <span class="token number">4096</span> Jul <span class="token number">12</span> 03:43 pg_twophase
+-rw-------. <span class="token number">1</span> postgres postgres     <span class="token number">3</span> Jul <span class="token number">12</span> 03:43 PG_VERSION
+drwx------. <span class="token number">3</span> postgres postgres  <span class="token number">4096</span> Jul <span class="token number">12</span> 03:43 pg_wal
+drwx------. <span class="token number">5</span> postgres postgres  <span class="token number">4096</span> Jul <span class="token number">12</span> 03:43 pg_walminer
+drwx------. <span class="token number">2</span> postgres postgres  <span class="token number">4096</span> Jul <span class="token number">12</span> 03:43 pg_xact
+-rw-------. <span class="token number">1</span> postgres postgres   <span class="token number">267</span> Jul <span class="token number">12</span> 03:43 postgresql.auto.conf
+-rw-------. <span class="token number">1</span> postgres postgres <span class="token number">27115</span> Jul <span class="token number">12</span> 03:43 postgresql.conf
+-rw-------. <span class="token number">1</span> postgres postgres    <span class="token number">30</span> Jul <span class="token number">12</span> 03:43 postmaster.opts.bak
+-rw-------. <span class="token number">1</span> postgres postgres     <span class="token number">0</span> Jul <span class="token number">12</span> 03:43 standby.signal<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>修改postgresql.conf配置：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># 从库postgresql.conf修改</span>
+<span class="token punctuation">[</span>postgres@pg02 ~<span class="token punctuation">]</span>$ <span class="token function">vi</span> /app/appdata/pg15/data/postgresql.conf
+
+<span class="token comment"># 1.注释一下参数，即是在前面加# </span>
+<span class="token comment">#wal_level = replica </span>
+<span class="token comment">#max_wal_senders = 8 </span>
+<span class="token comment">#wal_keep_size = 500 </span>
+<span class="token comment">#wal_sender_timeout = 60s</span>
+<span class="token comment"># 2.添加和修改一下参数</span>
+primary_conninfo <span class="token operator">=</span> <span class="token string">'host=192.168.8.80 port=5432 user=replica password=replica'</span>
+recovery_target_timeline <span class="token operator">=</span> latest 
+hot_standby <span class="token operator">=</span> on
+max_standby_streaming_delay <span class="token operator">=</span> 30s
+wal_receiver_status_interval <span class="token operator">=</span> 10s
+hot_standby_feedback <span class="token operator">=</span> on
+max_connections <span class="token operator">=</span> <span class="token number">200</span>  <span class="token comment">#大于主节点</span>
+max_worker_processes <span class="token operator">=</span> <span class="token number">20</span>
+
+<span class="token comment"># 3.保存退出</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>重新启动从库：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># 启动从库</span>
+<span class="token punctuation">[</span>postgres@pg02 ~<span class="token punctuation">]</span>$ /app/pg15/bin/pg_ctl -D /app/appdata/pg15/data -l /app/appdata/pg15/logs/server.log start<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+
+<h3 id="主从同步验证"><a href="#主从同步验证" class="headerlink" title="主从同步验证"></a>主从同步验证</h3><p>将Pg02、Pg03主机都配置完成并启动postgresql后，在主库pg01上用postgres用户进入psql，输入如下查询sql验证同步状态：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># 主库PSQL查询</span>
+<span class="token assign-left variable">postgres</span><span class="token operator">=</span><span class="token comment"># select client_addr,usename,backend_start,application_name,sync_state,sync_priority FROM pg_stat_replication;</span>
+   client_addr   <span class="token operator">|</span> usename <span class="token operator">|</span>         backend_start         <span class="token operator">|</span> application_name <span class="token operator">|</span> sync_state <span class="token operator">|</span> sync_priority
+-----------------+---------+-------------------------------+------------------+------------+---------------
+ <span class="token number">192.168</span>.8.191 <span class="token operator">|</span> replica <span class="token operator">|</span> <span class="token number">2023</span>-12-22 <span class="token number">18</span>:52:32.45571+08 <span class="token operator">|</span> walreceiver      <span class="token operator">|</span> async      <span class="token operator">|</span>             <span class="token number">0</span>
+ <span class="token number">192.168</span>.8.192 <span class="token operator">|</span> replica <span class="token operator">|</span> <span class="token number">2023</span>-12-22 <span class="token number">19</span>:04:32.92774+08 <span class="token operator">|</span> walreceiver      <span class="token operator">|</span> async      <span class="token operator">|</span>             <span class="token number">0</span>
+ 
+<span class="token comment"># 测试创建删除数据库观察从库是否同步</span>
+<span class="token assign-left variable">postgres</span><span class="token operator">=</span><span class="token comment"># create database test;</span>
+<span class="token assign-left variable">postgres</span><span class="token operator">=</span><span class="token comment"># drop database test;</span>
+<span class="token comment"># 在主库上创建、删除后可到从库上查看是否一致。psql 输入‘\l’可查看所有的数据库。</span>
+<span class="token assign-left variable">postgres</span><span class="token operator">=</span><span class="token comment"># \l</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>至此，Postgresql 15.5的安装和一主两从配置结束。</p>
+<h3 id="开启归档模式"><a href="#开启归档模式" class="headerlink" title="开启归档模式"></a>开启归档模式</h3><p>主机pg01操作修改postgresql.conf文件</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment">#调整如下两个参数</span>
+<span class="token assign-left variable">archive_mode</span><span class="token operator">=</span><span class="token string">'on'</span>
+<span class="token assign-left variable">archive_command</span><span class="token operator">=</span><span class="token string">'test ! -f /app/appdata/pg15/archive/%f &amp;&amp; cp %p /app/appdata/pg15/archive/%f'</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+
+<p>同步在主库(pg01)以及其他从他从库（pg02&#x2F;pg03）创建归档目录：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># 创建归档目录</span>
+<span class="token function">mkdir</span> -p /app/appdata/pg15/archive
+
+<span class="token comment"># 给postgres用户授权</span>
+<span class="token function">chown</span> -R postgres /app/appdata/pg15/archive<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>然后重启主库pg服务即可。</p>
+<p>其他参考命令：</p>
+<pre class="line-numbers language-sql" data-language="sql"><code class="language-sql"><span class="token comment"># 查询归档参数SQL</span>
+<span class="token keyword">select</span> <span class="token operator">*</span> <span class="token keyword">from</span> pg_settings <span class="token keyword">where</span> name <span class="token operator">in</span> <span class="token punctuation">(</span><span class="token string">'wal_level'</span><span class="token punctuation">,</span><span class="token string">'archive_mode'</span><span class="token punctuation">,</span><span class="token string">'archive_command'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment"># 查询归档文件状态</span>
+<span class="token keyword">select</span> <span class="token operator">*</span> <span class="token keyword">from</span> pg_stat_get_archiver<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h2 id="其他建议"><a href="#其他建议" class="headerlink" title="其他建议"></a>其他建议</h2><blockquote>
+<p>1.正式环境建议最大连接数根据实际场景调整；</p>
+</blockquote>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># 登录服务器 切换postgres账号</span>
+<span class="token function">su</span> - postgres
+<span class="token comment"># 进入psql查询</span>
+psql
+<span class="token comment"># 查询当前总共正在使用的连接数</span>
+<span class="token keyword">select</span> count<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span> from pg_stat_activity<span class="token punctuation">;</span>
+<span class="token comment"># 查询显示系统允许的最大连接数</span>
+show max_connections<span class="token punctuation">;</span>
+<span class="token comment"># 查询显示系统保留的用户数</span>
+show superuser_reserved_connections <span class="token punctuation">;</span>
+<span class="token comment"># 查询当前所有连接的状态</span>
+<span class="token keyword">select</span> datname,pid,application_name,state from pg_stat_activity<span class="token punctuation">;</span> 
+
+<span class="token comment"># 增大最大连接数</span>
+alter system <span class="token builtin class-name">set</span> <span class="token assign-left variable">max_connections</span><span class="token operator">=</span><span class="token number">1000</span><span class="token punctuation">;</span>
+<span class="token comment">## 调整完最大连接数，记得重启pgsql服务</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>☕请作者喝杯咖啡☕</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.jpg" alt="Mr Liu 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/images/alipay.jpg" alt="Mr Liu 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>Mr Liu
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://luckyliupp.github.io/2023/12/29/openeuler-install-pgsql14/" title="安装PostgreSQL15.5并配置一主二从">https://luckyliupp.github.io/2023/12/29/openeuler-install-pgsql14/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" rel="tag"># 操作系统</a>
+              <a href="/tags/Linux/" rel="tag"># Linux</a>
+              <a href="/tags/OpenEuler/" rel="tag"># OpenEuler</a>
+              <a href="/tags/PostgreSQL/" rel="tag"># PostgreSQL</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2023/12/25/mac-ssh-autologin/" rel="prev" title="MacOS Sonoma14.2.1系统SSH免密登录">
+                  <i class="fa fa-chevron-left"></i> MacOS Sonoma14.2.1系统SSH免密登录
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2024/01/02/docker-install-in-openeuler/" rel="next" title="openEuler安装docker最新版本">
+                  openEuler安装docker最新版本 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mr Liu</span>
+</div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+      <span>站点总字数：</span>
+    <span title="站点总字数">46k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span>站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">2:48</span>
+  </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script><script src="/js/bookmark.js"></script>
+
+  
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>

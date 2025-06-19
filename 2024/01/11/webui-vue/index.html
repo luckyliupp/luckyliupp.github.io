@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.2.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.png">
+  <link rel="mask-icon" href="/images/favicon.png" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" integrity="sha256-Z1K5uhUaJXA7Ll0XrZ/0JhX4lAtZFpT6jkKrEDT0drU=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"luckyliupp.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.14.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":true,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta property="og:type" content="article">
+<meta property="og:title" content="前端框架汇总-Vue系列【持续更新ing....】">
+<meta property="og:url" content="https://luckyliupp.github.io/2024/01/11/webui-vue/index.html">
+<meta property="og:site_name" content="Hello Mr Liu">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2024-01-11T03:03:00.000Z">
+<meta property="article:modified_time" content="2025-06-19T01:55:13.315Z">
+<meta property="article:author" content="Mr Liu">
+<meta property="article:tag" content="前端框架">
+<meta property="article:tag" content="Vue">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://luckyliupp.github.io/2024/01/11/webui-vue/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://luckyliupp.github.io/2024/01/11/webui-vue/","path":"2024/01/11/webui-vue/","title":"前端框架汇总-Vue系列【持续更新ing....】"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>前端框架汇总-Vue系列【持续更新ing....】 | Hello Mr Liu</title>
+  
+
+
+
+
+
+
+  <script async defer data-website-id="" src=""></script>
+
+  <script defer data-domain="" src=""></script>
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Hello Mr Liu</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">临江对月</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#View-Design"><span class="nav-number">1.</span> <span class="nav-text">View Design</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#D2Admin"><span class="nav-number">2.</span> <span class="nav-text">D2Admin</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Vue-Admin-Work"><span class="nav-number">3.</span> <span class="nav-text">Vue Admin Work</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Naive-UI"><span class="nav-number">4.</span> <span class="nav-text">Naive UI</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%AF%94%E8%BE%83%E5%AE%8C%E6%95%B4"><span class="nav-number">4.1.</span> <span class="nav-text">比较完整</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BB%E9%A2%98%E5%8F%AF%E8%B0%83"><span class="nav-number">4.2.</span> <span class="nav-text">主题可调</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8-TypeScript"><span class="nav-number">4.3.</span> <span class="nav-text">使用 TypeScript</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BF%AB"><span class="nav-number">4.4.</span> <span class="nav-text">快</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#SCUI-Admin"><span class="nav-number">5.</span> <span class="nav-text">SCUI Admin</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Naive-Ui-Admin"><span class="nav-number">6.</span> <span class="nav-text">Naive Ui Admin</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Vben-Admin"><span class="nav-number">7.</span> <span class="nav-text">Vben Admin</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#EleAdmin"><span class="nav-number">8.</span> <span class="nav-text">EleAdmin</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Mr Liu"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Mr Liu</p>
+  <div class="site-description" itemprop="description">和意识先进的人在一起你才能转变意识，和心态积极的人在一起，你才能够积极，靠自己改变很难，一个人拽着自己的头发是很难把自己拎起来的。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">26</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">20</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">41</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/big/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://luckyliupp.github.io/2024/01/11/webui-vue/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Mr Liu">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hello Mr Liu">
+      <meta itemprop="description" content="和意识先进的人在一起你才能转变意识，和心态积极的人在一起，你才能够积极，靠自己改变很难，一个人拽着自己的头发是很难把自己拎起来的。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="前端框架汇总-Vue系列【持续更新ing....】 | Hello Mr Liu">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          前端框架汇总-Vue系列【持续更新ing....】
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2024-01-11 11:03:00" itemprop="dateCreated datePublished" datetime="2024-01-11T11:03:00+08:00">2024-01-11</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-06-19 09:55:13" itemprop="dateModified" datetime="2025-06-19T09:55:13+08:00">2025-06-19</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%89%8D%E7%AB%AF%E6%A1%86%E6%9E%B6/" itemprop="url" rel="index"><span itemprop="name">前端框架</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>1.2k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>4 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <blockquote>
+<span id="more"></span>
+</blockquote>
+<h1 id="View-Design"><a href="#View-Design" class="headerlink" title="View Design"></a>View Design</h1><p>原名iView，后改名为ViewUI，现在叫ViewDesgn。</p>
+<p>基于Vue.js3的企业级UI组件库和中后台系统解决方案。</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">相关产品信息：
+View UI Plus 【开源】基于Vue.js3的开源UI组件库；✅
+Admin Cloud  【需要购买授权】企业级多租户权限管理开发平台；
+Admin Plus   【需要购买授权】开箱即用的中后台前端解决方案；
+iCRUD        【需要购买授权】面向配置的增删改查表格组件；<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>官方地址：<a target="_blank" rel="noopener" href="https://www.iviewui.com/">iView &#x2F; View Design 一套企业级 UI 组件库和前端解决方案 (iviewui.com)</a></p>
+<h1 id="D2Admin"><a href="#D2Admin" class="headerlink" title="D2Admin"></a>D2Admin</h1><p>D2Admin是一个完全 <strong>开源免费</strong> ✅的企业中后台产品前端集成方案，使用最新的前端技术栈，小于 60kb 的本地首屏 js 加载，已经做好大部分项目前期准备工作，并且带有大量示例代码，助力管理系统快速开发。</p>
+<p>官方地址:<a target="_blank" rel="noopener" href="https://d2.pub/">D2开源组</a></p>
+<h1 id="Vue-Admin-Work"><a href="#Vue-Admin-Work" class="headerlink" title="Vue Admin Work"></a>Vue Admin Work</h1><p>开箱即用的中后台前端解决方案。</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">相关产品/版本信息：
+Admin Work A    【开源】Vue3/vite/Typescript/Antd；✅
+Admin Work Pro  【需要购买授权】Vue3/vite/Typescript/Naive UI；
+Arco Work       【需要购买授权】Vue3/vite/Typescript/Arco Design；
+Vue Admin Work  【开源】Vue2/Webpack/Javascript/Element UI；✅
+Vue Admin Work X【开源】Vue3/Webpack/Typescript/Element Plus；✅
+Admin Work      【开源】Vue3/vite/Typescript/Naive UI；✅<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>官方地址：<a target="_blank" rel="noopener" href="http://www.vueadminwork.com/index">Admin Work (vueadminwork.com)</a></p>
+<h1 id="Naive-UI"><a href="#Naive-UI" class="headerlink" title="Naive UI"></a>Naive UI</h1><p>一个 Vue 3 组件库，比较完整，主题可调，使用 TypeScript，快…</p>
+<p>【开源】✅  在官网未发现需要购买的内容…..</p>
+<p>特点：</p>
+<blockquote>
+<h2 id="比较完整"><a href="#比较完整" class="headerlink" title="比较完整"></a>比较完整</h2><p>有超过 80 个组件，希望能帮你少写点代码。</p>
+<p>顺便一提，它们全都可以 treeshaking。</p>
+<h2 id="主题可调"><a href="#主题可调" class="headerlink" title="主题可调"></a>主题可调</h2><p>我们提供了一个使用 TypeScript 构建的先进的类型安全主题系统。你只需要提供一个样式覆盖的对象，剩下的都交给我们。</p>
+<p>顺便一提，不用 less、sass、css 变量，也不用 webpack 的 loaders。以及你可以试试主题编辑器。</p>
+<h2 id="使用-TypeScript"><a href="#使用-TypeScript" class="headerlink" title="使用 TypeScript"></a>使用 TypeScript</h2><p>Naive UI 全量使用 TypeScript 编写，和你的 TypeScript 项目无缝衔接。</p>
+<p>顺便一提，你不需要导入任何 CSS 就能让组件正常工作。</p>
+<h2 id="快"><a href="#快" class="headerlink" title="快"></a>快</h2><p>我尽力让它不要太慢。至少 select、tree、transfer、table、cascader 都可以用虚拟列表。</p>
+</blockquote>
+<p>官方地址：<a target="_blank" rel="noopener" href="https://www.naiveui.com/zh-CN/os-theme">Naive UI: 一个 Vue 3 组件库</a></p>
+<h1 id="SCUI-Admin"><a href="#SCUI-Admin" class="headerlink" title="SCUI Admin"></a>SCUI Admin</h1><p>基于 Vue3、elementPlus 持续性的提供独家组件和丰富的业务模板帮助你快速搭建企业级中后台前端任务。</p>
+<p>【开源】✅  在官网未发现需要购买的内容…..</p>
+<p>官方地址：<a target="_blank" rel="noopener" href="https://lolicode.gitee.io/scui-doc/">SCUI (gitee.io)</a></p>
+<h1 id="Naive-Ui-Admin"><a href="#Naive-Ui-Admin" class="headerlink" title="Naive Ui Admin"></a>Naive Ui Admin</h1><p>基于 Vue3、Vite、TypeScript 等最新技术栈开发。</p>
+<p>【开源】✅  在官网未发现需要购买的内容…..</p>
+<p>特点：</p>
+<blockquote>
+<p>最新技术栈：基于 Vue3、Vite、TypeScript 等最新技术栈开发。</p>
+<p>轻量快速的热重载：无论应用程序大小如何，都始终极快的模块热重载；</p>
+<p>最佳实践：常用页面布局，组件使用示例，插件示例实现；</p>
+<p>组件封装：对日常使用频率较高的组件二次封装，满足基础工作需求；</p>
+<p>主题配置：丰富的主题配置及黑暗主题适配；</p>
+<p>权限管理：完善的前后端权限管理方案</p>
+</blockquote>
+<p>官方地址：<a target="_blank" rel="noopener" href="https://docs.naiveadmin.com/">Naive Ui Admin 开箱即用中台前端框架 | Naive Ui Admin 开箱即用中台前端框架 (naiveadmin.com)</a></p>
+<h1 id="Vben-Admin"><a href="#Vben-Admin" class="headerlink" title="Vben Admin"></a>Vben Admin</h1><p>​	Vue-Vben-Admin 是一个基于 Vue3.0、Vite、 Ant-Design-Vue、TypeScript 的后台解决方案，目标是为开发中大型项目提供开箱即用的解决方案。包括二次封装组件、utils、hooks、动态菜单、权限校验、按钮级别权限控制等功能。项目会使用前端较新的技术栈，可以作为项目的启动模版，以帮助你快速搭建企业级中后台产品原型。也可以作为一个示例，用于学习 vue3、vite、ts 等主流技术。该项目会持续跟进最新技术，并将其应用在项目中。</p>
+<p>【开源】✅  在官网未发现需要购买的内容…..</p>
+<p>官方地址：<a target="_blank" rel="noopener" href="https://doc.vvbin.cn/">Home | Vben Admin (vvbin.cn)</a></p>
+<h1 id="EleAdmin"><a href="#EleAdmin" class="headerlink" title="EleAdmin"></a>EleAdmin</h1><p>通用型后台管理模板，界面美观、开箱即用，拥有丰富的扩展组件和模板页面，适合各类中后台应用。</p>
+<blockquote>
+<p>相关产品&#x2F;版本信息：<br><strong>EleAdminPlus</strong>  【需要购买授权】使用 Vue3、ElementPlus最新版搭建， 使用当前主流的前端技术栈：Vite、Vue、CompositionApi、Typescript、VueRouter、Pinia、Axios、Scss 等；</p>
+<p><strong>EleAdminPro</strong>   【需要购买授权】使用 Vue3、AntDesignVue最新版搭建， 使用当前主流的前端技术栈：Vite、Vue、CompositionApi、Typescript、VueRouter、Pinia、Axios、Less 等；</p>
+<p><strong>EleAdmin</strong>  	【需要购买授权】使用 Vue2、ElementUI最新版搭建， 使用当前主流的前端技术栈：Webpack、Vue、VueX、VueRouter、VueCLI、Axios、Scss 等， 并优化了大量的 ElementUI 样式；</p>
+</blockquote>
+<p>官方地址：<a target="_blank" rel="noopener" href="https://eleadmin.com/">EleAdmin后台管理模板</a></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>☕请作者喝杯咖啡☕</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.jpg" alt="Mr Liu 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/images/alipay.jpg" alt="Mr Liu 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>Mr Liu
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://luckyliupp.github.io/2024/01/11/webui-vue/" title="前端框架汇总-Vue系列【持续更新ing....】">https://luckyliupp.github.io/2024/01/11/webui-vue/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/%E5%89%8D%E7%AB%AF%E6%A1%86%E6%9E%B6/" rel="tag"># 前端框架</a>
+              <a href="/tags/Vue/" rel="tag"># Vue</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2024/01/02/docker-install-in-openeuler/" rel="prev" title="openEuler安装docker最新版本">
+                  <i class="fa fa-chevron-left"></i> openEuler安装docker最新版本
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2024/01/17/openeuler-install-glusterfs/" rel="next" title="OpenEuler22.03的GlusterFS集群安装">
+                  OpenEuler22.03的GlusterFS集群安装 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mr Liu</span>
+</div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+      <span>站点总字数：</span>
+    <span title="站点总字数">46k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span>站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">2:48</span>
+  </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script><script src="/js/bookmark.js"></script>
+
+  
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>

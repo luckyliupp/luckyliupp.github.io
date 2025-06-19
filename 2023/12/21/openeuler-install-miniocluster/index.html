@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.2.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.png">
+  <link rel="mask-icon" href="/images/favicon.png" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" integrity="sha256-Z1K5uhUaJXA7Ll0XrZ/0JhX4lAtZFpT6jkKrEDT0drU=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"luckyliupp.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.14.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":true,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta property="og:type" content="article">
+<meta property="og:title" content="OpenEuler22.03 SP2 LTS安装Minio2023集群">
+<meta property="og:url" content="https://luckyliupp.github.io/2023/12/21/openeuler-install-miniocluster/index.html">
+<meta property="og:site_name" content="Hello Mr Liu">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://luckyliupp.github.io/images/openeuler-install-miniocluster/image-20231221175606333.png">
+<meta property="article:published_time" content="2023-12-21T10:41:10.000Z">
+<meta property="article:modified_time" content="2025-06-19T01:55:13.314Z">
+<meta property="article:author" content="Mr Liu">
+<meta property="article:tag" content="操作系统">
+<meta property="article:tag" content="Linux">
+<meta property="article:tag" content="OpenEuler">
+<meta property="article:tag" content="Minio">
+<meta property="article:tag" content="对象存储">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://luckyliupp.github.io/images/openeuler-install-miniocluster/image-20231221175606333.png">
+
+
+<link rel="canonical" href="https://luckyliupp.github.io/2023/12/21/openeuler-install-miniocluster/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://luckyliupp.github.io/2023/12/21/openeuler-install-miniocluster/","path":"2023/12/21/openeuler-install-miniocluster/","title":"OpenEuler22.03 SP2 LTS安装Minio2023集群"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>OpenEuler22.03 SP2 LTS安装Minio2023集群 | Hello Mr Liu</title>
+  
+
+
+
+
+
+
+  <script async defer data-website-id="" src=""></script>
+
+  <script defer data-domain="" src=""></script>
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Hello Mr Liu</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">临江对月</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E7%8E%AF%E5%A2%83%E8%A7%84%E5%88%92"><span class="nav-number">1.</span> <span class="nav-text">1.环境规划</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-Minio-nginx"><span class="nav-number">2.</span> <span class="nav-text">2.Minio-nginx</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1%E6%9B%B4%E6%96%B0%E7%B3%BB%E7%BB%9F%E5%B9%B6%E8%AE%BE%E7%BD%AEselinux"><span class="nav-number">2.1.</span> <span class="nav-text">2.1更新系统并设置selinux</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2%E9%80%9A%E8%BF%87LV%E6%96%B9%E5%BC%8F%E6%8C%82%E8%BD%BD%E6%95%B0%E6%8D%AE%E7%9B%98"><span class="nav-number">2.2.</span> <span class="nav-text">2.2通过LV方式挂载数据盘</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3%E4%B8%8B%E8%BD%BD%E5%B9%B6%E7%BC%96%E8%AF%91%E5%AE%89%E8%A3%85Nginx"><span class="nav-number">2.3.</span> <span class="nav-text">2.3下载并编译安装Nginx</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-4%E9%98%B2%E7%81%AB%E5%A2%99%E9%85%8D%E7%BD%AE"><span class="nav-number">2.4.</span> <span class="nav-text">2.4防火墙配置</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-Minio-data"><span class="nav-number">3.</span> <span class="nav-text">3.Minio-data</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1%E6%8C%82%E8%BD%BD%E5%A4%A7%E5%AE%B9%E9%87%8F%E7%A1%AC%E7%9B%98%EF%BC%88%E5%A4%A7%E4%BA%8E2T%EF%BC%89"><span class="nav-number">3.1.</span> <span class="nav-text">3.1挂载大容量硬盘（大于2T）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2%E7%B3%BB%E7%BB%9F%E8%B0%83%E4%BC%98"><span class="nav-number">3.2.</span> <span class="nav-text">3.2系统调优</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3%E9%98%B2%E7%81%AB%E5%A2%99%E9%85%8D%E7%BD%AE%EF%BC%9A"><span class="nav-number">3.3.</span> <span class="nav-text">3.3防火墙配置：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-4minio%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE"><span class="nav-number">3.4.</span> <span class="nav-text">3.4minio安装配置</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-Nginx%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%E9%85%8D%E7%BD%AE"><span class="nav-number">4.</span> <span class="nav-text">4.Nginx负载均衡配置</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Mr Liu"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Mr Liu</p>
+  <div class="site-description" itemprop="description">和意识先进的人在一起你才能转变意识，和心态积极的人在一起，你才能够积极，靠自己改变很难，一个人拽着自己的头发是很难把自己拎起来的。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">26</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">20</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">41</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/big/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://luckyliupp.github.io/2023/12/21/openeuler-install-miniocluster/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Mr Liu">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hello Mr Liu">
+      <meta itemprop="description" content="和意识先进的人在一起你才能转变意识，和心态积极的人在一起，你才能够积极，靠自己改变很难，一个人拽着自己的头发是很难把自己拎起来的。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="OpenEuler22.03 SP2 LTS安装Minio2023集群 | Hello Mr Liu">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          OpenEuler22.03 SP2 LTS安装Minio2023集群
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2023-12-21 18:41:10" itemprop="dateCreated datePublished" datetime="2023-12-21T18:41:10+08:00">2023-12-21</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-06-19 09:55:13" itemprop="dateModified" datetime="2025-06-19T09:55:13+08:00">2025-06-19</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" itemprop="url" rel="index"><span itemprop="name">操作系统</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E8%BD%AF%E4%BB%B6%E5%AE%89%E8%A3%85/" itemprop="url" rel="index"><span itemprop="name">软件安装</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>2.1k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>8 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p><img src="/../images/openeuler-install-miniocluster/image-20231221175606333.png" alt="image-20231221175606333"></p>
+<span id="more"></span>
+
+<h2 id="1-环境规划"><a href="#1-环境规划" class="headerlink" title="1.环境规划"></a>1.环境规划</h2><table>
+<thead>
+<tr>
+<th>序号</th>
+<th>IP</th>
+<th>Hostname</th>
+<th>CPU&#x2F;内存配置</th>
+<th>系统盘</th>
+<th>数据盘</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>192.168.12.210</td>
+<td>minio-nginx</td>
+<td>4C+16G</td>
+<td>80G</td>
+<td>200G</td>
+</tr>
+<tr>
+<td>2</td>
+<td>192.168.12.201</td>
+<td>minio-data1</td>
+<td>8C+16G</td>
+<td>80G</td>
+<td>5000G</td>
+</tr>
+<tr>
+<td>3</td>
+<td>192.168.12.202</td>
+<td>minio-data2</td>
+<td>8C+16G</td>
+<td>80G</td>
+<td>5000G</td>
+</tr>
+<tr>
+<td>4</td>
+<td>192.168.12.203</td>
+<td>minio-data3</td>
+<td>8C+16G</td>
+<td>80G</td>
+<td>5000G</td>
+</tr>
+<tr>
+<td>5</td>
+<td>192.168.12.204</td>
+<td>minio-data4</td>
+<td>8C+16G</td>
+<td>80G</td>
+<td>5000G</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>安装系统时，root默认密码为“~!@&#96;12qwe”</p>
+<p>内部DNS服务器：<a target="_blank" rel="noopener" href="http://minio.yicr.dap/">http://minio.yicr.dap</a> &#x3D;&#x3D;》192.168.12.210</p>
+<p>操作系统：OpenEuler22.03 SP2 LTS</p>
+<p>Nginx版本：nginx-1.24.0</p>
+<p>Minio版本：RELEASE.2023-12-20T01-00-02Z</p>
+</blockquote>
+<h2 id="2-Minio-nginx"><a href="#2-Minio-nginx" class="headerlink" title="2.Minio-nginx"></a>2.Minio-nginx</h2><h3 id="2-1更新系统并设置selinux"><a href="#2-1更新系统并设置selinux" class="headerlink" title="2.1更新系统并设置selinux"></a>2.1更新系统并设置selinux</h3><p>系统安装完毕后，先行更新系统，确保系统组件为最新状态。</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment">#更新系统</span>
+dnf upgrade -y
+
+<span class="token comment"># 调整selinux策略为宽容模式(nginx自启动的selinux配置复杂)</span>
+<span class="token function">vi</span> /etc/selinux/config
+<span class="token comment"># 设置 SELINUX=permissive</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="2-2通过LV方式挂载数据盘"><a href="#2-2通过LV方式挂载数据盘" class="headerlink" title="2.2通过LV方式挂载数据盘"></a>2.2通过LV方式挂载数据盘</h3><pre class="line-numbers language-none"><code class="language-none">#查看磁盘情况
+fdisk -l
+#给“&#x2F;dev&#x2F;vdb分区”并设置分区类型为Linux LVM。
+fdisk &#x2F;dev&#x2F;vdb<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>分区输入：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">Command <span class="token punctuation">(</span>m <span class="token keyword">for</span> <span class="token builtin class-name">help</span><span class="token punctuation">)</span>: n
+Partition <span class="token builtin class-name">type</span>
+   p   primary <span class="token punctuation">(</span><span class="token number">0</span> primary, <span class="token number">0</span> extended, <span class="token number">4</span> <span class="token function">free</span><span class="token punctuation">)</span>
+   e   extended <span class="token punctuation">(</span>container <span class="token keyword">for</span> logical partitions<span class="token punctuation">)</span>
+Select <span class="token punctuation">(</span>default p<span class="token punctuation">)</span>: p
+Partition number <span class="token punctuation">(</span><span class="token number">1</span>-4, default <span class="token number">1</span><span class="token punctuation">)</span>: 回车
+First sector <span class="token punctuation">(</span><span class="token number">2048</span>-419430399, default <span class="token number">2048</span><span class="token punctuation">)</span>: 回车
+Last sector, +/-sectors or +/-size<span class="token punctuation">&#123;</span>K,M,G,T,P<span class="token punctuation">&#125;</span> <span class="token punctuation">(</span><span class="token number">2048</span>-419430399, default <span class="token number">419430399</span><span class="token punctuation">)</span>: 回车
+
+Created a new partition <span class="token number">1</span> of <span class="token builtin class-name">type</span> <span class="token string">'Linux'</span> and of size <span class="token number">200</span> GiB.
+
+Command <span class="token punctuation">(</span>m <span class="token keyword">for</span> <span class="token builtin class-name">help</span><span class="token punctuation">)</span>: t
+Selected partition <span class="token number">1</span>
+Hex code or <span class="token builtin class-name">alias</span> <span class="token punctuation">(</span>type L to list all<span class="token punctuation">)</span>: 8e
+Changed <span class="token builtin class-name">type</span> of partition <span class="token string">'Linux'</span> to <span class="token string">'Linux LVM'</span><span class="token builtin class-name">.</span>
+
+Command <span class="token punctuation">(</span>m <span class="token keyword">for</span> <span class="token builtin class-name">help</span><span class="token punctuation">)</span>: w
+The partition table has been altered.
+Calling ioctl<span class="token punctuation">(</span><span class="token punctuation">)</span> to re-read partition table.
+Syncing disks.<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>继续执行：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment">#再次查看分区情况</span>
+<span class="token function">fdisk</span> -l
+<span class="token comment">#显示结果已创建vdb1分区</span>
+Device     Boot Start       End   Sectors  Size Id Type
+/dev/vdb1        <span class="token number">2048</span> <span class="token number">419430399</span> <span class="token number">419428352</span>  200G 8e Linux LVM
+<span class="token comment">#格式化分区（也可等到LV格式化）</span>
+mkfs.ext4 /dev/vdb1<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>把分区添加到物理卷(PV)</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># 为`/dev/vdb1` 分区创建PV：</span>
+pvcreate /dev/vdb1<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+
+<p>创建新的卷组(VG)</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># 如果VG还不存在，则先创建VG，否则可以将PV加到现有的VG中来扩容VG。</span>
+<span class="token comment"># 创建名为vg_minio_data 的VG，包含/dev/vdb1 PV。</span>
+vgcreate vg_minio_data /dev/vdb1 
+<span class="token comment"># 可运行vgscan来列出VG</span>
+<span class="token comment"># 运行vgdisplay vg_dlp查看VG详细信息查看VG详细信息</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>创建逻辑卷（LV）</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># 从vg_minio_data VG中创建一个名为lv_minio_data的LV，大小为180G。</span>
+lvcreate -L 180G -n lv_minio_data vg_minio_data
+<span class="token comment"># 可运行lvs 查看LV报告或运行lvscan查看LV信息</span>
+<span class="token comment"># 运行lvdisplay /dev/vg_minio_data/lv_minio_data 可查看LV的详细信息。</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>将LV挂载到目录</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># 创建待挂载的目录</span>
+<span class="token function">mkdir</span> /app
+<span class="token comment"># 挂载前先格式化LV</span>
+mkfs.ext4 /dev/vg_minio_data/lv_minio_data
+<span class="token comment"># 挂载LV</span>
+<span class="token function">mount</span> /dev/vg_minio_data/lv_minio_data /app<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>永久挂载LV到目录</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># 编辑/etc/fstab文件</span>
+<span class="token function">vi</span> /etc/fstab
+<span class="token comment"># 添加以下行后保存退出</span>
+/dev/vg_minio_data/lv_minio_data        /app         ext4    defaults        <span class="token number">0</span> <span class="token number">0</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="2-3下载并编译安装Nginx"><a href="#2-3下载并编译安装Nginx" class="headerlink" title="2.3下载并编译安装Nginx"></a>2.3下载并编译安装Nginx</h3><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># 安装必要依赖</span>
+dnf -y <span class="token function">install</span> <span class="token function">tar</span> gcc <span class="token function">make</span> pcre pcre-devel zlib zlib-devel openssl openssl-devel
+<span class="token comment"># 创建nginx安装文件夹</span>
+<span class="token function">mkdir</span> /app/nginx
+<span class="token comment"># 下载nginx源码包 （下载到了/app下）</span>
+<span class="token function">wget</span> https://nginx.org/download/nginx-1.24.0.tar.gz
+<span class="token comment"># 解压源码包</span>
+<span class="token function">tar</span> -zxvf nginx-1.24.0.tar.gz 
+<span class="token comment"># 安装nginx</span>
+<span class="token builtin class-name">cd</span> /app/nginux-1.24.0<span class="token punctuation">;</span>
+
+<span class="token comment"># 配置nginx安装路径及安装模块</span>
+./configure --prefix<span class="token operator">=</span>/app/nginx    --with-http_stub_status_module --with-http_ssl_module --with-http_v2_module --with-http_sub_module --with-http_gzip_static_module --with-pcre --with-http_realip_module
+<span class="token comment">#--prefix 指定安装路径</span>
+<span class="token comment">#--with-http_stub_status_module    允许查看nginx状态的模块</span>
+<span class="token comment"># --with-http_ssl_module           支持https的模块</span>
+
+<span class="token comment"># 编译&amp;&amp;安装</span>
+<span class="token function">make</span> <span class="token operator">&amp;&amp;</span> <span class="token function">make</span> <span class="token function">install</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>修改nginx运行用户为root：</p>
+<pre class="line-numbers language-none"><code class="language-none">vi &#x2F;app&#x2F;nginx&#x2F;config&#x2F;nginx.conf
+# 移除user nobody 前的“#”，修改noby为root<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+
+<p>设置nginx开机自启：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># 创建启动脚本</span>
+<span class="token function">vi</span> /etc/systemd/system/nginx.service<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+
+<p>nginx.service内容：</p>
+<blockquote>
+<p>[Unit]<br>Description&#x3D;nginx<br>After&#x3D;network.target</p>
+<p>[Service]<br>Type&#x3D;forking<br>ExecStart&#x3D;&#x2F;app&#x2F;nginx&#x2F;sbin&#x2F;nginx -c &#x2F;app&#x2F;nginx&#x2F;conf&#x2F;nginx.conf<br>ExecReload&#x3D;&#x2F;app&#x2F;nginx&#x2F;sbin&#x2F;nginx -s reload<br>ExecStop&#x3D;&#x2F;app&#x2F;nginx&#x2F;sbin&#x2F;nginx -s quit<br>PrivateTmp&#x3D;true</p>
+<p>[Install]<br>WantedBy&#x3D;multi-user.target</p>
+</blockquote>
+<pre class="line-numbers language-none"><code class="language-none"># 重载配置
+systemctl daemon-reload
+# 加入自启
+systemctl enable nginx
+# 启动nginx
+systemctl start nginx<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="2-4防火墙配置"><a href="#2-4防火墙配置" class="headerlink" title="2.4防火墙配置"></a>2.4防火墙配置</h3><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># 配置防火墙放行5432端口</span>
+<span class="token function">sudo</span> firewall-cmd --add-port<span class="token operator">=</span><span class="token number">80</span>/tcp --permanent  
+<span class="token function">sudo</span> firewall-cmd --add-port<span class="token operator">=</span><span class="token number">443</span>/tcp --permanent
+<span class="token comment"># 重新加载防火墙配置文件</span>
+<span class="token function">sudo</span> firewall-cmd --reload      <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h2 id="3-Minio-data"><a href="#3-Minio-data" class="headerlink" title="3.Minio-data"></a>3.Minio-data</h2><p>包含minio-data1&#x2F;2&#x2F;3&#x2F;4四台服务器，配置相同。（hostname请按照文章开头设置）</p>
+<h3 id="3-1挂载大容量硬盘（大于2T）"><a href="#3-1挂载大容量硬盘（大于2T）" class="headerlink" title="3.1挂载大容量硬盘（大于2T）"></a>3.1挂载大容量硬盘（大于2T）</h3><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># 待分区：/dev/vdb 4.88T</span>
+<span class="token comment"># 硬盘容量超过2T，需要使用parted进行gpt分区</span>
+<span class="token punctuation">[</span>root@openeuler-base ~<span class="token punctuation">]</span><span class="token comment"># parted /dev/vdb </span>
+GNU Parted <span class="token number">3.5</span>
+Using /dev/vdb
+Welcome to GNU Parted<span class="token operator">!</span> Type <span class="token string">'help'</span> to view a list of commands.
+<span class="token punctuation">(</span>parted<span class="token punctuation">)</span> mklabel gpt                  <span class="token comment"># 转为gpt分区                                               </span>
+<span class="token punctuation">(</span>parted<span class="token punctuation">)</span> mkpart primary xfs <span class="token number">0</span>% <span class="token number">100</span>%  <span class="token comment"># 创建xfs文件格式的主分区                                          </span>
+<span class="token punctuation">(</span>parted<span class="token punctuation">)</span> p                    <span class="token comment"># print打印                                            </span>
+Model: Virtio Block Device <span class="token punctuation">(</span>virtblk<span class="token punctuation">)</span>
+Disk /dev/vdb: 5369GB
+Sector size <span class="token punctuation">(</span>logical/physical<span class="token punctuation">)</span>: 512B/512B
+Partition Table: gpt
+Disk Flags: 
+
+Number  Start   End     Size    File system  Name     Flags
+ <span class="token number">1</span>      <span class="token number">17</span>.4kB  5369GB  5369GB  ext4         primary
+
+<span class="token punctuation">(</span>parted<span class="token punctuation">)</span> toggle <span class="token number">1</span> lvm          <span class="token comment">#硬盘类型更改为LVM                                           </span>
+<span class="token punctuation">(</span>parted<span class="token punctuation">)</span> p                                                                
+Model: Virtio Block Device <span class="token punctuation">(</span>virtblk<span class="token punctuation">)</span>
+Disk /dev/vdb: 5369GB
+Sector size <span class="token punctuation">(</span>logical/physical<span class="token punctuation">)</span>: 512B/512B
+Partition Table: gpt
+Disk Flags: 
+
+Number  Start   End     Size    File system  Name     Flags
+ <span class="token number">1</span>      <span class="token number">17</span>.4kB  5369GB  5369GB  ext4         primary  lvm
+
+<span class="token punctuation">(</span>parted<span class="token punctuation">)</span> quit                 <span class="token comment"># 退出 parted 操作                                            </span>
+Information: You may need to update /etc/fstab.
+
+<span class="token punctuation">[</span>root@openeuler-base ~<span class="token punctuation">]</span><span class="token comment"># partprobe     #系统重读分区表      </span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>创建PV（物理卷）、VG（卷组）、LV（逻辑卷）：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># 把分区加到物理卷（创建PV）</span>
+<span class="token comment"># 运行pvscan命令列出所有的PV</span>
+<span class="token comment"># 运行pvdisplay /dev/vdb1 查看PV详细信息</span>
+pvcreate /dev/vdb1 
+
+<span class="token comment"># 创建新的卷组（VG）</span>
+<span class="token comment"># 运行vgscan来列出VG</span>
+<span class="token comment"># 运行vg_minio_data查看VG详细信息</span>
+vgcreate vg_minio_data /dev/vdb1
+
+<span class="token comment"># 创建逻辑卷（LV）</span>
+<span class="token comment"># 运行lvscan查看LV信息</span>
+<span class="token comment"># 运行lvdisplay /dev/vg_minio_data/lv_minio_data可查看LV的详细信息</span>
+<span class="token comment"># 自vg_minio_data中创建一个名为lv_minio_data的LV，大小为4.8T</span>
+lvcreate -L <span class="token number">4</span>.8T -n lv_minio_data vg_minio_data
+
+<span class="token comment"># 格式化LV为xfs文件格式</span>
+<span class="token function">mkfs</span> -t xfs /dev/vg_minio_data/lv_minio_data
+
+<span class="token comment"># 在“/app”目录下创建/minio/run、/minio/data和/minio/config文件夹，分别用于存储执行脚本、数据文件和配置文件：</span>
+<span class="token function">mkdir</span> -p /app/minio/run /app/minio/data /app/minio/config
+<span class="token comment"># 临时挂载LV至挂载目录/app/minio/data</span>
+<span class="token function">mount</span> /dev/vg_minio_data/lv_minio_data /app/minio/data
+<span class="token comment"># 永久挂载LV</span>
+<span class="token function">vi</span> /etc/fstab
+<span class="token comment"># 文件末尾添加如下行后保存退出</span>
+/dev/vg_minio_data/lv_minio_data /app/minio/data              xfs    defaults        <span class="token number">0</span> <span class="token number">0</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="3-2系统调优"><a href="#3-2系统调优" class="headerlink" title="3.2系统调优"></a>3.2系统调优</h3><p>修改系统最大文件连接数：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">vi</span> /etc/security/limits.conf
+
+<span class="token comment"># 在文件末尾添加如下两行：</span>
+*               soft    nofile          <span class="token number">65535</span>
+*               hard    nofile          <span class="token number">65535</span>
+<span class="token comment"># 保存退出</span>
+
+<span class="token comment"># 重新加载系统配置</span>
+sysctl -p
+<span class="token comment">#重启生效</span>
+<span class="token function">reboot</span>
+<span class="token comment"># 可通过一下命令查看当前系统连接数</span>
+<span class="token builtin class-name">ulimit</span> -n   <span class="token comment">#同一时间最多可开启的文件数</span>
+<span class="token builtin class-name">ulimit</span> -a   <span class="token comment">#显示当前资源限制</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>修改host（vi &#x2F;etc&#x2F;hosts），添加如下内容：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token number">192.168</span>.12.201 minio-data1
+<span class="token number">192.168</span>.12.202 minio-data2
+<span class="token number">192.168</span>.12.203 minio-data3
+<span class="token number">192.168</span>.12.204 minio-data4<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+
+
+
+<h3 id="3-3防火墙配置："><a href="#3-3防火墙配置：" class="headerlink" title="3.3防火墙配置："></a>3.3防火墙配置：</h3><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">sudo</span> firewall-cmd --add-port<span class="token operator">=</span><span class="token number">9000</span>/tcp --permanent  
+<span class="token function">sudo</span> firewall-cmd --add-port<span class="token operator">=</span><span class="token number">9001</span>/tcp --permanent
+<span class="token function">sudo</span> firewall-cmd --reload<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="3-4minio安装配置"><a href="#3-4minio安装配置" class="headerlink" title="3.4minio安装配置"></a>3.4minio安装配置</h3><p>下载minio到“&#x2F;app&#x2F;minio&#x2F;run”目录：</p>
+<pre class="line-numbers language-none"><code class="language-none">cd &#x2F;app&#x2F;minio&#x2F;run
+wget https:&#x2F;&#x2F;dl.min.io&#x2F;server&#x2F;minio&#x2F;release&#x2F;linux-amd64&#x2F;minio<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+
+<p>在“&#x2F;app&#x2F;minio&#x2F;run”创建minio集群启动脚本run.sh</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">vi</span> /app/minio/run/run.sh<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>minio集群启动脚本run.sh内容：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># run.sh文件内容</span>
+<span class="token comment">#!/bin/bash</span>
+<span class="token builtin class-name">export</span> <span class="token assign-left variable">MINIO_ROOT_USER</span><span class="token operator">=</span>DapMinio
+<span class="token builtin class-name">export</span> <span class="token assign-left variable">MINIO_ROOT_PASSWORD</span><span class="token operator">=</span>DapYicr2023<span class="token operator">!</span>.<span class="token operator">!</span>
+
+<span class="token builtin class-name">export</span> <span class="token assign-left variable">MINIO_SERVER_URL</span><span class="token operator">=</span>http://minio.yicr.dap
+<span class="token builtin class-name">export</span> <span class="token assign-left variable">MINIO_BROWSER_REDIRECT_URL</span><span class="token operator">=</span>http://minio.yicr.dap/ui
+
+/app/minio/run/minio server --config-dir /app/minio/config --address <span class="token string">":9000"</span> --console-address <span class="token string">":9001"</span> <span class="token punctuation">\</span>
+http://minio-data1:9000/app/minio/data http://minio-data2:9000/app/minio/data http://minio-data3:9000/app/minio/data http://minio-data4:9000/app/minio/data <span class="token operator">></span> /app/minio/log/minio_server.log<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>给minio和启动脚本授予执行权限：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">chmod</span> +x /app/minio/run/minio
+<span class="token function">chmod</span> +x /app/minio/run/run.sh<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+
+<p>配置为系统服务</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">vi</span> /usr/lib/systemd/system/minio.service<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>文件内容：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token punctuation">[</span>Unit<span class="token punctuation">]</span>
+<span class="token assign-left variable">Description</span><span class="token operator">=</span>Minio <span class="token function">service</span>
+<span class="token assign-left variable">Documentation</span><span class="token operator">=</span>https://docs.minio.io/
+ 
+<span class="token punctuation">[</span>Service<span class="token punctuation">]</span>
+<span class="token assign-left variable">WorkingDirectory</span><span class="token operator">=</span>/app/minio/run/
+<span class="token assign-left variable">ExecStart</span><span class="token operator">=</span>/app/minio/run/run.sh
+ 
+<span class="token assign-left variable">Restart</span><span class="token operator">=</span>on-failure
+<span class="token assign-left variable">RestartSec</span><span class="token operator">=</span><span class="token number">5</span>
+ 
+<span class="token punctuation">[</span>Install<span class="token punctuation">]</span>
+<span class="token assign-left variable">WantedBy</span><span class="token operator">=</span>multi-user.target<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h2 id="4-Nginx负载均衡配置"><a href="#4-Nginx负载均衡配置" class="headerlink" title="4.Nginx负载均衡配置"></a>4.Nginx负载均衡配置</h2><p>修改“minio-nginx”主机的Nginx.conf配置：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">user  root<span class="token punctuation">;</span>
+worker_processes  <span class="token number">1</span><span class="token punctuation">;</span>
+
+<span class="token comment">#error_log  logs/error.log;</span>
+<span class="token comment">#error_log  logs/error.log  notice;</span>
+<span class="token comment">#error_log  logs/error.log  info;</span>
+
+<span class="token comment">#pid        logs/nginx.pid;</span>
+
+
+events <span class="token punctuation">&#123;</span>
+    worker_connections  <span class="token number">1024</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span>
+
+
+http <span class="token punctuation">&#123;</span>
+    include       mime.types<span class="token punctuation">;</span>
+    default_type  application/octet-stream<span class="token punctuation">;</span>
+
+    <span class="token comment">#log_format  main  '$remote_addr - $remote_user [$time_local] "$request" '</span>
+    <span class="token comment">#                  '$status $body_bytes_sent "$http_referer" '</span>
+    <span class="token comment">#                  '"$http_user_agent" "$http_x_forwarded_for"';</span>
+
+    <span class="token comment">#access_log  logs/access.log  main;</span>
+
+    sendfile        on<span class="token punctuation">;</span>
+    <span class="token comment">#tcp_nopush     on;</span>
+
+    <span class="token comment">#keepalive_timeout  0;</span>
+    keepalive_timeout  <span class="token number">65</span><span class="token punctuation">;</span>
+
+    <span class="token comment">#gzip  on;</span>
+
+	upstream minio_api <span class="token punctuation">&#123;</span>
+        least_conn<span class="token punctuation">;</span>
+        server minio-data1:9000<span class="token punctuation">;</span>
+        server minio-data2:9000<span class="token punctuation">;</span>
+        server minio-data3:9000<span class="token punctuation">;</span>
+        server minio-data4:9000<span class="token punctuation">;</span>
+	<span class="token punctuation">&#125;</span>
+
+	upstream minio_console <span class="token punctuation">&#123;</span>
+        least_conn<span class="token punctuation">;</span>
+        server minio-data1:9001<span class="token punctuation">;</span>
+        server minio-data2:9001<span class="token punctuation">;</span>
+        server minio-data3:9001<span class="token punctuation">;</span>
+        server minio-data4:9001<span class="token punctuation">;</span>
+	<span class="token punctuation">&#125;</span>
+    server <span class="token punctuation">&#123;</span>
+    listen       <span class="token number">80</span><span class="token punctuation">;</span>
+    listen  <span class="token punctuation">[</span>::<span class="token punctuation">]</span>:80<span class="token punctuation">;</span>
+    server_name  minio.yicr.dap<span class="token punctuation">;</span>
+
+    <span class="token comment"># Allow special characters in headers</span>
+    ignore_invalid_headers off<span class="token punctuation">;</span>
+    <span class="token comment"># Allow any size file to be uploaded.</span>
+    <span class="token comment"># Set to a value such as 1000m; to restrict file size to a specific value</span>
+    client_max_body_size <span class="token number">0</span><span class="token punctuation">;</span>
+    <span class="token comment"># Disable buffering</span>
+    proxy_buffering off<span class="token punctuation">;</span>
+    proxy_request_buffering off<span class="token punctuation">;</span>
+
+    location / <span class="token punctuation">&#123;</span>
+        proxy_set_header Host <span class="token variable">$http_host</span><span class="token punctuation">;</span>
+        proxy_set_header X-Real-IP <span class="token variable">$remote_addr</span><span class="token punctuation">;</span>
+        proxy_set_header X-Forwarded-For <span class="token variable">$proxy_add_x_forwarded_for</span><span class="token punctuation">;</span>
+        proxy_set_header X-Forwarded-Proto <span class="token variable">$scheme</span><span class="token punctuation">;</span>
+
+        proxy_connect_timeout <span class="token number">300</span><span class="token punctuation">;</span>
+        <span class="token comment"># Default is HTTP/1, keepalive is only enabled in HTTP/1.1</span>
+        proxy_http_version <span class="token number">1.1</span><span class="token punctuation">;</span>
+        proxy_set_header Connection <span class="token string">""</span><span class="token punctuation">;</span>
+        chunked_transfer_encoding off<span class="token punctuation">;</span>
+
+        proxy_pass http://minio_api<span class="token punctuation">;</span> <span class="token comment"># This uses the upstream directive definition to load balance</span>
+        <span class="token punctuation">&#125;</span>
+
+    location /ui/ <span class="token punctuation">&#123;</span>
+        rewrite ^/ui/<span class="token punctuation">(</span>.*<span class="token punctuation">)</span> /<span class="token variable">$1</span> <span class="token builtin class-name">break</span><span class="token punctuation">;</span>
+        proxy_set_header Host <span class="token variable">$http_host</span><span class="token punctuation">;</span>
+        proxy_set_header X-Real-IP <span class="token variable">$remote_addr</span><span class="token punctuation">;</span>
+        proxy_set_header X-Forwarded-For <span class="token variable">$proxy_add_x_forwarded_for</span><span class="token punctuation">;</span>
+        proxy_set_header X-Forwarded-Proto <span class="token variable">$scheme</span><span class="token punctuation">;</span>
+        proxy_set_header X-NginX-Proxy <span class="token boolean">true</span><span class="token punctuation">;</span>
+
+        <span class="token comment"># This is necessary to pass the correct IP to be hashed</span>
+        real_ip_header X-Real-IP<span class="token punctuation">;</span>
+
+        proxy_connect_timeout <span class="token number">300</span><span class="token punctuation">;</span>
+
+        <span class="token comment"># To support websockets in MinIO versions released after January 2023</span>
+        proxy_http_version <span class="token number">1.1</span><span class="token punctuation">;</span>
+        proxy_set_header Upgrade <span class="token variable">$http_upgrade</span><span class="token punctuation">;</span>
+        proxy_set_header Connection <span class="token string">"upgrade"</span><span class="token punctuation">;</span>
+        <span class="token comment"># Some environments may encounter CORS errors (Kubernetes + Nginx Ingress)</span>
+        <span class="token comment"># Uncomment the following line to set the Origin request to an empty string</span>
+        <span class="token comment"># proxy_set_header Origin '';</span>
+
+        chunked_transfer_encoding off<span class="token punctuation">;</span>
+
+        proxy_pass http://minio_console<span class="token punctuation">;</span> <span class="token comment"># This uses the upstream directive definition to load balance</span>
+        <span class="token punctuation">&#125;</span>
+    <span class="token punctuation">&#125;</span>
+
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>DNS配置成功后可以直接通过<a target="_blank" rel="noopener" href="http://minio.yicr.dap/ui">http://minio.yicr.dap/ui</a> 来访问控制台。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>☕请作者喝杯咖啡☕</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.jpg" alt="Mr Liu 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/images/alipay.jpg" alt="Mr Liu 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>Mr Liu
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://luckyliupp.github.io/2023/12/21/openeuler-install-miniocluster/" title="OpenEuler22.03 SP2 LTS安装Minio2023集群">https://luckyliupp.github.io/2023/12/21/openeuler-install-miniocluster/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" rel="tag"># 操作系统</a>
+              <a href="/tags/Linux/" rel="tag"># Linux</a>
+              <a href="/tags/OpenEuler/" rel="tag"># OpenEuler</a>
+              <a href="/tags/Minio/" rel="tag"># Minio</a>
+              <a href="/tags/%E5%AF%B9%E8%B1%A1%E5%AD%98%E5%82%A8/" rel="tag"># 对象存储</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2023/12/20/openeuler-install-nginx/" rel="prev" title="OpenEuler22.03源码编译安装nginx1.24.0">
+                  <i class="fa fa-chevron-left"></i> OpenEuler22.03源码编译安装nginx1.24.0
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2023/12/25/mac-ssh-autologin/" rel="next" title="MacOS Sonoma14.2.1系统SSH免密登录">
+                  MacOS Sonoma14.2.1系统SSH免密登录 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mr Liu</span>
+</div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+      <span>站点总字数：</span>
+    <span title="站点总字数">46k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span>站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">2:48</span>
+  </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script><script src="/js/bookmark.js"></script>
+
+  
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>

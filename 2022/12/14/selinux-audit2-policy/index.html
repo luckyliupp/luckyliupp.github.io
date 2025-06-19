@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.2.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.png">
+  <link rel="mask-icon" href="/images/favicon.png" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" integrity="sha256-Z1K5uhUaJXA7Ll0XrZ/0JhX4lAtZFpT6jkKrEDT0drU=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"luckyliupp.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.14.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":true,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta property="og:type" content="article">
+<meta property="og:title" content="Selinux,audit2why,audit2allow和策略">
+<meta property="og:url" content="https://luckyliupp.github.io/2022/12/14/selinux-audit2-policy/index.html">
+<meta property="og:site_name" content="Hello Mr Liu">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://luckyliupp.github.io/images/selinux-audit2-policy/image-20231221173509255.png">
+<meta property="article:published_time" content="2022-12-14T05:49:34.000Z">
+<meta property="article:modified_time" content="2025-06-19T01:55:13.315Z">
+<meta property="article:author" content="Mr Liu">
+<meta property="article:tag" content="Linux">
+<meta property="article:tag" content="Selinux">
+<meta property="article:tag" content="audit2why">
+<meta property="article:tag" content="audit2allow">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://luckyliupp.github.io/images/selinux-audit2-policy/image-20231221173509255.png">
+
+
+<link rel="canonical" href="https://luckyliupp.github.io/2022/12/14/selinux-audit2-policy/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://luckyliupp.github.io/2022/12/14/selinux-audit2-policy/","path":"2022/12/14/selinux-audit2-policy/","title":"Selinux,audit2why,audit2allow和策略"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Selinux,audit2why,audit2allow和策略 | Hello Mr Liu</title>
+  
+
+
+
+
+
+
+  <script async defer data-website-id="" src=""></script>
+
+  <script defer data-domain="" src=""></script>
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Hello Mr Liu</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">临江对月</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-overview-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Mr Liu"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Mr Liu</p>
+  <div class="site-description" itemprop="description">和意识先进的人在一起你才能转变意识，和心态积极的人在一起，你才能够积极，靠自己改变很难，一个人拽着自己的头发是很难把自己拎起来的。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">26</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">20</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">41</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/big/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://luckyliupp.github.io/2022/12/14/selinux-audit2-policy/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Mr Liu">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hello Mr Liu">
+      <meta itemprop="description" content="和意识先进的人在一起你才能转变意识，和心态积极的人在一起，你才能够积极，靠自己改变很难，一个人拽着自己的头发是很难把自己拎起来的。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Selinux,audit2why,audit2allow和策略 | Hello Mr Liu">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Selinux,audit2why,audit2allow和策略
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2022-12-14 13:49:34" itemprop="dateCreated datePublished" datetime="2022-12-14T13:49:34+08:00">2022-12-14</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-06-19 09:55:13" itemprop="dateModified" datetime="2025-06-19T09:55:13+08:00">2025-06-19</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" itemprop="url" rel="index"><span itemprop="name">操作系统</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E5%AE%89%E5%85%A8%E5%8A%A0%E5%9B%BA/" itemprop="url" rel="index"><span itemprop="name">安全加固</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E5%AE%89%E5%85%A8%E5%8A%A0%E5%9B%BA/%E7%BF%BB%E8%AF%91/" itemprop="url" rel="index"><span itemprop="name">翻译</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>1.2k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>5 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p><img src="/../images/selinux-audit2-policy/image-20231221173509255.png" alt="image-20231221173509255"></p>
+<span id="more"></span>
+
+<blockquote>
+<p>👉 原文链接：<a target="_blank" rel="noopener" href="https://osric.com/chris/accidental-developer/2017/11/selinux-audit2why-audit2allow-policy-files/">SELinux， audit2 why， audit2allow， and policy files</a></p>
+</blockquote>
+<p>我不是 SELinux 方面的专家，但每当我阅读包含<em>禁用 SELinux</em> 步骤的在线教程时，我都会畏首畏尾。</p>
+<p>我最近在安装 <a target="_blank" rel="noopener" href="https://www.icinga.com/">Icinga</a> 时遇到了这样的问题。由于创建进程 ID （PID） 文件的权限问题，服务无法启动。一个站点建议禁用 SELinux，但我认为是时候学习更新 SELinux 的类型强制 （TE） 策略了。</p>
+<p>首先，我需要”audit2why”这个工具来解释被阻止的内容以及原因。</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># yum -q provides audit2why</span>
+policycoreutils-python-2.5-17.1.el7.x86_64 <span class="token builtin class-name">:</span> SELinux policy core python  utilities
+Repo        <span class="token builtin class-name">:</span> base
+Matched from:
+Filename    <span class="token builtin class-name">:</span> /usr/bin/audit2allow<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<blockquote>
+<p>❗译者注：上述命令是查询提供audit2why工具的软件包，不同系统得出的结果可能不同，如译者当前使用的openEuler22.03输出的结果是：</p>
+</blockquote>
+<blockquote>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">policycoreutils-python-2.5-34.el7.x86_64 <span class="token builtin class-name">:</span> SELinux policy core python utilities
+Repo        <span class="token builtin class-name">:</span> base
+Matched from:
+Filename    <span class="token builtin class-name">:</span> /usr/bin/audit2why
+
+policycoreutils-python-utils-3.3-1.oe2203.noarch <span class="token builtin class-name">:</span> Policy core python utilities <span class="token keyword">for</span> selinux
+Repo        <span class="token builtin class-name">:</span> everything
+Matched from:
+Filename    <span class="token builtin class-name">:</span> /usr/bin/audit2why
+
+❗根据译者查询可得知安装policycoreutils-python或者policycoreutils-python-utils都可以。<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+</blockquote>
+<p>我安装了软件包（和依赖项）：<code>policycoreutils-python</code></p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">yum <span class="token function">install</span> policycoreutils-python<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>然后使用audit2why分析审计日志：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># audit2why -i /var/log/audit/audit.log</span>
+<span class="token assign-left variable">type</span><span class="token operator">=</span>AVC <span class="token assign-left variable">msg</span><span class="token operator">=</span>audit<span class="token punctuation">(</span><span class="token number">1510711476.690</span>:132<span class="token punctuation">)</span>: avc:  denied  <span class="token punctuation">&#123;</span> <span class="token function">chown</span> <span class="token punctuation">&#125;</span> <span class="token keyword">for</span>  <span class="token assign-left variable">pid</span><span class="token operator">=</span><span class="token number">2459</span> <span class="token assign-left variable">comm</span><span class="token operator">=</span><span class="token string">"icinga"</span> <span class="token assign-left variable">capability</span><span class="token operator">=</span><span class="token number">0</span>  <span class="token assign-left variable">scontext</span><span class="token operator">=</span>system_u:system_r:nagios_t:s0 <span class="token assign-left variable">tcontext</span><span class="token operator">=</span>system_u:system_r:nagios_t:s0 <span class="token assign-left variable">tclass</span><span class="token operator">=</span>capability
+
+        Was caused by:
+            Missing <span class="token builtin class-name">type</span> enforcement <span class="token punctuation">(</span>TE<span class="token punctuation">)</span> allow rule.
+            You can use audit2allow to generate a loadable module to allow this access.
+
+<span class="token assign-left variable">type</span><span class="token operator">=</span>AVC <span class="token assign-left variable">msg</span><span class="token operator">=</span>audit<span class="token punctuation">(</span><span class="token number">1510711476.724</span>:134<span class="token punctuation">)</span>: avc:  denied  <span class="token punctuation">&#123;</span> <span class="token builtin class-name">read</span> <span class="token function">write</span> <span class="token punctuation">&#125;</span> <span class="token keyword">for</span>  <span class="token assign-left variable">pid</span><span class="token operator">=</span><span class="token number">2465</span> <span class="token assign-left variable">comm</span><span class="token operator">=</span><span class="token string">"icinga"</span> <span class="token assign-left variable">name</span><span class="token operator">=</span><span class="token string">"icinga.pid"</span> <span class="token assign-left variable">dev</span><span class="token operator">=</span><span class="token string">"tmpfs"</span> <span class="token assign-left variable">ino</span><span class="token operator">=</span><span class="token number">19128</span> <span class="token assign-left variable">scontext</span><span class="token operator">=</span>system_u:system_r:nagios_t:s0 <span class="token assign-left variable">tcontext</span><span class="token operator">=</span>system_u:object_r:initrc_var_run_t:s0 <span class="token assign-left variable">tclass</span><span class="token operator">=</span>file
+
+        Was caused by:
+            Missing <span class="token builtin class-name">type</span> enforcement <span class="token punctuation">(</span>TE<span class="token punctuation">)</span> allow rule.
+            You can use audit2allow to generate a loadable module to allow this access.<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>这仍然有点难以理解。比如，我并不知道操作为什么被阻止。查看其中的细节说明：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token assign-left variable">scontext</span><span class="token operator">=</span>system_u:system_r:nagios_t:s0
+<span class="token assign-left variable">tcontext</span><span class="token operator">=</span>system_u:system_r:nagios_t:s0<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+
+<p>为了帮助理解：</p>
+<ul>
+<li>scontext &#x3D; 源上下文</li>
+<li>tcontext &#x3D; 目标上下文</li>
+<li>_u：_r：_t：S# &#x3D; 用户：角色：类型：安全级别</li>
+</ul>
+<p>源上下文和目标上下文是相同的，因此在我看来应该允许该命令。但是，下面让我们试着看看audit2allow这个工具会告诉我们什么：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># audit2allow -i /var/log/audit/audit.log</span>
+
+<span class="token comment">#============= nagios_t ==============</span>
+allow nagios_t initrc_var_run_t:file <span class="token punctuation">&#123;</span> lock <span class="token function">open</span> <span class="token builtin class-name">read</span> <span class="token function">write</span> <span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
+allow nagios_t self:capability <span class="token function">chown</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>我不清楚第一条策略有多宽泛：它是否允许 nagios 类型方法访问所有文件？如果是这样，那可能太宽泛了。正如手册警告的那样：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">在处理此实用程序的输出时必须谨慎，确保被允许的操作不会构成安全威胁。通常最好的方式是定义新的域和<span class="token punctuation">(</span>或<span class="token punctuation">)</span>类型，或者采用其他结构上的变化，以允许一组最优的操作来取得操作的成功，而不是盲目地执行有时宽泛的策略来实施此实用程序推荐的更改。<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>这实在是太可怕了。如果替代方案是完全禁用 SELinux，那么过于宽泛的 SELinux 策略并不是世界上最糟糕的事情。</p>
+<p>所以提供了几个规则。现在怎么办？幸运的是，和手册页都包含有关如何将规则合并到 SELinux 策略中的详细信息。首先，生成新的类型强制策略：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># audit2allow -i /var/log/audit/audit.log --module local > local.te</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<blockquote>
+<p>❗译者注：audit2allow -M 可以直接编译策略文件。</p>
+</blockquote>
+<p>除了默认输出之外，还包括一些额外的信息：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># cat local.te</span>
+
+module <span class="token builtin class-name">local</span> <span class="token number">1.0</span><span class="token punctuation">;</span>
+
+require <span class="token punctuation">&#123;</span>
+        <span class="token builtin class-name">type</span> nagios_t<span class="token punctuation">;</span>
+        <span class="token builtin class-name">type</span> initrc_var_run_t<span class="token punctuation">;</span>
+        class capability <span class="token function">chown</span><span class="token punctuation">;</span>
+        class <span class="token function">file</span> <span class="token punctuation">&#123;</span> lock <span class="token function">open</span> <span class="token builtin class-name">read</span> <span class="token function">write</span> <span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span>
+
+<span class="token comment">#============= nagios_t ==============</span>
+allow nagios_t initrc_var_run_t:file <span class="token punctuation">&#123;</span> lock <span class="token function">open</span> <span class="token builtin class-name">read</span> <span class="token function">write</span> <span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
+allow nagios_t self:capability <span class="token function">chown</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>接下来是手册说：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># SELinux provides a policy devel environment under</span>
+<span class="token comment"># /usr/share/selinux/devel including all of the shipped</span>
+<span class="token comment"># interface files.</span>
+<span class="token comment"># You can create a te file and compile it by executing</span>
+
+$ <span class="token function">make</span> -f /usr/share/selinux/devel/Makefile local.pp<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>但是，我的系统没有目录：<code>/usr/share/selinux/devel</code></p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># ls /usr/share/selinux/</span>
+packages  targeted<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+
+<p>我需要安装软件包（和依赖项）：<code>policycoreutils-devel</code></p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># yum install policycoreutils-devel</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>编译策略文件：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># make -f /usr/share/selinux/devel/Makefile local.pp</span>
+Compiling targeted <span class="token builtin class-name">local</span> module
+/usr/bin/checkmodule:  loading policy configuration from tmp/local.tmp
+/usr/bin/checkmodule:  policy configuration loaded
+/usr/bin/checkmodule:  writing binary representation <span class="token punctuation">(</span>version <span class="token number">17</span><span class="token punctuation">)</span> to tmp/local.mod
+Creating targeted local.pp policy package
+<span class="token function">rm</span> tmp/local.mod.fc tmp/local.mod<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>现在使用以下命令装载它：<code>semodule</code></p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># semodule -i local.pp</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>问题解决了吗？</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># systemctl start icinga</span>
+<span class="token comment"># systemctl status icinga</span>
+● icinga.service - LSB: start and stop Icinga monitoring daemon
+   Loaded: loaded <span class="token punctuation">(</span>/etc/rc.d/init.d/icinga<span class="token punctuation">;</span> bad<span class="token punctuation">;</span> vendor preset: disabled<span class="token punctuation">)</span>
+   Active: active <span class="token punctuation">(</span>running<span class="token punctuation">)</span> since Tue <span class="token number">2017</span>-11-14 <span class="token number">22</span>:35:23 EST<span class="token punctuation">;</span> 6s ago
+     Docs: man:systemd-sysv-generator<span class="token punctuation">(</span><span class="token number">8</span><span class="token punctuation">)</span>
+  Process: <span class="token number">2661</span> <span class="token assign-left variable">ExecStop</span><span class="token operator">=</span>/etc/rc.d/init.d/icinga stop <span class="token punctuation">(</span>code<span class="token operator">=</span>exited, <span class="token assign-left variable">status</span><span class="token operator">=</span><span class="token number">0</span>/SUCCESS<span class="token punctuation">)</span>
+  Process: <span class="token number">3838</span> <span class="token assign-left variable">ExecStart</span><span class="token operator">=</span>/etc/rc.d/init.d/icinga start <span class="token punctuation">(</span>code<span class="token operator">=</span>exited, <span class="token assign-left variable">status</span><span class="token operator">=</span><span class="token number">0</span>/SUCCESS<span class="token punctuation">)</span>
+   CGroup: /system.slice/icinga.service
+           └─3850 /usr/bin/icinga -d /etc/icinga/icinga.cfg
+
+Nov <span class="token number">14</span> <span class="token number">22</span>:35:23 localhost.localdomain systemd<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span>: Starting LSB: start and sto<span class="token punctuation">..</span>.
+Nov <span class="token number">14</span> <span class="token number">22</span>:35:23 localhost.localdomain icinga<span class="token punctuation">[</span><span class="token number">3838</span><span class="token punctuation">]</span>: Running configuration che<span class="token punctuation">..</span>.
+Nov <span class="token number">14</span> <span class="token number">22</span>:35:23 localhost.localdomain icinga<span class="token punctuation">[</span><span class="token number">3838</span><span class="token punctuation">]</span>: Icinga with PID  not runn<span class="token punctuation">..</span>.
+Nov <span class="token number">14</span> <span class="token number">22</span>:35:23 localhost.localdomain icinga<span class="token punctuation">[</span><span class="token number">3838</span><span class="token punctuation">]</span>: Starting icinga: Starting<span class="token punctuation">..</span>.
+Nov <span class="token number">14</span> <span class="token number">22</span>:35:23 localhost.localdomain systemd<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span>: Started LSB: start and stop<span class="token punctuation">..</span>.
+Nov <span class="token number">14</span> <span class="token number">22</span>:35:23 localhost.localdomain icinga<span class="token punctuation">[</span><span class="token number">3850</span><span class="token punctuation">]</span>: Finished daemonizing<span class="token punctuation">..</span>. <span class="token punctuation">(</span><span class="token punctuation">..</span>.
+Nov <span class="token number">14</span> <span class="token number">22</span>:35:23 localhost.localdomain icinga<span class="token punctuation">[</span><span class="token number">3850</span><span class="token punctuation">]</span>: Event loop started<span class="token punctuation">..</span>.
+Hint: Some lines were ellipsized, use -l to show <span class="token keyword">in</span> full.<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>成功了！权限问题已解决，无需禁用 SELinux。</p>
+<p>关于 SELinux，我还需要了解更多，但这是一个开始。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>☕请作者喝杯咖啡☕</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.jpg" alt="Mr Liu 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/images/alipay.jpg" alt="Mr Liu 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>Mr Liu
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://luckyliupp.github.io/2022/12/14/selinux-audit2-policy/" title="Selinux,audit2why,audit2allow和策略">https://luckyliupp.github.io/2022/12/14/selinux-audit2-policy/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/Linux/" rel="tag"># Linux</a>
+              <a href="/tags/Selinux/" rel="tag"># Selinux</a>
+              <a href="/tags/audit2why/" rel="tag"># audit2why</a>
+              <a href="/tags/audit2allow/" rel="tag"># audit2allow</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2022/12/14/openeuler-install-redis/" rel="prev" title="OpenEuler系统源码编译安装redis">
+                  <i class="fa fa-chevron-left"></i> OpenEuler系统源码编译安装redis
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2022/12/28/docker-remote/" rel="next" title="Docker配置远程管理">
+                  Docker配置远程管理 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mr Liu</span>
+</div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+      <span>站点总字数：</span>
+    <span title="站点总字数">46k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span>站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">2:48</span>
+  </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script><script src="/js/bookmark.js"></script>
+
+  
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>
