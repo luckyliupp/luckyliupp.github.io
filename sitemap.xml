@@ -2,6 +2,15 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://luckyliupp.github.io/2025/06/19/mac15-install-oldhpdriver/</loc>
+    
+    <lastmod>2025-11-24</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://luckyliupp.github.io/2025/06/26/pm-sucess21/</loc>
     
     <lastmod>2025-06-26</lastmod>
@@ -14,15 +23,6 @@
     <loc>https://luckyliupp.github.io/2025/06/19/mac-question-answer/</loc>
     
     <lastmod>2025-06-20</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://luckyliupp.github.io/2025/06/19/mac15-install-oldhpdriver/</loc>
-    
-    <lastmod>2025-06-19</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
